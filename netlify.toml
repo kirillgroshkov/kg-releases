@@ -1,0 +1,23 @@
+
+# Global settings
+[build]
+  publish = "dist"
+  command = "build/build-netlify.sh"
+
+[context.production]
+  [context.production.environment]
+    YARN_VERSION = "1.3.2"
+    YARN_FLAGS = "--ignore-engines"
+    NG_ENV = "prod"
+
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    YARN_VERSION = "1.3.2"
+    YARN_FLAGS = "--ignore-engines"
+    NG_ENV = "master"
+
+[context.branch-deploy]
+  [context.branch-deploy.environment]
+    YARN_VERSION = "1.3.2"
+    YARN_FLAGS = "--ignore-engines"
+    NG_ENV = "master"

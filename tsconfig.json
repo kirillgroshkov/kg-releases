@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2015",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "lib": ["dom", "es2015", "es2016", "es2017", "esnext"],
+    "strict": true,
+    "types": [
+      "node",
+      "vue"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "src/typings"
+    ]
+  }
+}

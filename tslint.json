@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "./node_modules/@naturalcycles/shared-dev/tslint.json"
+  ]
+}
