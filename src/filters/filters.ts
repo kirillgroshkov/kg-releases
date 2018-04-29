@@ -1,3 +1,4 @@
+import { mdService } from '@/srv/md.service'
 import { timeUtil } from '@/util/time.util'
 import Vue from 'vue'
 
@@ -9,4 +10,8 @@ Vue.filter('unixtimePretty', (v: number) => {
 Vue.filter('timeAgo', (v: number) => {
   if (!v) return ''
   return timeUtil.timeBetween(Date.now(), v * 1000)
+})
+
+Vue.filter('md', (s: string) => {
+  return mdService.parse(s)
 })
