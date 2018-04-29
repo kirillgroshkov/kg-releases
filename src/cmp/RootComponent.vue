@@ -5,7 +5,9 @@
       <tr v-for="r in releases" :key="r.id">
         <td><img :src="r.avatarUrl" width="40" height="40"></td>
         <td>
-          {{r.repoFullName}} @ {{r.v}}<br>
+          <a :href="`https://github.com/${r.repoFullName}`" target="_blank">{{r.repoFullName}}</a>
+          @
+          <a :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank">{{r.v}}</a><br>
           {{r.published | unixtimePretty}}<br>
           {{r.published | timeAgo}} ago
         </td>
