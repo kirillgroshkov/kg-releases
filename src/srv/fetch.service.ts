@@ -1,10 +1,14 @@
 export class FetchService {
-  async fetch<T> (method: string, url: string, _opt: RequestInit = {}): Promise<T> {
+  async fetch<T = any> (method: string, url: string, _opt: RequestInit = {}): Promise<T> {
     // avoid mutation
     const opt = {
       method,
       credentials: 'include',
       ..._opt,
+      headers: {
+        'Content-Type': 'application/json',
+        ..._opt.headers, // || {}
+      },
     } as any
 
     // Stringify body
@@ -12,13 +16,8 @@ export class FetchService {
       opt.body = JSON.stringify(opt.body)
     }
 
-    // Content-type: application/json
-    if (!opt.headers) opt.headers = {}
-    if (!opt.headers['Content-Type']) {
-      opt.headers['Content-Type'] = 'application/json'
-    }
-
     const resp = await fetch(url, opt)
+
     if (!resp.ok) {
       const err = new Error(resp.statusText)
       ; (err as any).response = resp
@@ -29,19 +28,19 @@ export class FetchService {
   }
 
   // convenience methods
-  async get<T> (url: string, opt: RequestInit = {}): Promise<T> {
+  async get<T = any> (url: string, opt: RequestInit = {}): Promise<T> {
     return this.fetch<T>('get', url, opt)
   }
-  async post<T> (url: string, opt: RequestInit = {}): Promise<T> {
+  async post<T = any> (url: string, opt: RequestInit = {}): Promise<T> {
     return this.fetch<T>('post', url, opt)
   }
-  async put<T> (url: string, opt: RequestInit = {}): Promise<T> {
+  async put<T = any> (url: string, opt: RequestInit = {}): Promise<T> {
     return this.fetch<T>('put', url, opt)
   }
-  async patch<T> (url: string, opt: RequestInit = {}): Promise<T> {
+  async patch<T = any> (url: string, opt: RequestInit = {}): Promise<T> {
     return this.fetch<T>('patch', url, opt)
   }
-  async delete<T> (url: string, opt: RequestInit = {}): Promise<T> {
+  async delete<T = any> (url: string, opt: RequestInit = {}): Promise<T> {
     return this.fetch<T>('delete', url, opt)
   }
 }

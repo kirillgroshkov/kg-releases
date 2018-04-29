@@ -5,6 +5,7 @@ import Vue from 'vue'
 import './hooks' // must be defined BEFORE router is created!
 import { router } from '@/router'
 import { store } from '@/store'
+import '@/filters/time.filters.ts'
 import RootComponent from './cmp/RootComponent.vue'
 
 Vue.config.productionTip = false
