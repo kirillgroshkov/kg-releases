@@ -8,7 +8,7 @@
 Last updated: {{resp.lastCheckedReleases | unixtimePretty}}
 Starred repos: {{resp.starredRepos}}
 Rate limit remaining: {{resp.rateLimit.remaining}}
-Rate limit reset: {{resp.rateLimit.reset}}
+Rate limit reset: {{resp.rateLimit.reset | unixtimePretty}}
           </pre>
         </div>
       </div>
