@@ -8,6 +8,9 @@ import { store } from '@/store'
 import '@/filters/filters.ts'
 import RootComponent from './cmp/RootComponent.vue'
 
+import './scss/global.scss'
+import './scss/bootstrap.scss'
+
 Vue.config.productionTip = false
 
 export const app = new Vue({

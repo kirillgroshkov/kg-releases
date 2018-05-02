@@ -43,6 +43,10 @@ export class FetchService {
   async delete<T = any> (url: string, opt: RequestInit = {}): Promise<T> {
     return this.fetch<T>('delete', url, opt)
   }
+
+  async errorPopup (err: any): Promise<any> {
+    alert(JSON.stringify(err && err.message || {}, undefined, 2))
+  }
 }
 
 export const fetchService = new FetchService()

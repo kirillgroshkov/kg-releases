@@ -21,15 +21,16 @@ export interface Release {
 }
 
 class ReleasesService {
-  async fetchReleases (): Promise<Release[]> {
+  async fetchReleases (): Promise<FeedResp> {
     const r = await apiService.get<FeedResp>('')
-    return r.releases.map(r => this.mapRelease(r))
+    r.releases = r.releases.map(r => this.mapRelease(r)) // .slice(0, 5)
+    return r
   }
 
   private mapRelease (r: Release): Release {
     return {
       ...r,
-      descr: mdService.parse((r.descr || '').substr(0, 2000)),
+      descr: mdService.parse((r.descr || '')), // .substr(0, 2000)),
     }
   }
 }
