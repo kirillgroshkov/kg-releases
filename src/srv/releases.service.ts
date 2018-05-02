@@ -1,6 +1,13 @@
 import { apiService } from '@/srv/api.service'
 import { mdService } from '@/srv/md.service'
 
+export interface FeedResp {
+  rateLimit: any
+  lastStarred: string[]
+  starredRepos: number
+  releases: Release[]
+}
+
 export interface Release {
   // `${repoOwner}_${repoName}_${v}`
   id: string
@@ -15,8 +22,8 @@ export interface Release {
 
 class ReleasesService {
   async fetchReleases (): Promise<Release[]> {
-    const r = await apiService.get<Release[]>('')
-    return r.map(r => this.mapRelease(r))
+    const r = await apiService.get<FeedResp>('')
+    return r.releases.map(r => this.mapRelease(r))
   }
 
   private mapRelease (r: Release): Release {
