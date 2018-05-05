@@ -1,4 +1,4 @@
-import { mdService } from '@/srv/md.service'
+import { markdownService } from '@/srv/markdown.service'
 import { timeUtil } from '@/util/time.util'
 import Vue from 'vue'
 
@@ -13,5 +13,5 @@ Vue.filter('timeAgo', (v: number) => {
 })
 
 Vue.filter('md', (s: string) => {
-  return mdService.parse(s)
+  return markdownService.parse(s)
 })

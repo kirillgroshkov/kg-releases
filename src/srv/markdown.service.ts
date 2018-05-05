@@ -2,7 +2,7 @@
 import { memo } from '@/decorators/memo.decorator'
 import * as marked from 'marked'
 
-class MDService {
+class MarkdownService {
   @memo()
   private parser (): typeof marked {
     // console.log('MDService init...')
@@ -17,4 +17,4 @@ class MDService {
   }
 }
 
-export const mdService = new MDService()
+export const markdownService = new MarkdownService()

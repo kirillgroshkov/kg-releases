@@ -25,10 +25,13 @@
   },
   "dependencies": {
     "bootstrap": "^4.1.1",
+    "jquery": "^3.3.1",
     "kg-shared": "^1.0.2",
     "marked": "^0.3.19",
+    "popper.js": "^1.14.3",
     "vue": "^2.5.2",
     "vue-class-component": "^6.0.0",
+    "vue-progressbar": "^0.7.5",
     "vue-property-decorator": "^6.0.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

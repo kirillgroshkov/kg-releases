@@ -1,11 +1,18 @@
 import { apiService } from '@/srv/api.service'
-import { mdService } from '@/srv/md.service'
+import { markdownService } from '@/srv/markdown.service'
+import { store } from '@/store'
 
 export interface FeedResp {
-  rateLimit: any
+  rateLimit: RateLimit
   lastStarred: string[]
   starredRepos: number
   releases: Release[]
+}
+
+export interface RateLimit {
+  limit: number
+  remaining: number
+  reset: number
 }
 
 export interface Release {
@@ -21,16 +28,19 @@ export interface Release {
 }
 
 class ReleasesService {
-  async fetchReleases (): Promise<FeedResp> {
-    const r = await apiService.get<FeedResp>('')
-    r.releases = r.releases.map(r => this.mapRelease(r)) // .slice(0, 5)
-    return r
+  async fetchReleases (): Promise<void> {
+    const feedResp = await apiService.get<FeedResp>('')
+    feedResp.releases = feedResp.releases.map(r => this.mapRelease(r)) // .slice(0, 5)
+
+    store.commit('extendState', {
+      feedResp,
+    })
   }
 
   private mapRelease (r: Release): Release {
     return {
       ...r,
-      descr: mdService.parse((r.descr || '')), // .substr(0, 2000)),
+      descr: markdownService.parse((r.descr || '')), // .substr(0, 2000)),
     }
   }
 }
