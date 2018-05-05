@@ -1,25 +1,5 @@
 <template>
   <div>
-    <!--
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    -->
-
     <div>
       <div class="container releases">
         <div class="row" v-if="feedResp.rateLimit">
@@ -33,7 +13,16 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
           </div>
         </div>
 
-        <template v-for="r in feedResp.releases">
+        <table border="1" cellspacing="0" cellpadding="6">
+          <tr v-for="r in feedResp.releases" :key="r.id">
+            <td><img :src="r.avatarUrl" width="20" height="20"></td>
+            <td>{{r.repoFullName}}</td>
+            <td>{{r.v}}</td>
+            <td>{{r.published | unixtimePretty}}</td>
+          </tr>
+        </table>
+
+        <template v-for="r in feedResp.releases" v-if="false">
           <div class="row titleRow">
             <div class="col">
               <h1>
@@ -64,17 +53,18 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { FeedResp } from "../srv/releases.service"
+import { FeedResp, releasesService } from "../srv/releases.service"
+import { st } from '../store'
 
 @Component
 export default class ReleasesPage extends Vue {
   get feedResp (): FeedResp {
-    return this.$store.state.feedResp
+    return st().feedResp
   }
 
   async mounted () {
     // this.loading = 'loading...'
-    // await releasesService.fetchReleases()
+    await releasesService.fetchReleases()
     // this.loading = ''
   }
 }
@@ -84,10 +74,10 @@ export default class ReleasesPage extends Vue {
   @import "../scss/var";
 
   .releases {
-    padding-top: 20px;
+    // padding-top: 20px;
   }
 
-  @include media-breakpoint-down(sm) {
+  @media (max-width: 800px) {
     .titleRow h1 {
       // color: pink;
       font-size: 24px;
@@ -97,7 +87,7 @@ export default class ReleasesPage extends Vue {
     }
   }
 
-  @include media-breakpoint-down(xs) {
+  @media (max-width: 500px) {
     .titleRow h1 {
       // color: pink;
       font-size: 18px;

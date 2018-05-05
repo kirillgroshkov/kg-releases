@@ -1,7 +1,9 @@
+import { PromiseDecoratorResp } from '@/decorators/decorator.util'
 import { memo } from '@/decorators/memo.decorator'
 import { initProgressDecorator, Progress } from '@/decorators/progress.decorator'
 import { env, logEnvironment } from '@/environment/environment'
 import { app } from '@/main'
+import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { store } from '@/store'
 
@@ -12,7 +14,10 @@ class BootstrapService {
 
     this.initDecorators()
 
-    await this.appInit()
+    await firebaseService.init()
+    await firebaseService.authStateChanged
+
+    // await this.appInit()
   }
 
   @Progress()
@@ -34,19 +39,26 @@ class BootstrapService {
         store.commit('setGhost')
         app.$Progress.start()
       },
-      okFn (r) {
+      okFn (r: PromiseDecoratorResp) {
         store.commit('setGhost', false)
         let cls: string = r.target && r.target.constructor && r.target.constructor.name
         if (cls) cls += '.'
         const args: string = r.args && r.args.length ? JSON.stringify(r.args) + ' ' : ''
         console.log(`@${r.decoratorName} ${cls}${r.propertyKey}() ${args}took ${r.millis} ms`)
         app.$Progress.finish()
+        return r.res
       },
-      errorFn (err) {
+      errorFn (r: PromiseDecoratorResp) {
         store.commit('setGhost', false)
         app.$Progress.fail()
-        alert(JSON.stringify(err, undefined, 2))
-        return Promise.reject(err)
+        console.log('decccc', r)
+        const t = [
+          `@Progress() error in ${r.target.constructor.name}.${r.propertyKey}:`,
+          (r.err && r.err.message) || JSON.stringify(r.err, undefined, 2),
+        ]
+        const msg = t.join('\n')
+        alert(msg)
+        return Promise.reject(r.err)
       },
     })
   }

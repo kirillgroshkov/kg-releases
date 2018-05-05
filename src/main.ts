@@ -2,10 +2,10 @@
 
 // css
 import './scss/global.scss'
-import './scss/bootstrap.scss'
 
 import '@/polyfills'
 import { bootstrapService } from '@/srv/bootstrap.service'
+import { jsonify } from '@/util/object.util'
 import Vue from 'vue'
 import './hooks' // must be defined BEFORE router is created!
 import { router } from '@/router'
@@ -13,10 +13,13 @@ import { store } from '@/store'
 import '@/filters/filters.ts'
 import RootComponent from './cmp/RootComponent.vue'
 
-// import 'jquery'
-// import 'bootstrap'
-
 Vue.config.productionTip = false
+
+// Material
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+Vue.use(VueMaterial)
 
 // Progress bar
 const VueProgressBar = require('vue-progressbar')
@@ -43,7 +46,7 @@ bootstrapService.init() // async
 
 // Debug
 const w: any = window
-w.state = () => JSON.parse(JSON.stringify(store.state))
+w.state = () => jsonify(store.state)
 w.commit = (type: string, payload?: any) => {
   store.commit(type, payload)
   return w.state()

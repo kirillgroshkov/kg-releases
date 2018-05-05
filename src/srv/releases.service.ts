@@ -1,6 +1,8 @@
+import { Progress } from '@/decorators/progress.decorator'
 import { apiService } from '@/srv/api.service'
 import { markdownService } from '@/srv/markdown.service'
-import { store } from '@/store'
+import { st, store } from '@/store'
+import { objectUtil } from '@/util/object.util'
 
 export interface FeedResp {
   rateLimit: RateLimit
@@ -27,7 +29,24 @@ export interface Release {
   avatarUrl: string
 }
 
+export interface Repo {
+  githubId: number
+  fullName: string
+  descr: string
+  homepage: string
+  stargazersCount: number
+  avatarUrl: string
+  starredAt: number
+}
+
+export interface AuthInput {
+  username: string
+  accessToken: string
+  idToken: string
+}
+
 class ReleasesService {
+  @Progress()
   async fetchReleases (): Promise<void> {
     const feedResp = await apiService.get<FeedResp>('')
     feedResp.releases = feedResp.releases.map(r => this.mapRelease(r)) // .slice(0, 5)
@@ -37,10 +56,38 @@ class ReleasesService {
     })
   }
 
+  @Progress()
+  async fetchRepos (): Promise<void> {
+    const starredRepos = await apiService.get<Repo[]>('/repos')
+
+    store.commit('extendState', {
+      starredRepos,
+    })
+  }
+
+  @Progress()
+  async getReleasesByRepo (repoFullName: string): Promise<Release[]> {
+    return apiService.get<Release[]>(`/repos/${repoFullName}/releases`)
+  }
+
+  @Progress()
+  async fetchReleasesByRepo (repoFullName: string): Promise<Release[]> {
+    return apiService.get<Release[]>(`/repos/${repoFullName}/releases/fetch`)
+  }
+
+  @Progress()
+  async auth (body: AuthInput): Promise<any> {
+    const r = await apiService.post(`/auth`, {
+      body,
+    })
+    console.log('auth', r)
+    return r
+  }
+
   private mapRelease (r: Release): Release {
     return {
       ...r,
-      descr: markdownService.parse((r.descr || '')), // .substr(0, 2000)),
+      descr: markdownService.parse(r.descr || ''), // .substr(0, 2000)),
     }
   }
 }

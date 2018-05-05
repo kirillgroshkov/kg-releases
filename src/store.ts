@@ -1,5 +1,6 @@
 import { env } from '@/environment/environment'
-import { FeedResp } from '@/srv/releases.service'
+import { UserInfo } from '@/srv/firebase.service'
+import { FeedResp, Repo } from '@/srv/releases.service'
 import { objectUtil } from '@/util/object.util'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -8,12 +9,15 @@ Vue.use(Vuex)
 
 export interface GlobalState {
   counter: number
+  user: UserInfo
   ghostMode: boolean
   feedResp: FeedResp
+  starredRepos: Repo[]
 }
 
 const DEF_STATE: GlobalState = {
   counter: 0,
+  user: {} as any,
   ghostMode: false,
   feedResp: {
     rateLimit: {} as any,
@@ -21,16 +25,20 @@ const DEF_STATE: GlobalState = {
     releases: [],
     lastStarred: [],
   },
+  starredRepos: [],
 }
 
 const PERSIST: string[] = [
   'counter',
   'feedResp',
+  'starredRepos',
+  // '',
 ]
 
-const initialState: GlobalState = localStorage.getItem('state')
-  ? JSON.parse(localStorage.getItem('state')!)
-  : DEF_STATE
+const initialState: GlobalState = {
+  ...DEF_STATE,
+  ...JSON.parse(localStorage.getItem('state') || '{}'),
+}
 
 export const store = new Vuex.Store<GlobalState>({
   strict: env().dev,
@@ -48,10 +56,20 @@ export const store = new Vuex.Store<GlobalState>({
     },
 
     setGhost (state: GlobalState, ghostMode = true): void {
-      Object.assign(state, {ghostMode})
+      Object.assign(state, { ghostMode })
     },
   },
 })
+
+// Shortcut function to get State, properly typed
+export function st (): GlobalState {
+  return store.state
+}
+
+// Shortcut
+export function commit (payload: Partial<GlobalState>): void {
+  store.commit('extendState', payload)
+}
 
 // Persist
 store.subscribe((m, state) => {
