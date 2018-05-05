@@ -23,7 +23,7 @@ export default class HomePage extends Vue {
   }
 
   auth () {
-    releasesService.auth()
+    // releasesService.auth()
   }
 }
 </script>
