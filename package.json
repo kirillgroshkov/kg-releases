@@ -7,10 +7,11 @@
   "scripts": {
     "precommit": "lint-staged",
     "serve": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "build": "node build/build.js",
+    "build": "node build/build.js && yarn copy-www",
     "tslint-all": "tslint 'src/**/*.{ts,tsx}' -t stylish --fix",
     "prettier-do": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss,graphql,json}'",
-    "prettier-all": "yarn prettier-do && yarn tslint-all"
+    "prettier-all": "yarn prettier-do && yarn tslint-all",
+    "copy-www": "cpx 'src/www/**' dist"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
