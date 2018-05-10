@@ -80,6 +80,11 @@ export default class LayoutComponent extends Vue {
 <style lang="scss" scoped>
   // @import "../scss/var";
 
+  main {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .md-app {
     // max-height: 400px;
     // min-height: 100vh;
