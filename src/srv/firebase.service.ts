@@ -4,7 +4,8 @@ import { releasesService } from '@/srv/releases.service'
 import { commit } from '@/store'
 import { jsonify, objectUtil } from '@/util/object.util'
 import { promiseUtil } from '@/util/promise.util'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 export interface UserInfo {
   uid: string
@@ -21,7 +22,7 @@ const CONFIG = {
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
 
-const githubAuthProvider = new firebase.auth.GithubAuthProvider()
+const githubAuthProvider = new firebase.auth!.GithubAuthProvider()
 
 class FirebaseService {
   private authStateChangedDeferred = promiseUtil.defer<void>()
@@ -30,13 +31,13 @@ class FirebaseService {
   @memo()
   async init (): Promise<void> {
     firebase.initializeApp(CONFIG)
-    firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
+    firebase.auth!().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
   }
 
   async login (): Promise<any> {
-    const r = await firebase.auth().signInWithPopup(githubAuthProvider)
+    const r = await firebase.auth!().signInWithPopup(githubAuthProvider)
     console.log(r)
-    const idToken = await firebase.auth().currentUser!.getIdToken()
+    const idToken = await firebase.auth!().currentUser!.getIdToken()
     console.log('idToken', idToken)
 
     await releasesService.auth({
@@ -50,7 +51,7 @@ class FirebaseService {
 
   @Progress()
   async logout (): Promise<void> {
-    await firebase.auth().signOut()
+    await firebase.auth!().signOut()
   }
 
   private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
@@ -58,7 +59,7 @@ class FirebaseService {
     this.authStateChangedDeferred.resolve()
 
     if (_user) {
-      const idToken = await firebase.auth().currentUser!.getIdToken()
+      const idToken = await firebase.auth!().currentUser!.getIdToken()
       // console.log('idToken', idToken)
       commit({
         user: {
