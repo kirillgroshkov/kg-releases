@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-container">
-      <md-app md-waterfall md-mode="fixed">
+      <md-app md-waterfall1 md-mode="fixed">
         <md-app-toolbar class="md-primary">
           <!--
           <md-button class="md-icon-button">

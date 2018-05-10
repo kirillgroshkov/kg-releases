@@ -55,6 +55,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { FeedResp, releasesService } from "../srv/releases.service"
 import { st } from '../store'
+import { promiseUtil } from '../util/promise.util';
 
 @Component
 export default class ReleasesPage extends Vue {
@@ -64,6 +65,7 @@ export default class ReleasesPage extends Vue {
 
   async mounted () {
     // this.loading = 'loading...'
+    await promiseUtil.delay(1000) // give time for animations to finish
     await releasesService.fetchReleases()
     // this.loading = ''
   }

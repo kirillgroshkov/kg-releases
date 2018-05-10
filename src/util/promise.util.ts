@@ -15,6 +15,14 @@ class PromiseUtil {
 
     return deferred
   }
+
+  async delay (ms: number): Promise<void> {
+    return new Promise<void>(r => setTimeout(r, ms))
+  }
+
+  async hangingPromise (): Promise<void> {
+    return new Promise<void>(r => {})
+  }
 }
 
 export const promiseUtil = new PromiseUtil()
