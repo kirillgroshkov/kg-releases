@@ -1,8 +1,17 @@
-
 body {
   // padding-top: 30px;
 }
 
 .__cov-progress {
-  transition: all .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+/*main123 {
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
+}*/
+
+.md-app-scroller {
+  // overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch !important;
 }
