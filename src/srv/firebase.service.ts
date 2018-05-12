@@ -46,7 +46,7 @@ class FirebaseService {
       idToken,
     })
 
-    return r
+    return authResp
   }
 
   @Progress()
