@@ -1,6 +1,6 @@
 import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
-import { releasesService } from '@/srv/releases.service'
+import { AuthResp, releasesService } from '@/srv/releases.service'
 import { commit } from '@/store'
 import { jsonify, objectUtil } from '@/util/object.util'
 import { promiseUtil } from '@/util/promise.util'
@@ -34,13 +34,13 @@ class FirebaseService {
     firebase.auth!().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
   }
 
-  async login (): Promise<any> {
+  async login (): Promise<AuthResp> {
     const r = await firebase.auth!().signInWithPopup(githubAuthProvider)
     console.log(r)
     const idToken = await firebase.auth!().currentUser!.getIdToken()
     console.log('idToken', idToken)
 
-    await releasesService.auth({
+    const authResp = await releasesService.auth({
       username: r.additionalUserInfo.username,
       accessToken: r.credential.accessToken,
       idToken,

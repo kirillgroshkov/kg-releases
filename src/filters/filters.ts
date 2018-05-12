@@ -7,6 +7,16 @@ Vue.filter('unixtimePretty', (v: number) => {
   return timeUtil.unixtimePretty(v)
 })
 
+Vue.filter('timePretty', (v: number) => {
+  if (!v) return ''
+  return timeUtil.timePretty(v)
+})
+
+Vue.filter('timeHM', (v: number) => {
+  if (!v) return ''
+  return timeUtil.timeHM(v)
+})
+
 Vue.filter('timeAgo', (v: number) => {
   if (!v) return ''
   return timeUtil.timeBetween(Date.now(), v * 1000)

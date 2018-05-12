@@ -10,3 +10,13 @@ body {
   overflow-y: scroll !important;
   -webkit-overflow-scrolling: touch !important;
 }
+
+.md-tabs-navigation .md-button {
+  // height: 56px !important; // 48
+  // height: 48px !important;
+}
+
+.md-toolbar,
+.md-toolbar-row {
+  min-height: 48px !important;
+}

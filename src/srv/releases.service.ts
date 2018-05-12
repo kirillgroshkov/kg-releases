@@ -45,6 +45,10 @@ export interface AuthInput {
   idToken: string
 }
 
+export interface AuthResp {
+  newUser: boolean
+}
+
 class ReleasesService {
   @Progress()
   async fetchReleases (): Promise<void> {
@@ -76,8 +80,8 @@ class ReleasesService {
   }
 
   @Progress()
-  async auth (body: AuthInput): Promise<any> {
-    const r = await apiService.post(`/auth`, {
+  async auth (body: AuthInput): Promise<AuthResp> {
+    const r = await apiService.post<AuthResp>(`/auth`, {
       body,
     })
     console.log('auth', r)

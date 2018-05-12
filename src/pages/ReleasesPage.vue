@@ -13,12 +13,17 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
           </div>
         </div>
 
-        <table border="1" cellspacing="0" cellpadding="6">
+        <table border="0" cellspacing="0" cellpadding="6" style="margin: 0 -8px 0 -6px;">
           <tr v-for="r in feedResp.releases" :key="r.id">
-            <td><img :src="r.avatarUrl" width="20" height="20"></td>
-            <td>{{r.repoFullName}}</td>
-            <td>{{r.v}}</td>
-            <td>{{r.published | unixtimePretty}}</td>
+            <td style="width: 40px;">
+              <img :src="r.avatarUrl" style="width: 30px; height: 30px;">
+            </td>
+            <td>
+              <a :href="`https://github.com/${r.repoFullName}`" target="_blank">{{r.repoFullName}}</a>
+              @
+              <a :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank">{{r.v}}</a>
+            </td>
+            <td>{{r.published | timeHM}}</td>
           </tr>
         </table>
 
@@ -51,16 +56,26 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
 </template>
 
 <script lang="ts">
+import { DateTime } from 'luxon';
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { FeedResp, releasesService } from "../srv/releases.service"
 import { st } from '../store'
 import { promiseUtil } from '../util/promise.util';
+import { LUXON_ISO_DATE_FORMAT } from '../util/time.util';
 
 @Component
 export default class ReleasesPage extends Vue {
   get feedResp (): FeedResp {
     return st().feedResp
+  }
+
+  get days(): string[] {
+    return [
+      DateTime.local(),
+      DateTime.local().minus({days: 1}),
+      DateTime.local().minus({days: 2}),
+    ].map(dt => dt.toFormat(LUXON_ISO_DATE_FORMAT))
   }
 
   async mounted () {

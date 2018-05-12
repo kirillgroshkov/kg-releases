@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 
 export const LUXON_ISO_DATE_FORMAT = 'yyyy-MM-dd'
 export const FORMAT_DATETIME_PRETTY = 'yyyy-MM-dd HH:mm:ss'
+export const FORMAT_TIME_PRETTY = 'HH:mm:ss'
+export const FORMAT_HM = 'HH:mm'
 
 class TimeUtil {
   timeBetween (ms1: number, ms2: number): string {
@@ -25,6 +27,14 @@ class TimeUtil {
 
   unixtimePretty (ts: number): string {
     return DateTime.fromMillis(ts * 1000).toFormat(FORMAT_DATETIME_PRETTY)
+  }
+
+  timePretty (ts: number): string {
+    return DateTime.fromMillis(ts * 1000).toFormat(FORMAT_TIME_PRETTY)
+  }
+
+  timeHM (ts: number): string {
+    return DateTime.fromMillis(ts * 1000).toFormat(FORMAT_HM)
   }
 }
 

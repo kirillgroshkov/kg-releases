@@ -2,24 +2,24 @@
   <div>
     <div class="page-container">
       <md-app md-waterfall1 md-mode="fixed">
-        <md-app-toolbar class="md-primary">
-          <!--
-          <md-button class="md-icon-button">
-            <md-icon>menu</md-icon>
-          </md-button>-->
-
+        <md-app-toolbar class="md-primary" v-if="user.uid">
           <!--
           <span class="md-title">My Title</span>
           -->
 
           <div class="md-toolbar-row">
             <div class="md-toolbar-section-start">
+              <md-button class="md-icon-button">
+                <md-icon>menu</md-icon>
+              </md-button>
+
               <md-tabs class="md-primary" style="flex: 4">
+                <!--
                 <md-tab md-label="Home" to="/" exact="true"></md-tab>
+                -->
                 <md-tab md-label="Releases" to="/releases"></md-tab>
                 <md-tab md-label="Projects" to="/projects"></md-tab>
-                <md-tab md-label="Posts"></md-tab>
-                <md-tab md-label="Favorites"></md-tab>
+                <md-tab md-label="Settings" to="/settings"></md-tab>
               </md-tabs>
             </div>
 
