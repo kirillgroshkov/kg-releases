@@ -35,7 +35,8 @@ class FirebaseService {
   }
 
   async login (): Promise<AuthResp> {
-    const r = await firebase.auth!().signInWithPopup(githubAuthProvider)
+    // const r = await firebase.auth!().signInWithPopup(githubAuthProvider)
+    const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
     console.log(r)
     const idToken = await firebase.auth!().currentUser!.getIdToken()
     console.log('idToken', idToken)
