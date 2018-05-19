@@ -1,4 +1,11 @@
 #
 # _redirects for netlify
 #
+
+#
+# force https
+#
+http://releases.netlify.com/* https://releases.netlify.com/:splat 301!
+
+# SPA
 /* /index.html 200
