@@ -1,0 +1,4 @@
+// Touch device: just :active
+// Mouse device: :hover and :active
+// Use: #{$active} {...}
+$active: 'body.no-touch &:hover, &:active';

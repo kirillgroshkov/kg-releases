@@ -12,6 +12,8 @@ class BootstrapService {
   async init (): Promise<void> {
     if (!env().dev) logEnvironment()
 
+    document.body.classList.add('ontouchstart' in document.documentElement ? 'touch' : 'no-touch')
+
     this.initDecorators()
 
     await firebaseService.init()

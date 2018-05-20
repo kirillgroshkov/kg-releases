@@ -117,7 +117,7 @@ export default class ReleasesPage extends Vue {
   .mainTr {
     transition: all .3s ease-out;
 
-    &:hover {
+    #{$active} {
       background-color: rgba(0, 0, 0, 0.05);
       cursor: pointer;
       transition: all .1s ease-in;

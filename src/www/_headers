@@ -1,0 +1,11 @@
+# 2592000 == 1 year
+/static/img/*
+  cache-control: public, max-age=2592000
+
+/static/js/*
+  cache-control: public, max-age=2592000
+
+/static/css/*
+  cache-control: public, max-age=2592000
+
+# 86400 == 1 day
