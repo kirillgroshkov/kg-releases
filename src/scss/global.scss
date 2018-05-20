@@ -20,3 +20,40 @@ body {
 .md-toolbar-row {
   min-height: 48px !important;
 }
+
+.md {
+  ul {
+    padding-left: 24px;
+    // list-style-type: disc;
+  }
+
+  code {
+    padding: 0 3px 2px;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2 {
+    font-size: 18px;
+    margin: 12px 0 6px;
+  }
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 14px;
+    margin: 12px 0 6px;
+  }
+}
+
+.slide-enter-active {
+  transition: opacity 0.5s;
+}
+.slide-leave-active {
+  transition: opacity 0.1s;
+}
+.slide-enter,
+.slide-leave-to {
+  opacity: 0;
+}

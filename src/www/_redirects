@@ -8,4 +8,8 @@
 http://releases.netlify.com/* https://releases.netlify.com/:splat 301!
 
 # SPA
-/* /index.html 200
+#/* /index.html 200
+/ /index.html 200
+/releases /index.html 200
+/projects/* /index.html 200
+/settings /index.html 200

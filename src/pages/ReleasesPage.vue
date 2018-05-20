@@ -13,43 +13,44 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
           </div>
         </div>
 
-        <table border="0" cellspacing="0" cellpadding="6" style="margin: 0 -8px 0 -6px;">
-          <tr v-for="r in feedResp.releases" :key="r.id">
-            <td style="width: 40px;">
-              <img :src="r.avatarUrl" style="width: 30px; height: 30px;">
-            </td>
-            <td>
-              <a :href="`https://github.com/${r.repoFullName}`" target="_blank">{{r.repoFullName}}</a>
-              @
-              <a :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank">{{r.v}}</a>
-            </td>
-            <td>{{r.published | timeHM}}</td>
-          </tr>
-        </table>
+        <div class="tableRow" style="margin: 0 -16px;">
+          <table border="0" cellspacing="0" cellpadding="6" style="width: 100% !important; max-width: 500px; table-layout: fixed; background-color1: pink">
+            <template v-for="r in feedResp.releases">
+              <tr class="mainTr" @click="toggleClick(r.id)">
+                <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top;">
+                  <img :src="r.avatarUrl" style="width: 40px; height: 40px;">
+                </td>
+                <td style="vertical-align: top; padding: 8px 0 0;">
+                  {{r.repoFullName}}<br>
+                  <span class="ver">{{r.v}}</span>
+                </td>
+                <td style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px;">
+                  {{r.published | timeHM}}
+                  <md-icon style="opacity: 0.4" v-if="expandedRow === r.id">expand_less</md-icon>
+                  <md-icon style="opacity: 0.4" v-else>expand_more</md-icon>
+                </td>
+              </tr>
 
-        <template v-for="r in feedResp.releases" v-if="false">
-          <div class="row titleRow">
-            <div class="col">
-              <h1>
-                <img :src="r.avatarUrl" width="80" height="80" class="img-thumbnail">
-                <a :href="`https://github.com/${r.repoFullName}`" target="_blank">{{r.repoFullName}}</a>
-                @
-                <a :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank">{{r.v}}</a>
-              </h1>
-            </div>
-          </div>
+              <transition name="slide">
+                <tr v-if="expandedRow === r.id" @click="toggleClick(r.id)">
+                  <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word;">
+                    <div>
+                      <md-button
+                        class="md-dense md-primary1 md-raised"
+                        style="margin-left: -4px; margin-top: 10px;"
+                        :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank"
+                      >
+                        view on github
+                      </md-button>
+                    </div>
 
-          <div class="row timeRow">
-            <div class="col">
-              {{r.published | unixtimePretty}} ({{r.published | timeAgo}} ago) {{r.name}}
-            </div>
-          </div>
-          <div class="row descrRow">
-            <div class="col" v-html="r.descr" style="padding-top: 20px; padding-bottom: 30px;">
-
-            </div>
-          </div>
-        </template>
+                    <div class="md" v-html="r.descr"></div>
+                  </td>
+                </tr>
+              </transition>
+            </template>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -66,6 +67,8 @@ import { LUXON_ISO_DATE_FORMAT } from '../util/time.util';
 
 @Component
 export default class ReleasesPage extends Vue {
+  expandedRow?: string = ''
+
   get feedResp (): FeedResp {
     return st().feedResp
   }
@@ -84,6 +87,15 @@ export default class ReleasesPage extends Vue {
     await releasesService.fetchReleases()
     // this.loading = ''
   }
+
+  toggleClick (id: string) {
+    if (this.expandedRow === id) {
+      this.expandedRow = ''
+    } else {
+      this.expandedRow = id
+    }
+
+  }
 }
 </script>
 
@@ -92,6 +104,24 @@ export default class ReleasesPage extends Vue {
 
   .releases {
     // padding-top: 20px;
+  }
+
+  .ver {
+    font-family: "Courier New";
+    font-size: 12px;
+    font-weight: bold;
+    color: #888;
+    line-height: 1;
+  }
+
+  .mainTr {
+    transition: all .3s ease-out;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: all .1s ease-in;
+    }
   }
 
   @media (max-width: 800px) {
