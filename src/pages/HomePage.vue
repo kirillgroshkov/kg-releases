@@ -3,9 +3,9 @@
     <div class="logo1"></div>
 
     <div class="descr1">
-      Keep track of opensource releases.<br>
+      Keep track of opensource releases 📦.<br>
       Free <small>(and will always be)</small>, <a href="https://github.com/kirillgroshkov/kg-releases" target="_blank">opensource</a>.<br>
-      Inspired by <small>[closed now]</small> Sibbell.
+      Inspired by Sibbell <small>(that was recently closed)</small>.
     </div>
 
 
@@ -89,7 +89,7 @@ export default class HomePage extends Vue {
     text-align: center;
     font-family: "Courier New";
     // font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
   }
 
   .flag-se {
