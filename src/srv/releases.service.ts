@@ -3,6 +3,8 @@ import { apiService } from '@/srv/api.service'
 import { markdownService } from '@/srv/markdown.service'
 import { st, store } from '@/store'
 import { objectUtil } from '@/util/object.util'
+import { LUXON_ISO_DATE_FORMAT } from '@/util/time.util'
+import { DateTime } from 'luxon'
 
 export interface FeedResp {
   rateLimit: RateLimit
@@ -52,7 +54,16 @@ export interface AuthResp {
 class ReleasesService {
   @Progress()
   async fetchReleases (): Promise<void> {
-    const feedResp = await apiService.get<FeedResp>('')
+    const minIncl = DateTime.utc()
+      .startOf('day')
+      .minus({ days: 20 })
+      .toFormat(LUXON_ISO_DATE_FORMAT)
+    const maxExcl = DateTime.utc()
+      .startOf('day')
+      .plus({ days: 1 })
+      .toFormat(LUXON_ISO_DATE_FORMAT)
+
+    const feedResp = await apiService.get<FeedResp>(`/?minIncl=${minIncl}&maxExcl=${maxExcl}`)
     feedResp.releases = feedResp.releases.map(r => this.mapRelease(r)) // .slice(0, 5)
 
     store.commit('extendState', {
