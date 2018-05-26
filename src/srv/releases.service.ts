@@ -6,7 +6,12 @@ import { objectUtil } from '@/util/object.util'
 import { LUXON_ISO_DATE_FORMAT } from '@/util/time.util'
 import { DateTime } from 'luxon'
 
+export interface ReleasesByDay {
+  [day: string]: Release[]
+}
+
 export interface FeedResp {
+  lastCheckedReleases: number
   rateLimit: RateLimit
   lastStarred: string[]
   starredRepos: number
@@ -52,23 +57,31 @@ export interface AuthResp {
 }
 
 class ReleasesService {
-  @Progress()
-  async fetchReleases (): Promise<void> {
-    const minIncl = DateTime.utc()
+  // @Progress()
+  async fetchReleases (minIncl: string, maxExcl?: string): Promise<FeedResp> {
+    console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
+    /*const minIncl = DateTime.utc()
       .startOf('day')
-      .minus({ days: 20 })
+      .minus({ days: 3 })
       .toFormat(LUXON_ISO_DATE_FORMAT)
     const maxExcl = DateTime.utc()
       .startOf('day')
       .plus({ days: 1 })
-      .toFormat(LUXON_ISO_DATE_FORMAT)
+      .toFormat(LUXON_ISO_DATE_FORMAT)*/
 
-    const feedResp = await apiService.get<FeedResp>(`/?minIncl=${minIncl}&maxExcl=${maxExcl}`)
-    feedResp.releases = feedResp.releases.map(r => this.mapRelease(r)) // .slice(0, 5)
+    const feedResp = await apiService.get<FeedResp>(`/?minIncl=${minIncl}&maxExcl=${maxExcl || ''}`)
+    feedResp.releases = feedResp.releases.map(r => this.mapRelease(r))
 
     store.commit('extendState', {
-      feedResp,
+      rateLimit: feedResp.rateLimit,
+      starredReposNumber: feedResp.starredRepos,
+      lastStarred: feedResp.lastStarred,
+      lastCheckedReleases: feedResp.lastCheckedReleases,
     })
+
+    store.commit('addReleases', feedResp.releases)
+
+    return feedResp
   }
 
   @Progress()

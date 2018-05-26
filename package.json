@@ -27,7 +27,7 @@
   "dependencies": {
     "firebase": "^5.0.1",
     "kg-shared": "^1.0.2",
-    "marked": "^0.3.19",
+    "marked": "^0.4.0",
     "vue": "^2.5.2",
     "vue-class-component": "^6.0.0",
     "vue-material": "^1.0.0-beta-10.2",

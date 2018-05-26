@@ -169,3 +169,9 @@ export function jsonify<T> (o: T): T {
   if (!o) return o
   return JSON.parse(JSON.stringify(o))
 }
+
+export function by<T = any> (a: T[] = [], by: string): { [k: string]: T } {
+  const r: { [k: string]: T } = {}
+  a.forEach((i: any) => (r[i[by]] = i))
+  return r
+}

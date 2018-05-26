@@ -1,6 +1,9 @@
+
 # releases.netlify.com
 
 > 🔥 Keep track of opensource releases 📦.
+
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 <div align="center">
     <img width="160" src="https://releases.netlify.com/static/img/logo1.png" alt="Releases">
@@ -48,3 +51,6 @@ Build for production with minification
 Build for production and view the bundle analyzer report
 
     yarn build --report
+
+
+*Support me with a Star!*

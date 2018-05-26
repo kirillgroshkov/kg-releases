@@ -55,4 +55,8 @@ w.reset = () => {
   store.commit('reset')
   return w.state()
 }
+w.getters = store.getters
 w.app = app
+w.clearReleases = () => {
+  store.commit('extendState', { releases: {} })
+}

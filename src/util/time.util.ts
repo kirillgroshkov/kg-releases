@@ -21,6 +21,10 @@ class TimeUtil {
     return `${d} days`
   }
 
+  now (): DateTime {
+    return DateTime.local()
+  }
+
   nowPretty (): string {
     return DateTime.local().toFormat(FORMAT_DATETIME_PRETTY)
   }
@@ -35,6 +39,10 @@ class TimeUtil {
 
   timeHM (ts: number): string {
     return DateTime.fromMillis(ts * 1000).toFormat(FORMAT_HM)
+  }
+
+  unixtimeToDay (ts: number): string {
+    return DateTime.fromMillis(ts * 1000).toFormat(LUXON_ISO_DATE_FORMAT)
   }
 }
 

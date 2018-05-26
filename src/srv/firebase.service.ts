@@ -4,6 +4,7 @@ import { AuthResp, releasesService } from '@/srv/releases.service'
 import { commit } from '@/store'
 import { jsonify, objectUtil } from '@/util/object.util'
 import { promiseUtil } from '@/util/promise.util'
+import { urlUtil } from '@/util/url.util'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -61,12 +62,22 @@ class FirebaseService {
 
     if (_user) {
       const idToken = await firebase.auth!().currentUser!.getIdToken()
+
       // console.log('idToken', idToken)
+      const user = {
+        ...objectUtil.pick<UserInfo>(_user, USER_FIELDS),
+        idToken,
+      }
+
+      // debug!
+      const qs = urlUtil.qs()
+      // console.log('qs', qs, _user)
+      if (qs.testUid) {
+        user.uid = qs.testUid
+      }
+
       commit({
-        user: {
-          ...objectUtil.pick<UserInfo>(_user, USER_FIELDS),
-          idToken,
-        },
+        user,
       })
     } else {
       commit({ user: {} as any })

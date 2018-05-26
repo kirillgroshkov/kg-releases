@@ -7,7 +7,7 @@ class ApiService extends FetchService {
   private get headers (): any {
     return objectUtil.filterFalsyValues({
       idToken: st().user.idToken,
-      uid: st().user.uid || 'kr87n2F9QLcBH3ZuYEUAPl0PK6J3', // default
+      uid: st().user.uid,
     })
   }
 

@@ -22,7 +22,7 @@ class BootstrapService {
     // await this.appInit()
   }
 
-  @Progress()
+  /*@Progress()
   private async appInit (): Promise<void> {
     try {
       await releasesService.fetchReleases()
@@ -33,7 +33,7 @@ class BootstrapService {
       }
       throw err
     }
-  }
+  }*/
 
   private initDecorators (): void {
     initProgressDecorator({

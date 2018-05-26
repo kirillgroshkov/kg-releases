@@ -2,20 +2,32 @@
   <div>
     <div>
       <div class="container releases">
-        <div class="row" v-if="feedResp.rateLimit">
+        <div class="row" v-if="state.rateLimit">
           <div class="col">
             <pre>
-Last updated: {{feedResp.lastCheckedReleases | unixtimePretty}}
-Starred repos: {{feedResp.starredRepos}}
-Rate limit remaining: {{feedResp.rateLimit.remaining}}
-Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
+Last updated: {{state.lastCheckedReleases | unixtimePretty}}
+Starred repos: {{state.starredReposNumber}}
+Rate limit remaining: {{state.rateLimit.remaining}}
+Rate limit reset: {{state.rateLimit.reset | unixtimePretty}}
             </pre>
           </div>
         </div>
 
-        <div class="tableRow" style="margin: 0 -16px;">
-          <table border="0" cellspacing="0" cellpadding="6" style="width: 100% !important; max-width: 500px; table-layout: fixed; background-color1: pink">
-            <template v-for="r in feedResp.releases">
+        <div v-if="false">
+          dayFirst={{dayFirst}}, dayLast={{dayLast}}
+          <div v-for="d in days" v-if="false">{{d}} {{(releasesByDay[d] || []).length}}</div>
+        </div>
+
+        <div class="tableRow" style="margin: -10px -16px 0;">
+          <template v-for="day in days">
+            <table v-if="(releasesByDay[day] || []).length" border="0" cellspacing="0" cellpadding="6" class="table1">
+              <tr>
+                <td colspan="3" style="padding-left: 66px;">{{ day }}</td>
+              </tr>
+            </table>
+
+            <table border="0" cellspacing="0" cellpadding="6" class="table1">
+            <template v-for="r in releasesByDay[day]">
               <tr class="mainTr" @click="toggleClick(r.id)">
                 <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top;">
                   <img :src="r.avatarUrl" style="width: 40px; height: 40px;">
@@ -49,6 +61,24 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
                 </tr>
               </transition>
             </template>
+            </table>
+          </template>
+
+          <table v-if="!dayLoading && !$store.getters.getReleasesCount()" border="0" cellspacing="0" cellpadding="6" class="table1">
+            <tr >
+              <td colspan="3">You have 0 releases in last 30 days. Either you have too few starred projects or maybe there's a
+                glitch in the system, so check back in 10 minutes.
+              </td>
+            </tr>
+          </table>
+
+          <table border="0" cellspacing="0" cellpadding="6" class="table1">
+            <tr v-if="dayLoading">
+              <td colspan="3">loading {{ dayLoading }}...</td>
+            </tr>
+            <tr v-else>
+              <td colspan="3"><md-button class="md-raised md-primary" @click="loadMore()">load more...</md-button></td>
+            </tr>
           </table>
         </div>
       </div>
@@ -60,32 +90,104 @@ Rate limit reset: {{feedResp.rateLimit.reset | unixtimePretty}}
 import { DateTime } from 'luxon';
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { FeedResp, releasesService } from "../srv/releases.service"
-import { st } from '../store'
+import { Progress } from '../decorators/progress.decorator';
+import { FeedResp, Release, ReleasesByDay, releasesService } from "../srv/releases.service"
+import { GlobalState, st, store } from "../store"
 import { promiseUtil } from '../util/promise.util';
-import { LUXON_ISO_DATE_FORMAT } from '../util/time.util';
+import { LUXON_ISO_DATE_FORMAT, timeUtil } from "../util/time.util"
 
 @Component
 export default class ReleasesPage extends Vue {
   expandedRow?: string = ''
+  // days: string[] = []
+  maxReleases = 30
+  dayFirst: string = ''
+  dayLast: string = ''
+  dayLoading: string = ''
+  dayMax: string = ''
+  releasesByDay: ReleasesByDay = {}
 
-  get feedResp (): FeedResp {
-    return st().feedResp
+  get dayNext (): string {
+    if (!this.dayLast) return ''
+    return DateTime.fromISO(this.dayLast, {zone: 'utc'})
+      .minus({days: 1})
+      .toFormat(LUXON_ISO_DATE_FORMAT)
   }
+
+  get state (): GlobalState {
+    return this.$store.state
+  }
+
+  /*get releasesByDay (): ReleasesByDay {
+    return store.getters.getReleasesByDay()
+  }*/
 
   get days(): string[] {
-    return [
-      DateTime.local(),
-      DateTime.local().minus({days: 1}),
-      DateTime.local().minus({days: 2}),
-    ].map(dt => dt.toFormat(LUXON_ISO_DATE_FORMAT))
+    const days: string[] = []
+    if (!this.dayFirst ||!this.dayLast) return []
+
+    for (
+      let day = DateTime.fromISO(this.dayFirst, {zone: 'utc'});
+      day.toFormat(LUXON_ISO_DATE_FORMAT) >= this.dayLast;
+      day = day.minus({days: 1})
+    ) {
+      days.push(day.toFormat(LUXON_ISO_DATE_FORMAT))
+    }
+
+    return days
   }
 
+  @Progress()
   async mounted () {
-    // this.loading = 'loading...'
+    this.maxReleases = 30
+    const today = DateTime.utc()
+    const todayStr = today.toFormat(LUXON_ISO_DATE_FORMAT)
+    this.dayMax = today.minus({days: 30}).toFormat(LUXON_ISO_DATE_FORMAT)
+    this.releasesByDay = store.getters.getReleasesByDay()
+    this.dayFirst = todayStr
+    this.dayLast = store.getters.getReleasesLastDay() || todayStr
+
     await promiseUtil.delay(1000) // give time for animations to finish
-    await releasesService.fetchReleases()
+    this.dayLast = await this.loadDay(today, 0)
+    this.dayLoading = ''
+    // console.log('dayLast end: ' + this.dayLast)
+
+    // cleanAfterLastDay
+    store.commit('cleanAfterLastDay', this.dayLast)
+  }
+
+  private async loadDay (day: DateTime, loaded: number): Promise<string> {
+    const dayStr = day.toFormat(LUXON_ISO_DATE_FORMAT)
+    this.dayLoading = dayStr
+    const nextDay = day.plus({days: 1})
+    const nextDayStr = nextDay.toFormat(LUXON_ISO_DATE_FORMAT)
+    // this.loading = 'loading...'
+    // _this.dayLast = dayStr
+    this.dayLast = store.getters.getReleasesLastDay()
+    // console.log('dayLast: ' + this.dayLast)
+
+    const feedResp = await releasesService.fetchReleases(dayStr, nextDayStr)
+    this.releasesByDay = store.getters.getReleasesByDay()
     // this.loading = ''
+    // const releasesCount = Object.keys(st().releases).length
+    loaded += feedResp.releases.length
+    // console.log('loaded: ' + loaded)
+
+    if (loaded < this.maxReleases && dayStr > this.dayMax) {
+      const yesterday = day.minus({days: 1})
+      return this.loadDay(yesterday, loaded)
+    }
+
+    return dayStr
+  }
+
+  async loadMore () {
+    const releasesCount = Object.keys(st().releases).length
+    this.maxReleases = releasesCount + 30
+    this.dayMax = DateTime.fromISO(this.dayMax, {zone: 'utc'}).minus({days: 30}).toFormat(LUXON_ISO_DATE_FORMAT)
+    const dayNext = DateTime.fromISO(this.dayLast, {zone: 'utc'}).minus({days: 1})
+    this.dayLast = await this.loadDay(dayNext, releasesCount)
+    this.dayLoading = ''
   }
 
   toggleClick (id: string) {
@@ -122,6 +224,13 @@ export default class ReleasesPage extends Vue {
       cursor: pointer;
       transition: all .1s ease-in;
     }
+  }
+
+  .table1 {
+    width: 100% !important;
+    max-width: 500px;
+    table-layout: fixed;
+    background-color1: pink;
   }
 
   @media (max-width: 800px) {
