@@ -1,6 +1,7 @@
 import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
 import { AuthResp, releasesService } from '@/srv/releases.service'
+import { sentryService } from '@/srv/sentry.service'
 import { commit } from '@/store'
 import { jsonify, objectUtil } from '@/util/object.util'
 import { promiseUtil } from '@/util/promise.util'
@@ -54,6 +55,7 @@ class FirebaseService {
   @Progress()
   async logout (): Promise<void> {
     await firebase.auth!().signOut()
+    sentryService.setUserContext({})
   }
 
   private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
@@ -75,6 +77,8 @@ class FirebaseService {
       if (qs.testUid) {
         user.uid = qs.testUid
       }
+
+      sentryService.setUserContext(user)
 
       commit({
         user,
