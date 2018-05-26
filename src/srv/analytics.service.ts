@@ -3,7 +3,7 @@ import { scriptUtil } from '@/util/script.util'
 
 class AnalyticsService {
   init (): void {
-    this.initGA()
+    // this.initGA()
     this.initHotjar()
   }
 

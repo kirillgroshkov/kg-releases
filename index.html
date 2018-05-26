@@ -14,5 +14,16 @@
   </head>
   <body>
     <div id="app">loading...</div>
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6342858-21"></script>
+    <script>
+      window.prod = location.hostname === 'releases.netlify.com'
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-6342858-21');
+    </script>
   </body>
 </html>
