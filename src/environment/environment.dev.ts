@@ -10,6 +10,8 @@ export class EnvironmentDev extends EnvironmentProd {
 
   sentryDsn = undefined
   // sentryEnabled = false
+
+  hotjarId = undefined
 }
 
 export default new EnvironmentDev()

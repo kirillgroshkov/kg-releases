@@ -3,6 +3,7 @@ import { memo } from '@/decorators/memo.decorator'
 import { initProgressDecorator } from '@/decorators/progress.decorator'
 import { env, logEnvironment } from '@/environment/environment'
 import { app } from '@/main'
+import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { sentryService } from '@/srv/sentry.service'
 import { store } from '@/store'
@@ -13,6 +14,8 @@ class BootstrapService {
     if (!env().dev) logEnvironment()
 
     sentryService.init()
+
+    analyticsService.init()
 
     document.body.classList.add('ontouchstart' in document.documentElement ? 'touch' : 'no-touch')
 

@@ -8,6 +8,8 @@ export class EnvironmentProd {
 
   sentryDsn: string | undefined = 'https://f15980b092a741ff8e903824cf2769fe@sentry.io/1214161'
   // sentryEnabled = true
+
+  hotjarId: number | undefined = 894902
 }
 
 export type Environment = EnvironmentProd
