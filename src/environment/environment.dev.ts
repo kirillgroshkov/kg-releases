@@ -12,6 +12,7 @@ export class EnvironmentDev extends EnvironmentProd {
   // sentryEnabled = false
 
   hotjarId = undefined
+  gaId = undefined
 }
 
 export default new EnvironmentDev()

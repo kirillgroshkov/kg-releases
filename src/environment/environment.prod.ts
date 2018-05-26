@@ -10,6 +10,8 @@ export class EnvironmentProd {
   // sentryEnabled = true
 
   hotjarId: number | undefined = 894902
+
+  gaId: string | undefined = 'UA-6342858-21'
 }
 
 export type Environment = EnvironmentProd

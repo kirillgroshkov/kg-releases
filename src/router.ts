@@ -3,6 +3,7 @@ import ProjectPage from '@/pages/ProjectPage.vue'
 import ProjectsPage from '@/pages/ProjectsPage.vue'
 import ReleasesPage from '@/pages/ReleasesPage.vue'
 import SettingsPage from '@/pages/SettingsPage.vue'
+import { analyticsService } from '@/srv/analytics.service'
 import { bootstrapService } from '@/srv/bootstrap.service'
 import { st, store } from '@/store'
 import Vue from 'vue'
@@ -59,5 +60,8 @@ export const router = new Router({
 router.beforeEach(async (to, from, next) => {
   // ensure Bootstrap is finished before rendering any route
   await bootstrapService.init()
+
+  analyticsService.pageView(to.path)
+
   next()
 })

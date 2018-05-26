@@ -1,5 +1,6 @@
 import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
+import { analyticsService } from '@/srv/analytics.service'
 import { AuthResp, releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { commit } from '@/store'
@@ -71,14 +72,15 @@ class FirebaseService {
         idToken,
       }
 
+      sentryService.setUserContext(user)
+      analyticsService.setUserId(user.uid)
+
       // debug!
       const qs = urlUtil.qs()
       // console.log('qs', qs, _user)
       if (qs.testUid) {
         user.uid = qs.testUid
       }
-
-      sentryService.setUserContext(user)
 
       commit({
         user,

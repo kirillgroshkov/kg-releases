@@ -33,15 +33,16 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { router } from '../router';
+import { analyticsService } from '../srv/analytics.service';
 import { firebaseService } from '../srv/firebase.service'
-import { releasesService } from '../srv/releases.service';
 
 @Component
 export default class HomePage extends Vue {
   async login () {
+    analyticsService.event('loginClick')
     const authResp = await firebaseService.login()
     if (authResp.newUser) {
-      alert('newUser intro!')
+      alert('Welcome to Releases!\nDepending on the number of stars it may take few minutes to import your starred repos and scan them.')
     }
     router.push('/releases')
   }
