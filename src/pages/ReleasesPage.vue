@@ -38,13 +38,13 @@ Rate limit reset: {{state.rateLimit.reset | unixtimePretty}}
                 </td>
                 <td style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px;">
                   {{r.published | timeHM}}
-                  <md-icon style="opacity: 0.4" v-if="expandedRow === r.id">expand_less</md-icon>
+                  <md-icon style="opacity: 0.4" v-if="expandedRows.has(r.id)">expand_less</md-icon>
                   <md-icon style="opacity: 0.4" v-else>expand_more</md-icon>
                 </td>
               </tr>
 
               <transition name="slide">
-                <tr v-if="expandedRow === r.id" @click="toggleClick(r.id)">
+                <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id)">
                   <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word;">
                     <div>
                       <md-button
@@ -98,7 +98,7 @@ import { LUXON_ISO_DATE_FORMAT, timeUtil } from "../util/time.util"
 
 @Component
 export default class ReleasesPage extends Vue {
-  expandedRow?: string = ''
+  expandedRows = new Set<string>()
   // days: string[] = []
   maxReleases = 30
   dayFirst: string = ''
@@ -191,12 +191,12 @@ export default class ReleasesPage extends Vue {
   }
 
   toggleClick (id: string) {
-    if (this.expandedRow === id) {
-      this.expandedRow = ''
+    if (this.expandedRows.has(id)) {
+      this.expandedRows.delete(id)
     } else {
-      this.expandedRow = id
+      this.expandedRows.add(id)
     }
-
+    this.expandedRows = new Set(this.expandedRows)
   }
 }
 </script>
