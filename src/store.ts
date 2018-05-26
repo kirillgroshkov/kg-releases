@@ -48,6 +48,8 @@ const initialState: GlobalState = {
 // const qs = urlUtil.qs()
 // if (qs.testUid) initialState = {...DEF_STATE}
 
+const releaseCompareDesc = (a: Release, b: Release) => b.published - a.published
+
 export const store = new Vuex.Store<GlobalState>({
   strict: env().dev,
   state: initialState,
@@ -60,6 +62,9 @@ export const store = new Vuex.Store<GlobalState>({
         if (!m[day]) m[day] = []
         m[day].push(r)
       })
+
+      // sort
+      Object.values(m).forEach(releases => releases.sort(releaseCompareDesc))
 
       return m
     },
