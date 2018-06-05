@@ -3,7 +3,10 @@
 
 > 🔥 Keep track of opensource releases 📦.
 
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m780525367-7efd11da78ed3262679d967a.svg?style=flat-square)](https://stats.uptimerobot.com/LvXvNC2j5)
+![](https://circleci.com/gh/kirillgroshkov/kg-releases.svg?style=shield&circle-token=0726fc25e3099b913bea54e5f6980e8ba15abea9)
+[![](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 <div align="center">
     <img width="160" src="https://releases.netlify.com/static/img/logo1.png" alt="Releases">
@@ -23,6 +26,8 @@ Watch releases of your Github starred repositories.
 
 One click to see release notes.
 
+Backend with all the magic is [here](https://github.com/kirillgroshkov/kg-backend).
+
 # Features
 
 - Free, opensource.
@@ -34,9 +39,18 @@ Feature requests, issues, PRs are welcome!
 
 # Roadmap
 
-- Reorganize history to allow go further back in time.
-- Get browser push notification on all or selected releases.
-- Parse `changelog.md`, `history.md` (and similar) in case when github release notes are empty.
+- [x] Reorganize history to allow go further back in time.
+- [ ] Email notifications
+- [ ] Get browser push notification on all or selected releases.
+- [ ] Parse `changelog.md`, `history.md` (and similar) in case when github release notes are empty.
+
+# Stack (frontend)
+
+- Vue
+- Vue-material
+- Typescript
+- Firebase Auth
+- Hosted at amazing Netlify
 
 ## Develop
 
