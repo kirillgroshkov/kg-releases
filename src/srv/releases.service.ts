@@ -1,10 +1,8 @@
+import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
 import { apiService } from '@/srv/api.service'
 import { markdownService } from '@/srv/markdown.service'
-import { st, store } from '@/store'
-import { objectUtil } from '@/util/object.util'
-import { LUXON_ISO_DATE_FORMAT } from '@/util/time.util'
-import { DateTime } from 'luxon'
+import { extendState, st, store } from '@/store'
 
 export interface ReleasesByDay {
   [day: string]: Release[]
@@ -52,8 +50,24 @@ export interface AuthInput {
   idToken: string
 }
 
-export interface AuthResp {
-  newUser: boolean
+export interface UserSettings {
+  notificationEmail?: string
+  notifyEmailRealtime?: boolean
+  notifyEmailDaily?: boolean
+}
+
+// frontend model of User
+export interface UserFM {
+  id: string
+  username: string
+  starredReposCount: number
+  displayName?: string
+  settings: UserSettings
+}
+
+export interface BackendResponse {
+  newUser?: boolean
+  userFM?: UserFM
 }
 
 class ReleasesService {
@@ -104,12 +118,42 @@ class ReleasesService {
   }
 
   @Progress()
-  async auth (body: AuthInput): Promise<AuthResp> {
-    const r = await apiService.post<AuthResp>(`/auth`, {
+  async auth (body: AuthInput): Promise<BackendResponse> {
+    const br = await apiService.post<BackendResponse>(`/auth`, {
       body,
     })
-    console.log('auth', r)
-    return r
+    console.log('auth', br)
+
+    this.onBackendResponse(br)
+
+    return br
+  }
+
+  async saveUserSettings (body: UserSettings): Promise<BackendResponse> {
+    const br = await apiService.put<BackendResponse>(`/userSettings`, {
+      body,
+    })
+
+    this.onBackendResponse(br)
+
+    return br
+  }
+
+  @memo()
+  async init (): Promise<BackendResponse> {
+    const br = await apiService.get<BackendResponse>(`/init`)
+
+    this.onBackendResponse(br)
+
+    return br
+  }
+
+  onBackendResponse (br: BackendResponse): void {
+    if (br.userFM) {
+      extendState({
+        userFM: br.userFM,
+      })
+    }
   }
 
   private mapRelease (r: Release): Release {

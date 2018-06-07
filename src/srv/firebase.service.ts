@@ -1,9 +1,9 @@
 import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
 import { analyticsService } from '@/srv/analytics.service'
-import { AuthResp, releasesService } from '@/srv/releases.service'
+import { BackendResponse, releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
-import { commit } from '@/store'
+import { extendState } from '@/store'
 import { jsonify, objectUtil } from '@/util/object.util'
 import { promiseUtil } from '@/util/promise.util'
 import { urlUtil } from '@/util/url.util'
@@ -34,23 +34,23 @@ class FirebaseService {
   @memo()
   async init (): Promise<void> {
     firebase.initializeApp(CONFIG)
-    firebase.auth!().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
+    firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
   }
 
-  async login (): Promise<AuthResp> {
+  async login (): Promise<BackendResponse> {
     const r = await firebase.auth!().signInWithPopup(githubAuthProvider)
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
     console.log(r)
     const idToken = await firebase.auth!().currentUser!.getIdToken()
     console.log('idToken', idToken)
 
-    const authResp = await releasesService.auth({
+    const br = await releasesService.auth({
       username: r.additionalUserInfo.username,
       accessToken: r.credential.accessToken,
       idToken,
     })
 
-    return authResp
+    return br
   }
 
   @Progress()
@@ -61,7 +61,6 @@ class FirebaseService {
 
   private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
     console.log('onAuthStateChanged, user: ', jsonify(_user))
-    this.authStateChangedDeferred.resolve()
 
     if (_user) {
       const idToken = await firebase.auth!().currentUser!.getIdToken()
@@ -82,12 +81,17 @@ class FirebaseService {
         user.uid = qs.testUid
       }
 
-      commit({
+      extendState({
         user,
       })
     } else {
-      commit({ user: {} as any })
+      extendState({
+        user: {} as any,
+        userFM: { settings: {} } as any,
+      })
     }
+
+    this.authStateChangedDeferred.resolve()
   }
 }
 

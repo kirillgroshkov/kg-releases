@@ -5,8 +5,9 @@ import { env, logEnvironment } from '@/environment/environment'
 import { app } from '@/main'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
+import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
-import { store } from '@/store'
+import { st, store } from '@/store'
 
 class BootstrapService {
   @memo()
@@ -24,21 +25,10 @@ class BootstrapService {
     await firebaseService.init()
     await firebaseService.authStateChanged
 
-    // await this.appInit()
-  }
-
-  /*@Progress()
-  private async appInit (): Promise<void> {
-    try {
-      await releasesService.fetchReleases()
-    } catch (err) {
-      if (err && err.response && err.response.status === 401) {
-        location.href = `${env().loginUrl}?autoLogin=1&return=${location.href}`
-        return
-      }
-      throw err
+    if (st().user.uid) {
+      releasesService.init() // async
     }
-  }*/
+  }
 
   private initDecorators (): void {
     initProgressDecorator({

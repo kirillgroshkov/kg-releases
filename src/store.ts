@@ -1,6 +1,6 @@
 import { env } from '@/environment/environment'
 import { UserInfo } from '@/srv/firebase.service'
-import { FeedResp, RateLimit, Release, ReleasesByDay, Repo } from '@/srv/releases.service'
+import { FeedResp, RateLimit, Release, ReleasesByDay, Repo, UserFM } from '@/srv/releases.service'
 import { by, objectUtil } from '@/util/object.util'
 import { timeUtil } from '@/util/time.util'
 import { urlUtil } from '@/util/url.util'
@@ -12,6 +12,7 @@ Vue.use(Vuex)
 export interface GlobalState {
   counter: number
   user: UserInfo
+  userFM: UserFM
   ghostMode: boolean
   lastCheckedReleases: number
   rateLimit: RateLimit
@@ -24,6 +25,9 @@ export interface GlobalState {
 const DEF_STATE: GlobalState = {
   counter: 0,
   user: {} as any,
+  userFM: {
+    settings: {},
+  } as any,
   ghostMode: false,
   lastCheckedReleases: 0,
   rateLimit: {} as any,
@@ -128,7 +132,7 @@ export function st (): GlobalState {
 }
 
 // Shortcut
-export function commit (payload: Partial<GlobalState>): void {
+export function extendState (payload: Partial<GlobalState>): void {
   store.commit('extendState', payload)
 }
 

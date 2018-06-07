@@ -9,9 +9,11 @@
 
           <div class="md-toolbar-row">
             <div class="md-toolbar-section-start">
+              <!--
               <md-button class="md-icon-button">
                 <md-icon>menu</md-icon>
               </md-button>
+              -->
 
               <md-tabs class="md-primary" style="flex: 4">
                 <!--
