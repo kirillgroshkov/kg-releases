@@ -17,7 +17,17 @@ Vue.config.productionTip = false
 
 // Material
 // import VueMaterial from 'vue-material'
-import {MdApp, MdContent, MdToolbar, MdButton, MdIcon, MdTabs, MdAvatar, MdField, MdCheckbox} from 'vue-material/dist/components'
+import {
+  MdApp,
+  MdContent,
+  MdToolbar,
+  MdButton,
+  MdIcon,
+  MdTabs,
+  MdAvatar,
+  MdField,
+  MdCheckbox,
+} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 // Vue.use(VueMaterial)
