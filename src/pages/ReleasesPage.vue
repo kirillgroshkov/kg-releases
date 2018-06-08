@@ -50,7 +50,7 @@ Rate limit reset: {{state.rateLimit.reset | unixtimePretty}}
                       <md-button
                         class="md-dense md-primary1 md-raised"
                         style="margin-left: -4px; margin-top: 10px;"
-                        :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank"
+                        :href="`https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`" target="_blank" rel="noopener"
                       >
                         view on github
                       </md-button>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>Project {{fullName}} <a :href="`https://github.com/${fullName}`" target="_blank">github</a></div>
+    <div>Project {{fullName}} <a :href="`https://github.com/${fullName}`" target="_blank" rel="noopener">github</a></div>
     <div>
       <md-button class="md-raised md-primary" @click="fetchFromGithub()">Fetch from github</md-button>
     </div>

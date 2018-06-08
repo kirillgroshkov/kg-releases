@@ -16,10 +16,20 @@ import RootComponent from './cmp/RootComponent.vue'
 Vue.config.productionTip = false
 
 // Material
-import VueMaterial from 'vue-material'
+// import VueMaterial from 'vue-material'
+import {MdApp, MdContent, MdToolbar, MdButton, MdIcon, MdTabs, MdAvatar, MdField, MdCheckbox} from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
-Vue.use(VueMaterial)
+// Vue.use(VueMaterial)
+Vue.use(MdApp)
+Vue.use(MdContent)
+Vue.use(MdToolbar)
+Vue.use(MdTabs)
+Vue.use(MdAvatar)
+Vue.use(MdButton)
+Vue.use(MdIcon)
+Vue.use(MdField)
+Vue.use(MdCheckbox)
 
 // Progress bar
 const VueProgressBar = require('vue-progressbar')
@@ -37,9 +47,6 @@ Vue.use(VueProgressBar, {
 export const app = new Vue({
   router,
   store,
-  // el: '#app',
-  // components: { RootComponent },
-  // template: '<RootComponent/>',
   render: h => h(RootComponent),
 }).$mount('#app')
 
