@@ -61,9 +61,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { UserInfo } from "../srv/firebase.service";
-import { st } from '../store';
-import { jsonify } from '../util/object.util';
+import { UserInfo } from '../srv/firebase.service'
+import { st } from '../store'
+import { jsonify } from '../util/object.util'
 
 @Component
 export default class LayoutComponent extends Vue {

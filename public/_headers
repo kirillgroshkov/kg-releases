@@ -2,10 +2,10 @@
 /static/img/*
   cache-control: public, max-age=2592000
 
-/static/js/*
+/js/*
   cache-control: public, max-age=2592000
 
-/static/css/*
+/css/*
   cache-control: public, max-age=2592000
 
 # 86400 == 1 day

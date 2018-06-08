@@ -87,24 +87,24 @@ Rate limit reset: {{state.rateLimit.reset | unixtimePretty}}
 </template>
 
 <script lang="ts">
-import { DateTime } from 'luxon';
+import { DateTime } from 'luxon'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Progress } from '../decorators/progress.decorator';
-import { FeedResp, Release, ReleasesByDay, releasesService } from "../srv/releases.service"
-import { GlobalState, st, store } from "../store"
-import { promiseUtil } from '../util/promise.util';
-import { LUXON_ISO_DATE_FORMAT, timeUtil } from "../util/time.util"
+import { Progress } from '../decorators/progress.decorator'
+import { FeedResp, Release, ReleasesByDay, releasesService } from '../srv/releases.service'
+import { GlobalState, st, store } from '../store'
+import { promiseUtil } from '../util/promise.util'
+import { LUXON_ISO_DATE_FORMAT, timeUtil } from '../util/time.util'
 
 @Component
 export default class ReleasesPage extends Vue {
   expandedRows = new Set<string>()
   // days: string[] = []
   maxReleases = 30
-  dayFirst: string = ''
-  dayLast: string = ''
-  dayLoading: string = ''
-  dayMax: string = ''
+  dayFirst = ''
+  dayLast = ''
+  dayLoading = ''
+  dayMax = ''
   releasesByDay: ReleasesByDay = {}
 
   get dayNext (): string {
@@ -122,9 +122,9 @@ export default class ReleasesPage extends Vue {
     return store.getters.getReleasesByDay()
   }*/
 
-  get days(): string[] {
+  get days (): string[] {
     const days: string[] = []
-    if (!this.dayFirst ||!this.dayLast) return []
+    if (!this.dayFirst || !this.dayLast) return []
 
     for (
       let day = DateTime.fromISO(this.dayFirst, {zone: 'utc'});

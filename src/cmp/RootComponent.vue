@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
+import LayoutComponent from '@/cmp/LayoutComponent.vue'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import LayoutComponent from '@/cmp/LayoutComponent.vue'
 
 @Component({
   components: {

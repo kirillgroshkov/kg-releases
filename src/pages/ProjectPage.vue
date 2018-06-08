@@ -14,9 +14,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Release, releasesService, Repo } from "../srv/releases.service"
-import { GlobalState, st, store } from "../store"
-import { promiseUtil } from '../util/promise.util';
+import { Release, releasesService, Repo } from '../srv/releases.service'
+import { GlobalState, st, store } from '../store'
+import { promiseUtil } from '../util/promise.util'
 
 @Component
 export default class ProjectPage extends Vue {

@@ -32,17 +32,17 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Progress } from '../decorators/progress.decorator';
-import { router } from '../router';
-import { analyticsService } from '../srv/analytics.service';
+import { Progress } from '../decorators/progress.decorator'
+import { router } from '../router'
+import { analyticsService } from '../srv/analytics.service'
 import { firebaseService } from '../srv/firebase.service'
-import { releasesService, UserFM, UserSettings } from "../srv/releases.service"
-import { st } from '../store';
-import { jsonify, objectUtil } from "../util/object.util"
+import { releasesService, UserFM, UserSettings } from '../srv/releases.service'
+import { st } from '../store'
+import { jsonify, objectUtil } from '../util/object.util'
 
 @Component
 export default class SettingsPage extends Vue {
-  notificationEmail: string = ''
+  notificationEmail = ''
   a = ''
 
   // userFM: UserFM = {} as UserFM

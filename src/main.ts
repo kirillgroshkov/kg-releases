@@ -37,10 +37,11 @@ Vue.use(VueProgressBar, {
 export const app = new Vue({
   router,
   store,
-  el: '#app',
-  components: { RootComponent },
-  template: '<RootComponent/>',
-})
+  // el: '#app',
+  // components: { RootComponent },
+  // template: '<RootComponent/>',
+  render: h => h(RootComponent),
+}).$mount('#app')
 
 bootstrapService.init() // async
 
