@@ -13,7 +13,7 @@ workbox.core.setCacheNameDetails({
 workbox.routing.registerRoute(
   new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
   workbox.strategies.cacheFirst({
-    cacheName: 'googlefonts',
+    cacheName: 'releases-googlefonts',
     plugins: [
       new workbox.expiration.Plugin({
         maxEntries: 30,
@@ -26,7 +26,7 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
   /\.(?:png|gif|jpg|jpeg|svg)$/,
   workbox.strategies.cacheFirst({
-    cacheName: 'images',
+    cacheName: 'releases-images',
     plugins: [
       new workbox.expiration.Plugin({
         maxEntries: 60,
@@ -40,7 +40,7 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
   new RegExp('^/(?:js|css)/.*'),
   workbox.strategies.cacheFirst({
-    cacheName: 'jscss',
+    cacheName: 'releases-jscss',
     plugins: [
       new workbox.expiration.Plugin({
         maxEntries: 30,
