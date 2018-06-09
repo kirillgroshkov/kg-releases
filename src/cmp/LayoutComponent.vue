@@ -20,7 +20,7 @@
                 <md-tab md-label="Home" to="/" exact="true"></md-tab>
                 -->
                 <md-tab md-label="Releases" to="/releases"></md-tab>
-                <md-tab md-label="Projects" to="/projects"></md-tab>
+                <md-tab md-label="Projects" to="/projects" v-if="false"></md-tab>
                 <md-tab md-label="Settings" to="/settings"></md-tab>
               </md-tabs>
             </div>
