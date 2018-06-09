@@ -1,4 +1,6 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js')
+
+// importScripts("/precache-manifest.7cb96de274005dd5b70689e45d55bd9a.js", "https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
+// importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js')
 
 // workbox.setConfig({ debug: false })
 
@@ -8,6 +10,28 @@ workbox.core.setCacheNameDetails({
   precache: 'precache',
   runtime: 'runtime',
 })
+
+const precacheManifest = self.__precacheManifest || []
+
+const indexRoute = precacheManifest.find(i => i.url === '/index.html')
+if (indexRoute) {
+  const urls = [
+    '/releases',
+    '/settings',
+  ]
+  urls.forEach(url => {
+    precacheManifest.push({
+      url,
+      revision: indexRoute.revision,
+    })
+  })
+}
+
+console.log('manifest', precacheManifest)
+
+// Precache
+workbox.precaching.precacheAndRoute(precacheManifest)
+// workbox.precaching.precacheAndRoute([])
 
 // Google Fonts: cacheFirst
 workbox.routing.registerRoute(
@@ -37,7 +61,7 @@ workbox.routing.registerRoute(
 )
 
 // JS, CSS: cacheFirst
-workbox.routing.registerRoute(
+/*workbox.routing.registerRoute(
   new RegExp('^/(?:js|css)/.*'),
   workbox.strategies.cacheFirst({
     cacheName: 'releases-jscss',
@@ -48,7 +72,7 @@ workbox.routing.registerRoute(
       }),
     ],
   }),
-)
+)*/
 
 // GA
 workbox.googleAnalytics.initialize()
