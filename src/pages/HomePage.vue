@@ -4,7 +4,7 @@
 
     <div class="descr1">
       Keep track of opensource releases 📦.<br>
-      Free <small>(and will always be)</small>, <a href="https://github.com/kirillgroshkov/kg-releases" target="_blank" rel="noopener">opensource</a>.<br>
+      Free <small>(and will always be)</small>, opensource.<br>
       Inspired by Sibbell <small>(that was recently closed)</small>.
     </div>
 

@@ -7,20 +7,49 @@
   <title>Releases</title>
   <meta name="description" content="Keep track of opensource releases (inspired by Sibbell).">
   <meta name="theme-color" content="#448aff">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons"
+        rel="preload" as="style" onload="this.onload=null; this.rel='stylesheet'">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="96x96" href="/static/img/favicon-96.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/static/img/icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="/static/img/icon-512.png">
   <link rel="apple-touch-startup-image" href="/static/img/splash-1242x2208.png">
+
+  <style>
+    #loading0 {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: #fafafa;
+      z-index: 9999999;
+      transition: opacity 500ms linear; -webkit-transition: opacity 500ms linear;
+    }
+    #loading0.opacity0 { opacity: 0;}
+
+    #loading1 {
+      position: absolute;
+      top: 0; bottom: 0; left: 0; right: 0;
+      width: 100px; height: 100px;
+      margin: auto;
+      fill: #448aff;
+    }
+  </style>
 </head>
 <body>
-<div id="app">loading...</div>
+<div id="loading0"><svg id="loading1" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg"><circle cx="12.5" cy="12.5" r="12.5"><animate attributeName="fill-opacity" begin="0s" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="12.5" cy="52.5" r="12.5" fill-opacity=".5"><animate attributeName="fill-opacity" begin="100ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="52.5" cy="12.5" r="12.5"><animate attributeName="fill-opacity" begin="300ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="52.5" cy="52.5" r="12.5"><animate attributeName="fill-opacity" begin="600ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="92.5" cy="12.5" r="12.5"><animate attributeName="fill-opacity" begin="800ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="92.5" cy="52.5" r="12.5"><animate attributeName="fill-opacity" begin="400ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="12.5" cy="92.5" r="12.5"><animate attributeName="fill-opacity" begin="700ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="52.5" cy="92.5" r="12.5"><animate attributeName="fill-opacity" begin="500ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="92.5" cy="92.5" r="12.5"><animate attributeName="fill-opacity" begin="200ms" dur="1s" values="1;.2;1" calcMode="linear" repeatCount="indefinite" /></circle></svg></div>
+
+<div id="app"></div>
 
 <!-- GA -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6342858-21"></script>
 <script>
   window.prod = location.hostname === 'releases.netlify.com'
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+    })
+  }
 
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
