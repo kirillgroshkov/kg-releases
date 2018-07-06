@@ -1,6 +1,6 @@
 
-const WorkboxPlugin = require('workbox-webpack-plugin')
-const ManifestPlugin = require('webpack-manifest-plugin')
+// const WorkboxPlugin = require('workbox-webpack-plugin')
+// const ManifestPlugin = require('webpack-manifest-plugin')
 
 module.exports = {
   lintOnSave: false,
@@ -26,6 +26,7 @@ module.exports = {
     }
   },*/
 
+  /*
   configureWebpack: {
     plugins: [
       new WorkboxPlugin.InjectManifest({
@@ -37,20 +38,8 @@ module.exports = {
           /_redirects/,
           /_headers/,
         ],
-        /* manifestTransforms: [
-          (entries) => {
-            const manifest = entries.map(entry => {
-              if (entry.url === '/index.html') entry.url = '/'
-              return entry
-            })
-            return {manifest, warnings: []}
-          },
-        ],*/
       }),
-      /*
-      new ManifestPlugin({
-        fileName: 'webpackManifest.json',
-      }),*/
     ],
   },
+  */
 }
