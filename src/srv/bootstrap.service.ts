@@ -8,6 +8,7 @@ import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
+import { promiseUtil } from '@/util/promise.util'
 
 class BootstrapService {
   @memo()
@@ -28,6 +29,8 @@ class BootstrapService {
     if (st().user.uid) {
       releasesService.init() // async
     }
+
+    this.hideLoader() // async
   }
 
   private initDecorators (): void {
@@ -58,6 +61,14 @@ class BootstrapService {
         return Promise.reject(r.err)
       },
     })
+  }
+
+  async hideLoader (): Promise<void> {
+    const loader = document.getElementById('loading0')!
+    await promiseUtil.delay(env().prod ? 2000 : 500)
+    loader.addEventListener('transitionend', () => loader.remove())
+    loader.classList.add('opacity0')
+
   }
 }
 

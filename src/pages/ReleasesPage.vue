@@ -7,8 +7,6 @@
             <pre>
 Last updated: {{state.lastCheckedReleases | unixtimePretty}}
 Starred repos: {{state.starredReposNumber}}
-Rate limit remaining: {{state.rateLimit.remaining}}
-Rate limit reset: {{state.rateLimit.reset | unixtimePretty}}
             </pre>
           </div>
         </div>

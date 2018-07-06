@@ -40,7 +40,7 @@ Feature requests, issues, PRs are welcome!
 # Roadmap
 
 - [x] Reorganize history to allow go further back in time.
-- [ ] Email notifications
+- [x] Email notifications
 - [ ] Get browser push notification on all or selected releases.
 - [ ] Parse `changelog.md`, `history.md` (and similar) in case when github release notes are empty.
 
@@ -54,17 +54,13 @@ Feature requests, issues, PRs are welcome!
 
 ## Develop
 
-Serve with hot reload at localhost:8080
-
     yarn serve
-
-Build for production with minification
 
     yarn build
 
-Build for production and view the bundle analyzer report
+Serve `dist` folder (http://localhost:3000):
 
-    yarn build --report
-
+    yarn global add serve
+    serve
 
 *Support me with a Star!*
