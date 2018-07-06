@@ -12,8 +12,8 @@
 
     <md-checkbox v-model="settings.notifyEmailRealtime">Notify on every release</md-checkbox><br>
     <md-checkbox v-model="settings.notifyEmailDaily">Notify once a day</md-checkbox><br>
-    <p>Email notification feature is in BETA now, it's likely that our emails will get into your SPAM folder.
-    To avoid that please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your Contacts.
+    <p>Please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your Contacts
+    if you discover that it goes to SPAM folder.
     </p>
 
     <p>To unsubscribe - untick the boxes above and click save.</p>

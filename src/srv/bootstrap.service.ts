@@ -65,7 +65,7 @@ class BootstrapService {
 
   async hideLoader (): Promise<void> {
     const loader = document.getElementById('loading0')!
-    await promiseUtil.delay(env().prod ? 2000 : 500)
+    await promiseUtil.delay(env().prod ? 500 : 500)
     loader.addEventListener('transitionend', () => loader.remove())
     loader.classList.add('opacity0')
 
