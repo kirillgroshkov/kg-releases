@@ -62,7 +62,21 @@ class FirebaseService {
   private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
     console.log('onAuthStateChanged, user: ', jsonify(_user))
 
-    if (_user) {
+    // debug!
+    const qs = urlUtil.qs()
+    if (qs.uid) {
+      console.log('debug: ?uid')
+      const user = {
+        uid: qs.uid,
+      } as UserInfo
+
+      sentryService.setUserContext(user)
+      analyticsService.setUserId(user.uid)
+
+      extendState({
+        user,
+      })
+    } else if (_user) {
       const idToken = await firebase.auth!().currentUser!.getIdToken()
 
       // console.log('idToken', idToken)
@@ -73,13 +87,6 @@ class FirebaseService {
 
       sentryService.setUserContext(user)
       analyticsService.setUserId(user.uid)
-
-      // debug!
-      const qs = urlUtil.qs()
-      // console.log('qs', qs, _user)
-      if (qs.testUid) {
-        user.uid = qs.testUid
-      }
 
       extendState({
         user,
