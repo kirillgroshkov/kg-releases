@@ -43,7 +43,7 @@
 <!-- GA -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6342858-21"></script>
 <script>
-  window.prod = location.hostname === 'releases.netlify.com'
+  window.prod = location.hostname.indexOf('releases.netlify.com') >= 0
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
