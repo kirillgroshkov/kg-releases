@@ -38,6 +38,20 @@ class FirebaseService {
   }
 
   async login (): Promise<BackendResponse> {
+    const iosStandalone = !!(window.navigator as any).standalone
+    if (iosStandalone) {
+      alert(`iOS Standalone PWA mode doesn\'t work with Github/Firebase authentication. 
+Solution is: authenticate in the browser, 
+get your uid by 'state().user.uid' in console,
+paste it in the next prompt()`)
+
+      const uid = prompt('uid')
+      if (uid) {
+        this.authorizeByUid(uid)
+        return {}
+      }
+    }
+
     const r = (await firebase.auth!().signInWithPopup(githubAuthProvider)) as any
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
     console.log(r)
@@ -65,17 +79,7 @@ class FirebaseService {
     // debug!
     const qs = urlUtil.qs()
     if (qs.uid) {
-      console.log('debug: ?uid')
-      const user = {
-        uid: qs.uid,
-      } as UserInfo
-
-      sentryService.setUserContext(user)
-      analyticsService.setUserId(user.uid)
-
-      extendState({
-        user,
-      })
+      this.authorizeByUid(qs.uid)
     } else if (_user) {
       const idToken = await firebase.auth!().currentUser!.getIdToken()
 
@@ -99,6 +103,20 @@ class FirebaseService {
     }
 
     this.authStateChangedDeferred.resolve()
+  }
+
+  private authorizeByUid (uid: string): void {
+    console.log('debug: authorizing by uid: ' + uid)
+    const user = {
+      uid,
+    } as UserInfo
+
+    sentryService.setUserContext(user)
+    analyticsService.setUserId(user.uid)
+
+    extendState({
+      user,
+    })
   }
 }
 
