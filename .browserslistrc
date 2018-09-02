@@ -1,0 +1,9 @@
+### Supported Browsers
+
+> 5%
+last 2 versions
+not ie <= 11
+not ie_mob <= 11
+# not OperaMini >= 0 # todo: fix
+# maintained node versions
+not dead
