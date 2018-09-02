@@ -1,0 +1,45 @@
+version: 2
+
+checks:
+  argument-count:
+    config:
+      threshold: 5
+  complex-logic:
+    config:
+      threshold: 4
+  file-lines:
+    config:
+      threshold: 800
+  method-complexity:
+    config:
+      threshold: 8
+  method-count:
+    config:
+      threshold: 50
+  method-lines:
+    config:
+      threshold: 100
+  nested-control-flow:
+    config:
+      threshold: 5
+  return-statements:
+    config:
+      threshold: 20
+  similar-code:
+    config:
+      threshold: # language-specific defaults. an override will affect all languages.
+  identical-code:
+    config:
+      threshold: # language-specific defaults. an override will affect all languages.
+
+exclude_patterns:
+  - "dist/"
+  - "node_modules/"
+  - "**/*.test.*"
+  - "**/*.mock.*"
+  - "**/*.d.ts"
+  - "build/"
+  - "src/scripts/"
+  - "src/environment/"
+  - "src/typings/"
+  - "test/"
