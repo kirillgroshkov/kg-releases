@@ -39,7 +39,7 @@ exclude_patterns:
   - "**/*.mock.*"
   - "**/*.d.ts"
   - "build/"
+  - "public/"
   - "src/scripts/"
   - "src/environment/"
   - "src/typings/"
-  - "test/"
