@@ -7,6 +7,7 @@
 ![](https://circleci.com/gh/kirillgroshkov/kg-releases.svg?style=shield&circle-token=0726fc25e3099b913bea54e5f6980e8ba15abea9)
 [![](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Maintainability](https://api.codeclimate.com/v1/badges/864acacfc0e17f7531bc/maintainability)](https://codeclimate.com/github/kirillgroshkov/kg-releases/maintainability)
 
 <div align="center">
     <img width="160" src="https://releases.netlify.com/static/img/logo1.png" alt="Releases">
