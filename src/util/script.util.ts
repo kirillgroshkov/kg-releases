@@ -6,7 +6,7 @@ class ScriptUtil {
       s.onload = resolve as any
       s.onerror = reject
       if (async) s.async = true
-      document.head.appendChild(s)
+      document.head!.appendChild(s)
     })
   }
 }

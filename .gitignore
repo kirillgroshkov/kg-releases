@@ -1,21 +1,45 @@
+#
+# DO NOT MODIFY, WILL BE OVERWRITTEN BY @naturalcycles/shared-module
+#
+# You can put more .gitignore files in your respective subfolders (e.g `src`) to ignore additional things.
+# Or PR to @naturalcycles/shared-module if you want to ignore something generic.
+#
+
+#
+# Global (all dirs)
+#
+*.iml
 .DS_Store
-node_modules
+
+#
+# Root dir
+#
+/.idea
+/.classpath
+/.project
+/.settings
+/.externalToolBuilders
+/.cache
+/.gitconfig
+/target
+/*.log
+/log.txt
+/.sass-cache
+/.sourcemaps
+/.env
+
+/node_modules
+
+/coverage
+/report
+
 /dist
+/tmp
 
-# local env files
-.env.local
-.env.*.local
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw*
+/src/@linked
+/src/scripts/try.*
+/logs
+/platforms
+/plugins
+/www/*
+!/www/.gitkeep

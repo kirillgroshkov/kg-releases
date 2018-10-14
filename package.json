@@ -4,24 +4,9 @@
   "author": "kirillgroshkov <1@inventix.ru>",
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build",
-    "tslint-all": "tslint 'src/**/*.{ts,tsx}' -t stylish --fix",
-    "prettier-do": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss,graphql,json}'",
-    "prettier-all": "yarn prettier-do && yarn tslint-all"
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx}": [
-      "prettier --write",
-      "tslint -t stylish --fix",
-      "git add"
-    ],
-    "src/**/*.{css,scss,graphql,json,md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "firebase": "^5.0.4",
@@ -37,15 +22,13 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@naturalcycles/shared-dev": "^1.0.11",
+    "@naturalcycles/shared-module": "^1.0.20",
     "@types/lru-cache": "^4.1.1",
     "@types/luxon": "^1.2.2",
     "@types/marked": "^0.4.0",
     "@types/node": "^10.3.2",
     "@vue/cli-plugin-typescript": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
     "node-sass": "^4.9.0",
     "prettier": "^1.13.7",
     "sass-loader": "^7.0.1",

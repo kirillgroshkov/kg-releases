@@ -1,4 +1,3 @@
-
 // const WorkboxPlugin = require('workbox-webpack-plugin')
 // const ManifestPlugin = require('webpack-manifest-plugin')
 

@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('@naturalcycles/shared-dev/prettier.config'),
+  ...require('@naturalcycles/shared-module/cfg/prettier.config'),
   printWidth: 120,
 }

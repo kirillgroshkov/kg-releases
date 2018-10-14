@@ -1,3 +1,6 @@
+#
+# # DO NOT MODIFY, WILL BE OVERWRITTEN BY @naturalcycles/shared-module
+#
 version: 2
 
 checks:
@@ -27,19 +30,31 @@ checks:
       threshold: 20
   similar-code:
     config:
-      threshold: # language-specific defaults. an override will affect all languages.
+      threshold: 60
   identical-code:
     config:
-      threshold: # language-specific defaults. an override will affect all languages.
+      threshold: 50
 
 exclude_patterns:
-  - "dist/"
-  - "node_modules/"
-  - "**/*.test.*"
-  - "**/*.mock.*"
-  - "**/*.d.ts"
-  - "build/"
-  - "public/"
-  - "src/scripts/"
-  - "src/environment/"
-  - "src/typings/"
+  - 'dist/'
+  - 'node_modules/'
+  - '**/*.test.*'
+  - '**/*.mock.*'
+  - '**/*.cnst.*'
+  - '**/*.d.ts'
+  - 'build/'
+  - 'src/@linked/'
+  - 'src/scripts/'
+  - 'src/test/'
+  - 'src/environments/'
+  - 'other/'
+  - 'patch/'
+  - 'cordova-hooks/'
+  - 'test/'
+  - 'resources/'
+  - 'static/'
+  - 'secret/'
+  - 'ex/'
+  - 'doc/'
+  - 'docker/'
+  - 'public/'

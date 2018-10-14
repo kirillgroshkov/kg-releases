@@ -1,4 +1,8 @@
+#
+# DO NOT MODIFY, WILL BE OVERWRITTEN BY @naturalcycles/shared-module
+#
 # http://editorconfig.org
+#
 
 root = true
 
@@ -31,6 +35,12 @@ indent_size = 2
 
 [**.java]
 indent_size = 4
+
+[**.sql]
+indent_size = 2
+
+[.eslintrc]
+indent_size = 2
 
 [**.min.*]
 indent_style = ignore

@@ -3,21 +3,50 @@
 # circleci config validate -c .circleci/config.yml
 #
 
-version: 2
+#
+# Defaults
+#
+defaults: &defaults
+  resource_class: xlarge
+  docker:
+  - image: naturalcycles/ci-node:latest
+  working_directory: ~/repo
+
+restore_cache: &restore_cache
+  key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-v1-{{ checksum "yarn.lock" }}
+
+save_cache: &save_cache
+  paths:
+  - node_modules
+  key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-v1-{{ checksum "yarn.lock" }}
+
+git_msg: &git_msg echo 'export GIT_MSG=`git log -1 --pretty=%B`' >> $BASH_ENV
+
+#
+# Jobs
+#
 jobs:
-  build:
-    docker:
-      - image: naturalcycles/ci-node:latest
-    working_directory: ~/repo
+  build-job:
+    <<: *defaults
     steps:
       - checkout
-      - run: echo 'export GIT_MSG=`git log -1 --pretty=%B`' >> $BASH_ENV
-      - restore_cache:
-          key: dependencies-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-v2-{{ checksum "yarn.lock" }}
-      - run: yarn --pure-lockfile
-      - save_cache:
-          paths:
-            - node_modules
-          key: dependencies-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-v2-{{ checksum "yarn.lock" }}
 
+      # env variables
+      - run: *git_msg
+
+      # yarn
+      - restore_cache: *restore_cache
+      - run: yarn --pure-lockfile
+      - save_cache: *save_cache
+
+      # build
       - run: yarn build
+
+#
+# Workflows
+#
+workflows:
+  version: 2
+  default-workflow:
+    jobs:
+    - build-job

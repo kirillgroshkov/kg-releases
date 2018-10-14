@@ -1,4 +1,3 @@
-
 # releases.netlify.com
 
 > 🔥 Keep track of opensource releases 📦.
@@ -33,7 +32,7 @@ Backend with all the magic is [here](https://github.com/kirillgroshkov/kg-backen
 
 - Free, opensource.
 - Simple github login. Automatically gets github stars.
-- Built with free tier of cloud infrastructure. Big thanks to Now.sh, Firebase, Netlify. 
+- Built with free tier of cloud infrastructure. Big thanks to Now.sh, Firebase, Netlify.
 - Near-realtime release notification (currently checks every 10 minutes).
 
 Feature requests, issues, PRs are welcome!
@@ -64,4 +63,4 @@ Serve `dist` folder (http://localhost:3000):
     yarn global add serve
     serve
 
-*Support me with a Star!*
+_Support me with a Star!_

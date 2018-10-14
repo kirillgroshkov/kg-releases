@@ -19,7 +19,7 @@ class BootstrapService {
 
     analyticsService.init()
 
-    document.body.classList.add('ontouchstart' in document.documentElement ? 'touch' : 'no-touch')
+    document.body.classList.add('ontouchstart' in document.documentElement! ? 'touch' : 'no-touch')
 
     this.initDecorators()
 
@@ -68,7 +68,6 @@ class BootstrapService {
     await promiseUtil.delay(env().prod ? 500 : 500)
     loader.addEventListener('transitionend', () => loader.remove())
     loader.classList.add('opacity0')
-
   }
 }
 

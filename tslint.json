@@ -1,5 +1,6 @@
 {
-  "extends": [
-    "./node_modules/@naturalcycles/shared-dev/tslint.json"
-  ]
+  "extends": ["./node_modules/@naturalcycles/shared-module/cfg/tslint.json"],
+  "linterOptions": {
+    "exclude": ["src/@linked/**/*"]
+  }
 }
