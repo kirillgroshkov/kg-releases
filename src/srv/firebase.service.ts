@@ -21,6 +21,11 @@ export interface UserInfo {
 const CONFIG = {
   apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
   authDomain: 'test124-1621f.firebaseapp.com',
+  // databaseURL: "https://test124-1621f.firebaseio.com",
+  projectId: 'test124-1621f',
+  // storageBucket: "test124-1621f.appspot.com",
+  // messagingSenderId: "755695435449",
+  appId: '1:755695435449:web:734140edc18237cc',
 }
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
