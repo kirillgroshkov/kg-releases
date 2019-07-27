@@ -4,6 +4,19 @@ class AnalyticsService {
   init (): void {
     // this.initGA()
     this.initHotjar()
+    ;(window as any).perfMetrics.onFirstInputDelay((delay: number, evt: Event) => {
+      console.log({ delay, evt })
+
+      this.event('perfMetrics', {
+        eventCategory: 'Perf Metrics',
+        eventAction: 'first-input-delay',
+        eventLabel: evt.type,
+        // Event values must be an integer.
+        eventValue: Math.round(delay),
+        // Exclude this event from bounce rate calculations.
+        nonInteraction: true,
+      })
+    })
   }
 
   setUserId (userId: string): void {

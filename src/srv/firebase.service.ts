@@ -6,8 +6,9 @@ import { extendState } from '@/store'
 import { urlUtil } from '@/util/url.util'
 import { _pick, deepCopy, memo } from '@naturalcycles/js-lib'
 import { pDefer } from '@naturalcycles/promise-lib'
-import firebase from 'firebase/app'
+import * as firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/performance'
 
 export interface UserInfo {
   uid: string
@@ -24,7 +25,7 @@ const CONFIG = {
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
 
-const githubAuthProvider = new firebase.auth!.GithubAuthProvider()
+const githubAuthProvider = new firebase.auth.GithubAuthProvider()
 
 class FirebaseService {
   private authStateChangedDeferred = pDefer()
@@ -34,13 +35,15 @@ class FirebaseService {
   async init (): Promise<void> {
     firebase.initializeApp(CONFIG)
     firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
+
+    const _perf = firebase.performance()
   }
 
   async login (): Promise<BackendResponse> {
-    const r = (await firebase.auth!().signInWithPopup(githubAuthProvider)) as any
+    const r = (await firebase.auth().signInWithPopup(githubAuthProvider)) as any
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
     console.log(r)
-    const idToken = await firebase.auth!().currentUser!.getIdToken()
+    const idToken = await firebase.auth().currentUser!.getIdToken()
     // console.log('idToken', idToken)
 
     const br = await releasesService.auth({
@@ -54,7 +57,7 @@ class FirebaseService {
 
   @Progress()
   async logout (): Promise<void> {
-    await firebase.auth!().signOut()
+    await firebase.auth().signOut()
     sentryService.setUserContext({})
   }
 

@@ -7,7 +7,6 @@
 # Defaults
 #
 defaults: &defaults
-  resource_class: medium
   docker:
     - image: naturalcycles/ci-node:latest
   working_directory: ~/repo
