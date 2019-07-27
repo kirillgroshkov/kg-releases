@@ -1,4 +1,8 @@
-type PromiseDecoratorFunction = (target: any, propertyKey: string, pd: PropertyDescriptor) => PropertyDescriptor
+type PromiseDecoratorFunction = (
+  target: any,
+  propertyKey: string,
+  pd: PropertyDescriptor,
+) => PropertyDescriptor
 
 export interface PromiseDecoratorCfg {
   decoratorName: string
@@ -19,12 +23,19 @@ export interface PromiseDecoratorResp {
   decoratorName: string
 }
 
-export function createPromiseDecorator (cfg: PromiseDecoratorCfg, decoratorParams?: any): PromiseDecoratorFunction {
-  return function DecoratorFunction (target: any, propertyKey: string, pd: PropertyDescriptor): PropertyDescriptor {
+export function createPromiseDecorator (
+  cfg: PromiseDecoratorCfg,
+  decoratorParams?: any,
+): PromiseDecoratorFunction {
+  return function DecoratorFunction (
+    target: any,
+    propertyKey: string,
+    pd: PropertyDescriptor,
+  ): PropertyDescriptor {
     // console.log(`@Decorator.${cfg.decoratorName} called: ` + propertyKey, pd, target)
     const originalMethod = pd.value!
 
-    pd.value = function (...args: any[]): Promise<any> {
+    pd.value = async function (...args: any[]): Promise<any> {
       // console.log(`@Decorator.${cfg.decoratorName} called inside function`)
       const started = Date.now()
 

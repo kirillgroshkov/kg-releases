@@ -28,7 +28,7 @@ export class FetchService {
       const t = [[resp.status, resp.statusText].join(' '), text].filter(t => !!t)
 
       const err = new Error(t.join('\n') || 'empty')
-      ; (err as any).response = resp
+      ;(err as any).response = resp
       return Promise.reject(err)
     }
 

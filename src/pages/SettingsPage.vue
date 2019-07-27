@@ -10,20 +10,21 @@
       <md-input v-model="settings.notificationEmail" type="email" required></md-input>
     </md-field>
 
-    <md-checkbox v-model="settings.notifyEmailRealtime">Notify on every release</md-checkbox><br>
-    <md-checkbox v-model="settings.notifyEmailDaily">Notify once a day</md-checkbox><br>
-    <p>Please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your Contacts
-    if you discover that it goes to SPAM folder.
+    <md-checkbox v-model="settings.notifyEmailRealtime">Notify on every release</md-checkbox><br />
+    <md-checkbox v-model="settings.notifyEmailDaily">Notify once a day</md-checkbox><br />
+    <p>
+      Please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your
+      Contacts if you discover that it goes to SPAM folder.
     </p>
 
     <p>To unsubscribe - untick the boxes above and click save.</p>
 
-    <md-button class="md-raised md-primary"
-               @click="save()"
-               :disabled="!saveEnabled"
-    >Save</md-button><br>
+    <md-button class="md-raised md-primary" @click="save()" :disabled="!saveEnabled">Save</md-button
+    ><br />
 
-    <br><hr><br>
+    <br />
+    <hr />
+    <br />
 
     <md-button class="md-raised md-transparent" @click="logout()">Logout</md-button>
   </div>
@@ -48,19 +49,19 @@ export default class SettingsPage extends Vue {
   // userFM: UserFM = {} as UserFM
   settings: UserSettings = {}
 
-  get userFM () {
+  get userFM() {
     return st().userFM
   }
 
-  get saveEnabled (): boolean {
+  get saveEnabled(): boolean {
     return !objectUtil.deepEquals(this.settings, st().userFM.settings)
   }
 
-  private init () {
-    this.settings = {...st().userFM.settings}
+  private init() {
+    this.settings = { ...st().userFM.settings }
   }
 
-  async mounted () {
+  async mounted() {
     await releasesService.init()
     this.init()
   }
@@ -68,14 +69,14 @@ export default class SettingsPage extends Vue {
 
   // Save button (if changed!)
 
-  async logout () {
+  async logout() {
     analyticsService.event('logoutClick')
     await firebaseService.logout()
     router.push('/')
   }
 
   @Progress()
-  async save () {
+  async save() {
     await releasesService.saveUserSettings(this.settings)
     this.init()
   }
@@ -83,7 +84,7 @@ export default class SettingsPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .form1 {
-    max-width: 400px;
-  }
+.form1 {
+  max-width: 400px;
+}
 </style>

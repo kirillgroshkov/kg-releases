@@ -60,7 +60,7 @@ export const app = new Vue({
   render: h => h(RootComponent),
 }).$mount('#app')
 
-bootstrapService.init() // async
+void bootstrapService.init()
 
 // Debug
 const w: any = window

@@ -1,5 +1,4 @@
 import { env } from '@/environment/environment'
-import { scriptUtil } from '@/util/script.util'
 
 class AnalyticsService {
   init (): void {
@@ -19,6 +18,7 @@ class AnalyticsService {
     window.gtag('event', eventName, params)
   }
 
+  /*
   private initGA (): void {
     window.dataLayer = window.dataLayer || []
     window.gtag = (...args: any[]) => window.dataLayer.push(...args)
@@ -28,16 +28,18 @@ class AnalyticsService {
     if (!env().gaId) return
 
     // Only load real script if it's enabled (gaId)
-    scriptUtil.loadScript(`https://www.googletagmanager.com/gtag/js?id=${env().gaId}`) // async
-  }
+    void loadScript(`https://www.googletagmanager.com/gtag/js?id=${env().gaId}`)
+  }*/
 
   private initHotjar (): void {
-    if (!env().hotjarId) return
-    ; (function (h, o, t, j) {
+    if (!env().hotjarId) {
+      return
+    }
+    ;(function (h, o, t, j) {
       h.hj =
         h.hj ||
         function () {
-          (h.hj.q = h.hj.q || []).push(arguments)
+          ;(h.hj.q = h.hj.q || []).push(arguments)
         }
       h._hjSettings = { hjid: env().hotjarId, hjsv: 6 }
       const a = o.getElementsByTagName('head')[0]

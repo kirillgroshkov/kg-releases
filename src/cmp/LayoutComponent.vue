@@ -27,7 +27,7 @@
 
             <div class="md-toolbar-section-end" style="flex: 0">
               <md-avatar v-if="user.uid" class="md-elevation-1">
-                <img class="avatar" :src="user.photoURL" alt="user.displayName">
+                <img class="avatar" :src="user.photoURL" alt="user.displayName" />
               </md-avatar>
             </div>
           </div>
@@ -38,7 +38,6 @@
         </md-app-content>
       </md-app>
     </div>
-
 
     <!--
     <div class="nav1">
@@ -67,11 +66,11 @@ import { jsonify } from '../util/object.util'
 
 @Component
 export default class LayoutComponent extends Vue {
-  get user (): UserInfo {
+  get user(): UserInfo {
     return st().user
   }
 
-  async mounted () {
+  async mounted() {
     // this.loading = 'loading...'
     // await releasesService.fetchReleases()
     // this.loading = ''
@@ -80,24 +79,24 @@ export default class LayoutComponent extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  // @import "../scss/var";
+// @import "../scss/var";
 
-  /*.md-app-container {
+/*.md-app-container {
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }*/
 
-  .md-app {
-    // max-height: 400px;
-    // min-height: 100vh;
-    max-height: 100vh;
-    // border: 1px solid rgba(#000, .12);
-  }
+.md-app {
+  // max-height: 400px;
+  // min-height: 100vh;
+  max-height: 100vh;
+  // border: 1px solid rgba(#000, .12);
+}
 
-  .avatar {
-    // border: 10px solid black;
-  }
-  .md-avatar {
-    // border: 1px solid black;
-  }
+.avatar {
+  // border: 10px solid black;
+}
+.md-avatar {
+  // border: 1px solid black;
+}
 </style>

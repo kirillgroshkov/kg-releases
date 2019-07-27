@@ -2,7 +2,7 @@
   <div>
     <div>Projects</div>
     <div v-for="r in starredRepos" :key="r.fullName">
-      <router-link :to="`/projects/${r.fullName}`">{{r.fullName}}</router-link>
+      <router-link :to="`/projects/${r.fullName}`">{{ r.fullName }}</router-link>
     </div>
   </div>
 </template>
@@ -16,17 +16,15 @@ import { promiseUtil } from '../util/promise.util'
 
 @Component
 export default class ProjectsPage extends Vue {
-  get starredRepos (): Repo[] {
+  get starredRepos(): Repo[] {
     return st().starredRepos
   }
 
-  async mounted () {
+  async mounted() {
     await promiseUtil.delay(1000) // give time for animations to finish
     await releasesService.fetchRepos()
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

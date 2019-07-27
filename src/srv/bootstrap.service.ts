@@ -27,10 +27,10 @@ class BootstrapService {
     await firebaseService.authStateChanged
 
     if (st().user.uid) {
-      releasesService.init() // async
+      void releasesService.init()
     }
 
-    this.hideLoader() // async
+    void this.hideLoader()
   }
 
   private initDecorators (): void {
@@ -48,7 +48,7 @@ class BootstrapService {
         app.$Progress.finish()
         return r.res
       },
-      errorFn (r: PromiseDecoratorResp) {
+      async errorFn (r: PromiseDecoratorResp) {
         store.commit('setGhost', false)
         app.$Progress.fail()
         console.log('decccc', r)

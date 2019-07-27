@@ -1,9 +1,8 @@
 import { env } from '@/environment/environment'
 import { UserInfo } from '@/srv/firebase.service'
-import { FeedResp, RateLimit, Release, ReleasesByDay, Repo, UserFM } from '@/srv/releases.service'
+import { RateLimit, Release, ReleasesByDay, Repo, UserFM } from '@/srv/releases.service'
 import { by, objectUtil } from '@/util/object.util'
 import { timeUtil } from '@/util/time.util'
-import { urlUtil } from '@/util/url.util'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -74,7 +73,9 @@ export const store = new Vuex.Store<GlobalState>({
     },
 
     getReleasesLastDay: (state: GlobalState) => (): string | undefined => {
-      const days = (Object.values(state.releases) || []).map(r => timeUtil.unixtimeToDay(r.published)).sort()
+      const days = (Object.values(state.releases) || [])
+        .map(r => timeUtil.unixtimeToDay(r.published))
+        .sort()
       return days.length ? days[0] : undefined
     },
 
