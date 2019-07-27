@@ -8,11 +8,11 @@
 </template>
 
 <script lang="ts">
+import { pDelay } from '@naturalcycles/promise-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { releasesService, Repo } from '../srv/releases.service'
-import { GlobalState, st, store } from '../store'
-import { promiseUtil } from '../util/promise.util'
+import { releasesService, Repo } from '@/srv/releases.service'
+import { GlobalState, st, store } from '@/store'
 
 @Component
 export default class ProjectsPage extends Vue {
@@ -21,7 +21,7 @@ export default class ProjectsPage extends Vue {
   }
 
   async mounted() {
-    await promiseUtil.delay(1000) // give time for animations to finish
+    await pDelay(1000) // give time for animations to finish
     await releasesService.fetchRepos()
   }
 }

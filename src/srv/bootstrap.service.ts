@@ -7,8 +7,8 @@ import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
-import { promiseUtil } from '@/util/promise.util'
 import { memo } from '@naturalcycles/js-lib'
+import { pDelay } from '@naturalcycles/promise-lib'
 
 class BootstrapService {
   @memo()
@@ -65,7 +65,7 @@ class BootstrapService {
 
   async hideLoader (): Promise<void> {
     const loader = document.getElementById('loading0')!
-    await promiseUtil.delay(env().prod ? 500 : 500)
+    await pDelay(env().prod ? 500 : 500)
     loader.addEventListener('transitionend', () => loader.remove())
     loader.classList.add('opacity0')
   }

@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@naturalcycles/js-lib": "^8.2.1",
+    "@naturalcycles/promise-lib": "^2.3.0",
     "@naturalcycles/time-lib": "^1.4.0",
     "firebase": "^6.3.3",
-    "luxon": "^1.17.2",
     "marked": "^0.7.0",
     "raven-js": "^3.27.2",
     "vue": "^2.6.10",
@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@naturalcycles/dev-lib": "^7.14.1",
-    "@types/luxon": "^1.15.2",
     "@types/marked": "^0.6.5",
     "@types/node": "^12.6.8",
     "@vue/cli-plugin-typescript": "^3.9.0",

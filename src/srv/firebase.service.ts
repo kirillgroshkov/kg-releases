@@ -3,10 +3,9 @@ import { analyticsService } from '@/srv/analytics.service'
 import { BackendResponse, releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
-import { jsonify, objectUtil } from '@/util/object.util'
-import { promiseUtil } from '@/util/promise.util'
 import { urlUtil } from '@/util/url.util'
-import { memo } from '@naturalcycles/js-lib'
+import { _pick, deepCopy, memo } from '@naturalcycles/js-lib'
+import { pDefer } from '@naturalcycles/promise-lib'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -28,7 +27,7 @@ const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoUR
 const githubAuthProvider = new firebase.auth!.GithubAuthProvider()
 
 class FirebaseService {
-  private authStateChangedDeferred = promiseUtil.defer<void>()
+  private authStateChangedDeferred = pDefer()
   authStateChanged = this.authStateChangedDeferred.promise
 
   @memo()
@@ -60,7 +59,7 @@ class FirebaseService {
   }
 
   private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
-    console.log('onAuthStateChanged, user: ', jsonify(_user))
+    console.log('onAuthStateChanged, user: ', deepCopy(_user))
 
     // debug!
     const qs = urlUtil.qs()
@@ -81,7 +80,7 @@ class FirebaseService {
 
       // console.log('idToken', idToken)
       const user = {
-        ...objectUtil.pick<UserInfo>(_user, USER_FIELDS),
+        ..._pick(_user, USER_FIELDS),
         idToken,
       }
 

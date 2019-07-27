@@ -5,7 +5,7 @@ import './scss/global.scss'
 
 import '@/polyfills'
 import { bootstrapService } from '@/srv/bootstrap.service'
-import { jsonify } from '@/util/object.util'
+import { deepCopy } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import './hooks' // must be defined BEFORE router is created!
 import { router } from '@/router'
@@ -64,7 +64,7 @@ void bootstrapService.init()
 
 // Debug
 const w: any = window
-w.state = () => jsonify(store.state)
+w.state = () => deepCopy(store.state)
 w.commit = (type: string, payload?: any) => {
   store.commit(type, payload)
   return w.state()

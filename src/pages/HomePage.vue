@@ -60,9 +60,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { router } from '../router'
-import { analyticsService } from '../srv/analytics.service'
-import { firebaseService } from '../srv/firebase.service'
+import { router } from '@/router'
+import { analyticsService } from '@/srv/analytics.service'
+import { firebaseService } from '@/srv/firebase.service'
 
 @Component
 export default class HomePage extends Vue {

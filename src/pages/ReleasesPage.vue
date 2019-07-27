@@ -109,14 +109,13 @@ Starred repos: {{ state.starredReposNumber }}
 </template>
 
 <script lang="ts">
-import { DateTime } from 'luxon'
+import { Dayjs, dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Progress } from '../decorators/progress.decorator'
-import { FeedResp, Release, ReleasesByDay, releasesService } from '../srv/releases.service'
-import { GlobalState, st, store } from '../store'
-import { promiseUtil } from '../util/promise.util'
-import { LUXON_ISO_DATE_FORMAT, timeUtil } from '../util/time.util'
+import { Progress } from '@/decorators/progress.decorator'
+import { ReleasesByDay, releasesService } from '@/srv/releases.service'
+import { GlobalState, st, store } from '@/store'
+import { pDelay } from '@naturalcycles/promise-lib'
 
 @Component
 export default class ReleasesPage extends Vue {
@@ -131,9 +130,11 @@ export default class ReleasesPage extends Vue {
 
   get dayNext(): string {
     if (!this.dayLast) return ''
-    return DateTime.fromISO(this.dayLast, { zone: 'utc' })
-      .minus({ days: 1 })
-      .toFormat(LUXON_ISO_DATE_FORMAT)
+
+    return dayjs
+      .utc(this.dayLast)
+      .subtract(1, 'day')
+      .toISODate()
   }
 
   get state(): GlobalState {
@@ -149,11 +150,11 @@ export default class ReleasesPage extends Vue {
     if (!this.dayFirst || !this.dayLast) return []
 
     for (
-      let day = DateTime.fromISO(this.dayFirst, { zone: 'utc' });
-      day.toFormat(LUXON_ISO_DATE_FORMAT) >= this.dayLast;
-      day = day.minus({ days: 1 })
+      let day = dayjs.utc(this.dayFirst);
+      day.toISODate() >= this.dayLast;
+      day = day.subtract(1, 'day')
     ) {
-      days.push(day.toFormat(LUXON_ISO_DATE_FORMAT))
+      days.push(day.toISODate())
     }
 
     return days
@@ -162,14 +163,14 @@ export default class ReleasesPage extends Vue {
   @Progress()
   async mounted() {
     this.maxReleases = 30
-    const today = DateTime.utc()
-    const todayStr = today.toFormat(LUXON_ISO_DATE_FORMAT)
-    this.dayMax = today.minus({ days: 30 }).toFormat(LUXON_ISO_DATE_FORMAT)
+    const today = dayjs.utc()
+    const todayStr = today.toISODate()
+    this.dayMax = today.subtract(30, 'day').toISODate()
     this.releasesByDay = store.getters.getReleasesByDay()
     this.dayFirst = todayStr
     this.dayLast = store.getters.getReleasesLastDay() || todayStr
 
-    await promiseUtil.delay(1000) // give time for animations to finish
+    await pDelay(1000) // give time for animations to finish
     this.dayLast = await this.loadDay(today, 0)
     this.dayLoading = ''
     // console.log('dayLast end: ' + this.dayLast)
@@ -178,11 +179,11 @@ export default class ReleasesPage extends Vue {
     store.commit('cleanAfterLastDay', this.dayLast)
   }
 
-  private async loadDay(day: DateTime, loaded: number): Promise<string> {
-    const dayStr = day.toFormat(LUXON_ISO_DATE_FORMAT)
+  private async loadDay(day: Dayjs, loaded: number): Promise<string> {
+    const dayStr = day.toISODate()
     this.dayLoading = dayStr
-    const nextDay = day.plus({ days: 1 })
-    const nextDayStr = nextDay.toFormat(LUXON_ISO_DATE_FORMAT)
+    const nextDay = day.add(1, 'day')
+    const nextDayStr = nextDay.toISODate()
     // this.loading = 'loading...'
     // _this.dayLast = dayStr
     this.dayLast = store.getters.getReleasesLastDay()
@@ -196,7 +197,7 @@ export default class ReleasesPage extends Vue {
     // console.log('loaded: ' + loaded)
 
     if (loaded < this.maxReleases && dayStr > this.dayMax) {
-      const yesterday = day.minus({ days: 1 })
+      const yesterday = day.subtract(1, 'day')
       return this.loadDay(yesterday, loaded)
     }
 
@@ -206,10 +207,11 @@ export default class ReleasesPage extends Vue {
   async loadMore() {
     const releasesCount = Object.keys(st().releases).length
     this.maxReleases = releasesCount + 30
-    this.dayMax = DateTime.fromISO(this.dayMax, { zone: 'utc' })
-      .minus({ days: 30 })
-      .toFormat(LUXON_ISO_DATE_FORMAT)
-    const dayNext = DateTime.fromISO(this.dayLast, { zone: 'utc' }).minus({ days: 1 })
+    this.dayMax = dayjs
+      .utc(this.dayMax)
+      .subtract(30, 'day')
+      .toISODate()
+    const dayNext = dayjs.utc(this.dayLast).subtract(1, 'day')
     this.dayLast = await this.loadDay(dayNext, releasesCount)
     this.dayLoading = ''
   }

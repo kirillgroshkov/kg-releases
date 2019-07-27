@@ -1,11 +1,11 @@
 import { env } from '@/environment/environment'
 import { FetchBody, FetchService } from '@/srv/fetch.service'
 import { st } from '@/store'
-import { objectUtil } from '@/util/object.util'
+import { filterFalsyValues } from '@naturalcycles/js-lib'
 
 class ApiService extends FetchService {
   private get headers (): any {
-    return objectUtil.filterFalsyValues({
+    return filterFalsyValues({
       idToken: st().user.idToken,
       uid: st().user.uid,
     })

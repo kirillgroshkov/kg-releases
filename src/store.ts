@@ -1,8 +1,8 @@
 import { env } from '@/environment/environment'
 import { UserInfo } from '@/srv/firebase.service'
 import { RateLimit, Release, ReleasesByDay, Repo, UserFM } from '@/srv/releases.service'
-import { by, objectUtil } from '@/util/object.util'
-import { timeUtil } from '@/util/time.util'
+import { _pick, by } from '@naturalcycles/js-lib'
+import { dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -61,7 +61,7 @@ export const store = new Vuex.Store<GlobalState>({
     getReleasesByDay: (state: GlobalState) => (): ReleasesByDay => {
       const m: ReleasesByDay = {}
       Object.values(state.releases).forEach(r => {
-        const day = timeUtil.unixtimeToDay(r.published)
+        const day = dayjs.unix(r.published).toISODate()
         if (!m[day]) m[day] = []
         m[day].push(r)
       })
@@ -74,7 +74,7 @@ export const store = new Vuex.Store<GlobalState>({
 
     getReleasesLastDay: (state: GlobalState) => (): string | undefined => {
       const days = (Object.values(state.releases) || [])
-        .map(r => timeUtil.unixtimeToDay(r.published))
+        .map(r => dayjs.unix(r.published).toISODate())
         .sort()
       return days.length ? days[0] : undefined
     },
@@ -115,7 +115,7 @@ export const store = new Vuex.Store<GlobalState>({
       const releases: { [id: string]: Release } = {}
 
       Object.values(state.releases).forEach(r => {
-        const day = timeUtil.unixtimeToDay(r.published)
+        const day = dayjs.unix(r.published).toISODate()
         if (day >= lastDay) {
           // include, otherwise exclude
           releases[r.id] = r
@@ -140,5 +140,5 @@ export function extendState (payload: Partial<GlobalState>): void {
 // Persist
 store.subscribe((m, state) => {
   // console.log('>>', m, JSON.stringify(state))
-  localStorage.setItem('state', JSON.stringify(objectUtil.pick(state, PERSIST)))
+  localStorage.setItem('state', JSON.stringify(_pick(state, PERSIST as any)))
 })
