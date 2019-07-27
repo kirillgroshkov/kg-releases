@@ -1,5 +1,5 @@
 #
-# # DO NOT MODIFY, WILL BE OVERWRITTEN BY @naturalcycles/shared-module
+# # DO NOT MODIFY, WILL BE OVERWRITTEN BY @naturalcycles/dev-lib
 #
 version: 2
 
@@ -41,12 +41,14 @@ exclude_patterns:
   - '**/*.test.*'
   - '**/*.mock.*'
   - '**/*.cnst.*'
+  - '**/*.config.*'
   - '**/*.d.ts'
   - 'build/'
   - 'src/@linked/'
-  - 'src/scripts/'
   - 'src/test/'
   - 'src/environments/'
+  - 'src/env/'
+  - 'scripts/'
   - 'other/'
   - 'patch/'
   - 'cordova-hooks/'
@@ -58,3 +60,4 @@ exclude_patterns:
   - 'doc/'
   - 'docker/'
   - 'public/'
+  - '**/__exclude/'

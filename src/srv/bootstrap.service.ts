@@ -1,5 +1,4 @@
 import { PromiseDecoratorResp } from '@/decorators/decorator.util'
-import { memo } from '@/decorators/memo.decorator'
 import { initProgressDecorator } from '@/decorators/progress.decorator'
 import { env, logEnvironment } from '@/environment/environment'
 import { app } from '@/main'
@@ -9,6 +8,7 @@ import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
 import { promiseUtil } from '@/util/promise.util'
+import { memo } from '@naturalcycles/js-lib'
 
 class BootstrapService {
   @memo()

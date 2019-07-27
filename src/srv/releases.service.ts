@@ -1,8 +1,8 @@
-import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
 import { apiService } from '@/srv/api.service'
 import { markdownService } from '@/srv/markdown.service'
 import { extendState, st, store } from '@/store'
+import { memo } from '@naturalcycles/js-lib'
 
 export interface ReleasesByDay {
   [day: string]: Release[]

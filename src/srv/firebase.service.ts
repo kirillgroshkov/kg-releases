@@ -1,4 +1,3 @@
-import { memo } from '@/decorators/memo.decorator'
 import { Progress } from '@/decorators/progress.decorator'
 import { analyticsService } from '@/srv/analytics.service'
 import { BackendResponse, releasesService } from '@/srv/releases.service'
@@ -7,6 +6,7 @@ import { extendState } from '@/store'
 import { jsonify, objectUtil } from '@/util/object.util'
 import { promiseUtil } from '@/util/promise.util'
 import { urlUtil } from '@/util/url.util'
+import { memo } from '@naturalcycles/js-lib'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 

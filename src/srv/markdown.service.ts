@@ -1,4 +1,4 @@
-import { memo } from '@/decorators/memo.decorator'
+import { memo } from '@naturalcycles/js-lib'
 import * as marked from 'marked'
 
 class MarkdownService {

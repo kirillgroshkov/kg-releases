@@ -1,5 +1,5 @@
-import { memo } from '@/decorators/memo.decorator'
 import { env } from '@/environment/environment'
+import { memo } from '@naturalcycles/js-lib'
 import { RavenOptions } from 'raven-js'
 import * as Raven from 'raven-js'
 import Vue from 'vue'
