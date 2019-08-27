@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { pDelay } from '@naturalcycles/promise-lib'
+import { pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { releasesService, Repo } from '@/srv/releases.service'

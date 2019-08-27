@@ -8,7 +8,7 @@ import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
 import { memo } from '@naturalcycles/js-lib'
-import { pDelay } from '@naturalcycles/promise-lib'
+import { pDelay } from '@naturalcycles/js-lib'
 
 class BootstrapService {
   @memo()

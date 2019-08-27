@@ -115,7 +115,7 @@ import Component from 'vue-class-component'
 import { Progress } from '@/decorators/progress.decorator'
 import { ReleasesByDay, releasesService } from '@/srv/releases.service'
 import { GlobalState, st, store } from '@/store'
-import { pDelay } from '@naturalcycles/promise-lib'
+import { pDelay } from '@naturalcycles/js-lib'
 
 @Component
 export default class ReleasesPage extends Vue {

@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@naturalcycles/js-lib": "^8.2.1",
-    "@naturalcycles/promise-lib": "^2.3.0",
     "@naturalcycles/time-lib": "^1.4.0",
     "firebase": "^6.3.3",
     "marked": "^0.7.0",
