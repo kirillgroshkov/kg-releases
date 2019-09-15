@@ -37,8 +37,8 @@ Starred repos: {{ state.starredReposNumber }}
                     <img :src="r.avatarUrl" style="width: 40px; height: 40px;" />
                   </td>
                   <td style="vertical-align: top; padding: 8px 0 0;">
-                    {{ r.repoFullName }}<br />
-                    <span class="ver">{{ r.v }}</span>
+                    {{ r.repoFullName }} <br />
+                    <span class="ver">{{ r.tagName }}</span>
                   </td>
                   <td
                     style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px;"
@@ -69,7 +69,7 @@ Starred repos: {{ state.starredReposNumber }}
                         </md-button>
                       </div>
 
-                      <div class="md" v-html="r.descr"></div>
+                      <div class="md" v-html="r.descrHtml"></div>
                     </td>
                   </tr>
                 </transition>
@@ -189,11 +189,11 @@ export default class ReleasesPage extends Vue {
     this.dayLast = store.getters.getReleasesLastDay()
     // console.log('dayLast: ' + this.dayLast)
 
-    const feedResp = await releasesService.fetchReleases(dayStr, nextDayStr)
+    const { releases = [] } = await releasesService.fetchReleases(dayStr, nextDayStr)
     this.releasesByDay = store.getters.getReleasesByDay()
     // this.loading = ''
     // const releasesCount = Object.keys(st().releases).length
-    loaded += feedResp.releases.length
+    loaded += releases.length
     // console.log('loaded: ' + loaded)
 
     if (loaded < this.maxReleases && dayStr > this.dayMax) {

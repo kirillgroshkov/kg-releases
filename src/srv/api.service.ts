@@ -12,7 +12,8 @@ class ApiService extends FetchService {
   }
 
   async fetch<T = any> (method: string, _url: string, _opt: FetchBody = {}): Promise<T> {
-    const url = `${env().apiUrl}${_url}`
+    const { apiUrl } = env()
+    const url = `${apiUrl}${_url}`
     return super.fetch<T>(method, url, {
       ..._opt,
       headers: {

@@ -1,19 +1,10 @@
 import { Progress } from '@/decorators/progress.decorator'
 import { apiService } from '@/srv/api.service'
-import { markdownService } from '@/srv/markdown.service'
 import { extendState, store } from '@/store'
 import { memo } from '@naturalcycles/js-lib'
 
 export interface ReleasesByDay {
   [day: string]: Release[]
-}
-
-export interface FeedResp {
-  lastCheckedReleases: number
-  rateLimit: RateLimit
-  lastStarred: string[]
-  starredRepos: number
-  releases: Release[]
 }
 
 export interface RateLimit {
@@ -22,16 +13,25 @@ export interface RateLimit {
   reset: number
 }
 
+export enum ReleaseType {
+  RELEASE = 'RELEASE',
+  TAG = 'TAG',
+}
+
 export interface Release {
-  // `${repoOwner}_${repoName}_${v}`
+  // ${repoFullName}_${tagName}
   id: string
   repoFullName: string
-  created: number
+  // created: number
   published: number
-  v: string // semver
-  descr: string // markdown
-  githubId: number
-  avatarUrl: string
+  // v: string // semver
+  tagName: string
+  descrHtml: string
+  author: string
+  authorThumb?: string
+  // githubId: number
+  avatarUrl?: string
+  // type: ReleaseType
 }
 
 export interface Repo {
@@ -68,34 +68,30 @@ export interface UserFM {
 export interface BackendResponse {
   newUser?: boolean
   userFM?: UserFM
+  releases?: Release[]
 }
 
 class ReleasesService {
   // @Progress()
-  async fetchReleases (minIncl: string, maxExcl?: string): Promise<FeedResp> {
+  async fetchReleases (minIncl: string, maxExcl?: string): Promise<BackendResponse> {
     console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
-    /*const minIncl = DateTime.utc()
-      .startOf('day')
-      .minus({ days: 3 })
-      .toFormat(LUXON_ISO_DATE_FORMAT)
-    const maxExcl = DateTime.utc()
-      .startOf('day')
-      .plus({ days: 1 })
-      .toFormat(LUXON_ISO_DATE_FORMAT)*/
 
-    const feedResp = await apiService.get<FeedResp>(`/?minIncl=${minIncl}&maxExcl=${maxExcl || ''}`)
-    feedResp.releases = feedResp.releases.map(r => this.mapRelease(r))
+    const { releases } = await apiService.get<BackendResponse>(
+      `/?minIncl=${minIncl}&maxExcl=${maxExcl || ''}`,
+    )
 
-    store.commit('extendState', {
-      rateLimit: feedResp.rateLimit,
-      starredReposNumber: feedResp.starredRepos,
-      lastStarred: feedResp.lastStarred,
-      lastCheckedReleases: feedResp.lastCheckedReleases,
-    })
+    // store.commit('extendState', {
+    //   rateLimit: feedResp.rateLimit,
+    //   starredReposNumber: feedResp.starredRepos,
+    //   lastStarred: feedResp.lastStarred,
+    //   lastCheckedReleases: feedResp.lastCheckedReleases,
+    // })
 
-    store.commit('addReleases', feedResp.releases)
+    store.commit('addReleases', releases)
 
-    return feedResp
+    return {
+      releases,
+    }
   }
 
   @Progress()
@@ -153,13 +149,6 @@ class ReleasesService {
       extendState({
         userFM: br.userFM,
       })
-    }
-  }
-
-  private mapRelease (r: Release): Release {
-    return {
-      ...r,
-      descr: markdownService.parse(r.descr || ''), // .substr(0, 2000)),
     }
   }
 }

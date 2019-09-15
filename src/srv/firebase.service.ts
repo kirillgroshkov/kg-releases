@@ -18,14 +18,18 @@ export interface UserInfo {
   idToken: string
 }
 
+// const CONFIG = {
+//   apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
+//   authDomain: 'test124-1621f.firebaseapp.com',
+//   projectId: 'test124-1621f',
+//   appId: '1:755695435449:web:734140edc18237cc',
+// }
+
 const CONFIG = {
-  apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
-  authDomain: 'test124-1621f.firebaseapp.com',
-  // databaseURL: "https://test124-1621f.firebaseio.com",
-  projectId: 'test124-1621f',
-  // storageBucket: "test124-1621f.appspot.com",
-  // messagingSenderId: "755695435449",
-  appId: '1:755695435449:web:734140edc18237cc',
+  apiKey: 'AIzaSyDcl9-AomhZQh2DWUswioVYQ3AsUhPb2bc',
+  authDomain: 'kg-backend3.firebaseapp.com',
+  projectId: 'kg-backend3',
+  appId: '1:1005385763504:web:6086ebd57284a3d3',
 }
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
@@ -41,7 +45,9 @@ class FirebaseService {
     firebase.initializeApp(CONFIG)
     firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
 
-    const _perf = firebase.performance()
+    if (window.prod) {
+      firebase.performance()
+    }
   }
 
   async login (): Promise<BackendResponse> {

@@ -4,7 +4,7 @@
   "author": "kirillgroshkov <1@inventix.ru>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 4100",
     "lint": "vue-cli-service lint",
     "build": "vue-cli-service build"
   },

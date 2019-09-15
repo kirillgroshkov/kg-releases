@@ -78,3 +78,9 @@ w.app = app
 w.clearReleases = () => {
   store.commit('extendState', { releases: {} })
 }
+
+declare global {
+  interface Window {
+    prod: boolean
+  }
+}
