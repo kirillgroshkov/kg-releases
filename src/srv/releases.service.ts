@@ -1,5 +1,5 @@
 import { Progress } from '@/decorators/progress.decorator'
-import { apiService } from '@/srv/api.service'
+import { api } from '@/srv/api.service'
 import { extendState, store } from '@/store'
 import { memo } from '@naturalcycles/js-lib'
 
@@ -73,12 +73,17 @@ export interface BackendResponse {
 
 class ReleasesService {
   // @Progress()
-  async fetchReleases (minIncl: string, maxExcl?: string): Promise<BackendResponse> {
+  async fetchReleases (minIncl: string, maxExcl = ''): Promise<BackendResponse> {
     console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
 
-    const { releases } = await apiService.get<BackendResponse>(
-      `/?minIncl=${minIncl}&maxExcl=${maxExcl || ''}`,
-    )
+    const { releases } = await api
+      .get('', {
+        searchParams: {
+          minIncl,
+          maxExcl,
+        },
+      })
+      .json<BackendResponse>()
 
     // store.commit('extendState', {
     //   rateLimit: feedResp.rateLimit,
@@ -96,7 +101,7 @@ class ReleasesService {
 
   @Progress()
   async fetchRepos (): Promise<void> {
-    const starredRepos = await apiService.get<Repo[]>('/repos')
+    const starredRepos = await api.get('repos').json<Repo[]>()
 
     store.commit('extendState', {
       starredRepos,
@@ -105,30 +110,34 @@ class ReleasesService {
 
   @Progress()
   async getReleasesByRepo (repoFullName: string): Promise<Release[]> {
-    return apiService.get<Release[]>(`/repos/${repoFullName}/releases`)
+    return api.get(`repos/${repoFullName}/releases`).json<Release[]>()
   }
 
   @Progress()
   async fetchReleasesByRepo (repoFullName: string): Promise<Release[]> {
-    return apiService.get<Release[]>(`/repos/${repoFullName}/releases/fetch`)
+    return api.get(`repos/${repoFullName}/releases/fetch`).json<Release[]>()
   }
 
   @Progress()
-  async auth (body: AuthInput): Promise<BackendResponse> {
-    const br = await apiService.post<BackendResponse>(`/auth`, {
-      body,
-    })
-    console.log('auth', br)
+  async auth (json: AuthInput): Promise<BackendResponse> {
+    const br = await api
+      .post(`auth`, {
+        json,
+      })
+      .json<BackendResponse>()
+    // console.log('auth', br)
 
     this.onBackendResponse(br)
 
     return br
   }
 
-  async saveUserSettings (body: UserSettings): Promise<BackendResponse> {
-    const br = await apiService.put<BackendResponse>(`/userSettings`, {
-      body,
-    })
+  async saveUserSettings (json: UserSettings): Promise<BackendResponse> {
+    const br = await api
+      .put(`userSettings`, {
+        json,
+      })
+      .json<BackendResponse>()
 
     this.onBackendResponse(br)
 
@@ -137,7 +146,7 @@ class ReleasesService {
 
   @memo()
   async init (): Promise<BackendResponse> {
-    const br = await apiService.get<BackendResponse>(`/init`)
+    const br = await api.get(`init`).json<BackendResponse>()
 
     this.onBackendResponse(br)
 

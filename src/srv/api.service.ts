@@ -1,27 +1,27 @@
 import { env } from '@/environment/environment'
-import { FetchBody, FetchService } from '@/srv/fetch.service'
 import { st } from '@/store'
 import { filterFalsyValues } from '@naturalcycles/js-lib'
+import Ky from 'ky'
 
-class ApiService extends FetchService {
-  private get headers (): any {
-    return filterFalsyValues({
-      idToken: st().user.idToken,
-      uid: st().user.uid,
-    })
-  }
+const { apiUrl } = env()
 
-  async fetch<T = any> (method: string, _url: string, _opt: FetchBody = {}): Promise<T> {
-    const { apiUrl } = env()
-    const url = `${apiUrl}${_url}`
-    return super.fetch<T>(method, url, {
-      ..._opt,
-      headers: {
-        ...this.headers,
-        ..._opt.headers,
+export const api = Ky.extend({
+  credentials: 'include',
+  timeout: 30000,
+  prefixUrl: apiUrl,
+  hooks: {
+    beforeRequest: [
+      (input, options) => {
+        const { uid, idToken } = st().user
+        const headers: Record<string, string> = filterFalsyValues({
+          idToken,
+          uid,
+        })
+
+        Object.keys(headers).forEach(k => {
+          options.headers.set(k, headers[k])
+        })
       },
-    })
-  }
-}
-
-export const apiService = new ApiService()
+    ],
+  },
+})

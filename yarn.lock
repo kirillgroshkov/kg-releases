@@ -4805,6 +4805,11 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
   integrity sha512-s5kLOcnH0XqDO+FvuaLX8DDjZ18CGFk7VygH40QoKPUQhW4e2rvM0rwUq0t8IQDOwYSeLK01U90OjzBTme2QqA==
 
+ky@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.14.0.tgz#b99bda5818d3a493f9857f39532ff567e2773c35"
+  integrity sha512-NSjg+WCElQPdlF3BFZnjh8s5QlMIP+vIGoyukrRU+n+23VBUX87bQYOoG5h3HX5tO7kKQYXvg+QZVt8n0uWmhg==
+
 launch-editor-middleware@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/launch-editor-middleware/-/launch-editor-middleware-2.2.1.tgz#e14b07e6c7154b0a4b86a0fd345784e45804c157"

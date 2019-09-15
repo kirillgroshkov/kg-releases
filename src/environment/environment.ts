@@ -16,8 +16,6 @@ if (location.href.includes('netlify')) {
   environment = ENVIRONMENTS['dev']
 }
 
-// todo: support prod from netlify
-
 export function env (): Environment {
   return environment
 }
