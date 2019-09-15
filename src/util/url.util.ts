@@ -1,9 +1,7 @@
-import { StringMap } from '@/typings/types'
-
 class UrlUtil {
-  qs (): StringMap {
+  qs (): Record<string, string> {
     const queryString = location.search
-    const query: StringMap = {}
+    const query: Record<string, string> = {}
     const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
     for (const p of pairs) {
       const pair = p.split('=')

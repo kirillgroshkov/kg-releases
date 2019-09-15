@@ -4,8 +4,7 @@ import { BackendResponse, releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 import { urlUtil } from '@/util/url.util'
-import { _pick, deepCopy, memo } from '@naturalcycles/js-lib'
-import { pDefer } from '@naturalcycles/js-lib'
+import { _pick, deepCopy, memo, pDefer } from '@naturalcycles/js-lib'
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/performance'
@@ -51,15 +50,15 @@ class FirebaseService {
   }
 
   async login (): Promise<BackendResponse> {
-    const r = (await firebase.auth().signInWithPopup(githubAuthProvider)) as any
+    const userCredential = await firebase.auth().signInWithPopup(githubAuthProvider)
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
-    console.log(r)
+    console.log(userCredential)
     const idToken = await firebase.auth().currentUser!.getIdToken()
     // console.log('idToken', idToken)
 
     const br = await releasesService.auth({
-      username: r.additionalUserInfo!.username,
-      accessToken: r.credential!.accessToken,
+      username: userCredential.additionalUserInfo!.username!,
+      accessToken: (userCredential.credential as any).accessToken,
       idToken,
     })
 
@@ -90,7 +89,7 @@ class FirebaseService {
         user,
       })
     } else if (_user) {
-      const idToken = await firebase.auth!().currentUser!.getIdToken()
+      const idToken = await firebase.auth().currentUser!.getIdToken()
 
       // console.log('idToken', idToken)
       const user = {

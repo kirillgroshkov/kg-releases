@@ -68,8 +68,8 @@ import { firebaseService } from '@/srv/firebase.service'
 export default class HomePage extends Vue {
   async login() {
     analyticsService.event('loginClick')
-    const authResp = await firebaseService.login()
-    if (authResp.newUser) {
+    const { newUser } = await firebaseService.login()
+    if (newUser) {
       alert(
         'Welcome to Releases!\nDepending on the number of stars it may take few minutes to import your starred repos and scan them.',
       )

@@ -82,5 +82,7 @@ w.clearReleases = () => {
 declare global {
   interface Window {
     prod: boolean
+    dataLayer: any[]
+    gtag (...args: any[]): void
   }
 }
