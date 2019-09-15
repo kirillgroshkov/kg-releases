@@ -1,52 +1,47 @@
 import { env } from '@/environment/environment'
 import { memo } from '@naturalcycles/js-lib'
-import { RavenOptions } from 'raven-js'
-import * as Raven from 'raven-js'
+import * as Sentry from '@sentry/browser'
+import * as Integrations from '@sentry/integrations'
 import Vue from 'vue'
-const RavenVue = require('raven-js/plugins/vue')
 
 class SentryService {
-  get enabled (): boolean {
-    // return env().sentryEnabled && !!env().sentryDsn
-    return !!env().sentryDsn
-  }
-
   @memo()
   init (): void {
     // if (!this.enabled) return
+    const { sentryDsn: dsn, name: environment } = env()
 
-    Raven.config(env().sentryDsn!, {
-      // release: buildInfo.ver,
-      environment: env().name,
-      tags: {
-        // buildInfo_ver: buildInfo.ver,
-        // buildInfo_env: buildInfo.env,
-      },
-      // whitelistUrls: [],
-      // debug: true,
-    } as RavenOptions)
-      .addPlugin(RavenVue, Vue)
-      .install()
+    Sentry.init({
+      dsn,
+      environment,
+      integrations: [
+        // new Integrations.CaptureConsole(),
+        new Integrations.Vue({
+          Vue,
+          attachProps: true,
+          logErrors: true,
+        }),
+      ],
+    })
   }
 
   // Returns lastEventId
-  captureException (err: Error): string {
+  captureException (err: Error): string | undefined {
     // debugger;
     console.log('error in sentryService.captureException:')
     console.error(err)
 
     // if (!this.enabled) return ''
 
-    Raven.captureException(err)
-    return Raven.lastEventId()
+    Sentry.captureException(err)
+    return Sentry.lastEventId()
   }
 
-  setUserContext (ctx: any): void {
-    Raven.setUserContext(ctx)
+  setUser (ctx: any): void {
+    Sentry.setUser(ctx)
   }
 
-  setExtraContext (ctx: any): void {
-    Raven.setExtraContext(ctx)
+  setExtras (ctx: any): void {
+    Sentry.setExtras(ctx)
   }
 }
 

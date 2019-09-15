@@ -6,7 +6,7 @@ export class EnvironmentDev extends EnvironmentProd {
   dev = true
 
   // loginUrl = 'http://localhost:8000/login'
-  // apiUrl = 'http://localhost:8000/releases'
+  // apiUrl = 'http://localhost:8080/releases'
 
   sentryDsn = undefined
   // sentryEnabled = false

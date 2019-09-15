@@ -69,7 +69,7 @@ class FirebaseService {
   @Progress()
   async logout (): Promise<void> {
     await firebase.auth().signOut()
-    sentryService.setUserContext({})
+    sentryService.setUser({})
   }
 
   private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
@@ -83,7 +83,7 @@ class FirebaseService {
         uid: qs.uid,
       } as UserInfo
 
-      sentryService.setUserContext(user)
+      sentryService.setUser(user)
       analyticsService.setUserId(user.uid)
 
       extendState({
@@ -98,7 +98,7 @@ class FirebaseService {
         idToken,
       }
 
-      sentryService.setUserContext(user)
+      sentryService.setUser(user)
       analyticsService.setUserId(user.uid)
 
       extendState({

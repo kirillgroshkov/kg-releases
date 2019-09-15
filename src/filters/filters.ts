@@ -1,4 +1,3 @@
-import { markdownService } from '@/srv/markdown.service'
 import { dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 
@@ -20,8 +19,4 @@ Vue.filter('timeHM', (v: number) => {
 Vue.filter('timeAgo', (v: number) => {
   if (!v) return ''
   return dayjs.unix(v).fromNow()
-})
-
-Vue.filter('md', (s: string) => {
-  return markdownService.parse(s)
 })
