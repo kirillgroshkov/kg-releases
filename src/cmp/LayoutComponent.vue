@@ -27,7 +27,7 @@
 
             <div class="md-toolbar-section-end" style="flex: 0">
               <md-avatar v-if="user.uid" class="md-elevation-1">
-                <img class="avatar" :src="user.photoURL" alt="user.displayName" />
+                <img class="avatar" :src="user.photoURL" alt="user.displayName" loading="lazy" />
               </md-avatar>
             </div>
           </div>
@@ -94,6 +94,8 @@ export default class LayoutComponent extends Vue {
 
 .avatar {
   // border: 10px solid black;
+  width: 40px;
+  height: 40px;
 }
 .md-avatar {
   // border: 1px solid black;

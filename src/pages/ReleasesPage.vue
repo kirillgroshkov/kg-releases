@@ -34,7 +34,7 @@ Starred repos: {{ state.starredReposNumber }}
               <template v-for="r in releasesByDay[day]">
                 <tr class="mainTr" @click="toggleClick(r.id)">
                   <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top;">
-                    <img :src="r.avatarUrl" style="width: 40px; height: 40px;" />
+                    <img :src="r.avatarUrl" style="width: 40px; height: 40px;" loading="lazy" />
                   </td>
                   <td style="vertical-align: top; padding: 8px 0 0;">
                     {{ r.repoFullName }} <br />
