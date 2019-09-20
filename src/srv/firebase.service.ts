@@ -1,6 +1,7 @@
 import { Progress } from '@/decorators/progress.decorator'
 import { analyticsService } from '@/srv/analytics.service'
-import { BackendResponse, releasesService } from '@/srv/releases.service'
+import { BackendResponse } from '@/srv/model'
+import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 import { urlUtil } from '@/util/url.util'

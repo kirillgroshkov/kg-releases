@@ -8,10 +8,11 @@
 </template>
 
 <script lang="ts">
+import { Repo } from '@/srv/model'
 import { pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { releasesService, Repo } from '@/srv/releases.service'
+import { releasesService } from '@/srv/releases.service'
 import { GlobalState, st, store } from '@/store'
 
 @Component

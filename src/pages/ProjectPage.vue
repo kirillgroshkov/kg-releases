@@ -17,10 +17,11 @@
 </template>
 
 <script lang="ts">
+import { Release } from '@/srv/model'
 import { pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Release, releasesService, Repo } from '../srv/releases.service'
+import { releasesService } from '../srv/releases.service'
 
 @Component
 export default class ProjectPage extends Vue {

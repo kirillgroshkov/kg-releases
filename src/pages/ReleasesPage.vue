@@ -2,11 +2,11 @@
   <div>
     <div>
       <div class="container releases">
-        <div class="row" v-if="state.rateLimit">
+        <div class="row">
           <div class="col">
             <pre>
-Last updated: {{ state.lastCheckedReleases | unixtimePretty }}
-Starred repos: {{ state.starredReposNumber }}
+Last updated: {{ state.releasesUpdaterLastFinished | unixtimePretty }}
+Starred repos: {{ state.userFM.starredReposCount }}
             </pre>
           </div>
         </div>
@@ -109,11 +109,12 @@ Starred repos: {{ state.starredReposNumber }}
 </template>
 
 <script lang="ts">
+import { ReleasesByDay } from '@/srv/model'
 import { Dayjs, dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Progress } from '@/decorators/progress.decorator'
-import { ReleasesByDay, releasesService } from '@/srv/releases.service'
+import { releasesService } from '@/srv/releases.service'
 import { GlobalState, st, store } from '@/store'
 import { pDelay } from '@naturalcycles/js-lib'
 

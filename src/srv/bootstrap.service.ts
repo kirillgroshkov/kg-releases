@@ -1,14 +1,18 @@
+import { bootstrapDoneDefer } from '@/bootstrapDone'
 import { PromiseDecoratorResp } from '@/decorators/decorator.util'
 import { initProgressDecorator } from '@/decorators/progress.decorator'
 import { env, logEnvironment } from '@/environment/environment'
 import { app } from '@/main'
+import { router } from '@/router'
 import { analyticsService } from '@/srv/analytics.service'
+import { ResponseWithHttpError } from '@/srv/api.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
-import { memo } from '@naturalcycles/js-lib'
+import { HttpError, memo } from '@naturalcycles/js-lib'
 import { pDelay } from '@naturalcycles/js-lib'
+import { HTTPError } from 'ky'
 
 class BootstrapService {
   @memo()
@@ -31,6 +35,7 @@ class BootstrapService {
     }
 
     void this.hideLoader()
+    bootstrapDoneDefer.resolve()
   }
 
   private initDecorators(): void {
@@ -48,17 +53,31 @@ class BootstrapService {
         app.$Progress.finish()
         return r.res
       },
-      async errorFn(r: PromiseDecoratorResp) {
+      async errorFn(resp: PromiseDecoratorResp) {
         store.commit('setGhost', false)
         app.$Progress.fail()
-        console.log('decccc', r)
-        const t = [
-          `@Progress() error in ${r.target.constructor.name}.${r.propertyKey}:`,
-          (r.err && r.err.message) || JSON.stringify(r.err, undefined, 2),
-        ]
-        const msg = t.join('\n')
+        const tokens = [`@Progress() error in ${resp.target.constructor.name}.${resp.propertyKey}`]
+        let httpError: HttpError | undefined
+
+        const { err } = resp
+        if (err instanceof HTTPError) {
+          httpError = (err.response as ResponseWithHttpError).httpError
+          if (httpError) {
+            tokens.push(httpError.message)
+          }
+        }
+
+        const msg = tokens.join('\n')
+        console.warn(msg)
         alert(msg)
-        return Promise.reject(r.err)
+
+        if (httpError && httpError.data.httpStatusCode === 401) {
+          await firebaseService.logout()
+          router.push('/')
+          return
+        }
+
+        return Promise.reject(msg)
       },
     })
   }

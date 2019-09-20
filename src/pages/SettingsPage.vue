@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts">
+import { UserSettings } from '@/srv/model'
 import { deepEquals } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
@@ -38,7 +39,7 @@ import { Progress } from '@/decorators/progress.decorator'
 import { router } from '@/router'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
-import { releasesService, UserFM, UserSettings } from '@/srv/releases.service'
+import { releasesService } from '@/srv/releases.service'
 import { st } from '@/store'
 
 @Component

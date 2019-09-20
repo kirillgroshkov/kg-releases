@@ -1,6 +1,6 @@
 import { env } from '@/environment/environment'
 import { UserInfo } from '@/srv/firebase.service'
-import { RateLimit, Release, ReleasesByDay, Repo, UserFM } from '@/srv/releases.service'
+import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 import { _pick, by } from '@naturalcycles/js-lib'
 import { dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
@@ -13,10 +13,10 @@ export interface GlobalState {
   user: UserInfo
   userFM: UserFM
   ghostMode: boolean
-  lastCheckedReleases: number
-  rateLimit: RateLimit
+  releasesUpdaterLastFinished?: number
+  // rateLimit: RateLimit
   lastStarred: string[]
-  starredReposNumber: number
+  // starredReposNumber: number
   releases: { [id: string]: Release }
   starredRepos: Repo[]
 }
@@ -28,9 +28,8 @@ const DEF_STATE: GlobalState = {
     settings: {},
   } as any,
   ghostMode: false,
-  lastCheckedReleases: 0,
-  rateLimit: {} as any,
-  starredReposNumber: 0,
+  // rateLimit: {} as any,
+  // starredReposNumber: 0,
   releases: {},
   lastStarred: [],
   starredRepos: [],
@@ -107,7 +106,7 @@ export const store = new Vuex.Store<GlobalState>({
     addReleases(state: GlobalState, releases: Release[] = []): void {
       state.releases = {
         ...state.releases,
-        ...by(releases, 'id'),
+        ...by(releases, r => r.id),
       }
     },
 
@@ -123,6 +122,19 @@ export const store = new Vuex.Store<GlobalState>({
       })
 
       state.releases = releases
+    },
+
+    onBackendResponse(state: GlobalState, br: BackendResponse = {}): void {
+      console.log('onBackendResponse', br)
+      const { userFM, releasesUpdaterLastFinished } = br
+
+      if (userFM) {
+        Object.assign(state, { userFM })
+      }
+
+      if (releasesUpdaterLastFinished) {
+        Object.assign(state, { releasesUpdaterLastFinished })
+      }
     },
   },
 })

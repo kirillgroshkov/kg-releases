@@ -58,6 +58,7 @@
 </template>
 
 <script lang="ts">
+import { Progress } from '@/decorators/progress.decorator'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { router } from '@/router'
@@ -66,6 +67,7 @@ import { firebaseService } from '@/srv/firebase.service'
 
 @Component
 export default class HomePage extends Vue {
+  @Progress()
   async login() {
     analyticsService.event('loginClick')
     const { newUser } = await firebaseService.login()
