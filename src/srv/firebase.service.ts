@@ -17,18 +17,11 @@ export interface UserInfo {
   idToken: string
 }
 
-// const CONFIG = {
-//   apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
-//   authDomain: 'test124-1621f.firebaseapp.com',
-//   projectId: 'test124-1621f',
-//   appId: '1:755695435449:web:734140edc18237cc',
-// }
-
 const CONFIG = {
-  apiKey: 'AIzaSyDcl9-AomhZQh2DWUswioVYQ3AsUhPb2bc',
-  authDomain: 'kg-backend3.firebaseapp.com',
-  projectId: 'kg-backend3',
-  appId: '1:1005385763504:web:6086ebd57284a3d3',
+  apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
+  authDomain: 'test124-1621f.firebaseapp.com',
+  projectId: 'test124-1621f',
+  appId: '1:755695435449:web:734140edc18237cc',
 }
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
