@@ -12,7 +12,7 @@ import { pDelay } from '@naturalcycles/js-lib'
 
 class BootstrapService {
   @memo()
-  async init (): Promise<void> {
+  async init(): Promise<void> {
     if (!env().dev) logEnvironment()
 
     sentryService.init()
@@ -33,13 +33,13 @@ class BootstrapService {
     void this.hideLoader()
   }
 
-  private initDecorators (): void {
+  private initDecorators(): void {
     initProgressDecorator({
-      beforeFn () {
+      beforeFn() {
         store.commit('setGhost')
         app.$Progress.start()
       },
-      okFn (r: PromiseDecoratorResp) {
+      okFn(r: PromiseDecoratorResp) {
         store.commit('setGhost', false)
         let cls: string = r.target && r.target.constructor && r.target.constructor.name
         if (cls) cls += '.'
@@ -48,7 +48,7 @@ class BootstrapService {
         app.$Progress.finish()
         return r.res
       },
-      async errorFn (r: PromiseDecoratorResp) {
+      async errorFn(r: PromiseDecoratorResp) {
         store.commit('setGhost', false)
         app.$Progress.fail()
         console.log('decccc', r)
@@ -63,7 +63,7 @@ class BootstrapService {
     })
   }
 
-  async hideLoader (): Promise<void> {
+  async hideLoader(): Promise<void> {
     const loader = document.getElementById('loading0')!
     await pDelay(env().prod ? 500 : 500)
     loader.addEventListener('transitionend', () => loader.remove())

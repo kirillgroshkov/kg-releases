@@ -73,7 +73,7 @@ export interface BackendResponse {
 
 class ReleasesService {
   // @Progress()
-  async fetchReleases (minIncl: string, maxExcl = ''): Promise<BackendResponse> {
+  async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
     console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
 
     const { releases } = await api
@@ -100,7 +100,7 @@ class ReleasesService {
   }
 
   @Progress()
-  async fetchRepos (): Promise<void> {
+  async fetchRepos(): Promise<void> {
     const starredRepos = await api.get('repos').json<Repo[]>()
 
     store.commit('extendState', {
@@ -109,17 +109,17 @@ class ReleasesService {
   }
 
   @Progress()
-  async getReleasesByRepo (repoFullName: string): Promise<Release[]> {
+  async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
     return api.get(`repos/${repoFullName}/releases`).json<Release[]>()
   }
 
   @Progress()
-  async fetchReleasesByRepo (repoFullName: string): Promise<Release[]> {
+  async fetchReleasesByRepo(repoFullName: string): Promise<Release[]> {
     return api.get(`repos/${repoFullName}/releases/fetch`).json<Release[]>()
   }
 
   @Progress()
-  async auth (json: AuthInput): Promise<BackendResponse> {
+  async auth(json: AuthInput): Promise<BackendResponse> {
     const br = await api
       .post(`auth`, {
         json,
@@ -132,7 +132,7 @@ class ReleasesService {
     return br
   }
 
-  async saveUserSettings (json: UserSettings): Promise<BackendResponse> {
+  async saveUserSettings(json: UserSettings): Promise<BackendResponse> {
     const br = await api
       .put(`userSettings`, {
         json,
@@ -145,7 +145,7 @@ class ReleasesService {
   }
 
   @memo()
-  async init (): Promise<BackendResponse> {
+  async init(): Promise<BackendResponse> {
     const br = await api.get(`init`).json<BackendResponse>()
 
     this.onBackendResponse(br)
@@ -153,7 +153,7 @@ class ReleasesService {
     return br
   }
 
-  onBackendResponse (br: BackendResponse): void {
+  onBackendResponse(br: BackendResponse): void {
     if (br.userFM) {
       extendState({
         userFM: br.userFM,

@@ -23,11 +23,11 @@ export interface PromiseDecoratorResp {
   decoratorName: string
 }
 
-export function createPromiseDecorator (
+export function createPromiseDecorator(
   cfg: PromiseDecoratorCfg,
   decoratorParams?: any,
 ): PromiseDecoratorFunction {
-  return function DecoratorFunction (
+  return function DecoratorFunction(
     target: any,
     propertyKey: string,
     pd: PropertyDescriptor,
@@ -35,7 +35,7 @@ export function createPromiseDecorator (
     // console.log(`@Decorator.${cfg.decoratorName} called: ` + propertyKey, pd, target)
     const originalMethod = pd.value!
 
-    pd.value = async function (...args: any[]): Promise<any> {
+    pd.value = async function(...args: any[]): Promise<any> {
       // console.log(`@Decorator.${cfg.decoratorName} called inside function`)
       const started = Date.now()
 

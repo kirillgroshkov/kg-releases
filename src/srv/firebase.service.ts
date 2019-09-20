@@ -40,7 +40,7 @@ class FirebaseService {
   authStateChanged = this.authStateChangedDeferred.promise
 
   @memo()
-  async init (): Promise<void> {
+  async init(): Promise<void> {
     firebase.initializeApp(CONFIG)
     firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
 
@@ -49,7 +49,7 @@ class FirebaseService {
     }
   }
 
-  async login (): Promise<BackendResponse> {
+  async login(): Promise<BackendResponse> {
     const userCredential = await firebase.auth().signInWithPopup(githubAuthProvider)
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
     console.log(userCredential)
@@ -66,12 +66,12 @@ class FirebaseService {
   }
 
   @Progress()
-  async logout (): Promise<void> {
+  async logout(): Promise<void> {
     await firebase.auth().signOut()
     sentryService.setUser({})
   }
 
-  private async onAuthStateChanged (_user?: UserInfo): Promise<void> {
+  private async onAuthStateChanged(_user?: UserInfo): Promise<void> {
     console.log('onAuthStateChanged, user: ', deepCopy(_user))
 
     // debug!

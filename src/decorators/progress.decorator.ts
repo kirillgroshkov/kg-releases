@@ -4,7 +4,7 @@ const cfg: PromiseDecoratorCfg = {
   decoratorName: 'Progress',
 }
 
-export function initProgressDecorator (_cfg: Partial<PromiseDecoratorCfg>): void {
+export function initProgressDecorator(_cfg: Partial<PromiseDecoratorCfg>): void {
   Object.assign(cfg, _cfg)
 }
 

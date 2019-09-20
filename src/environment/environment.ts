@@ -16,14 +16,14 @@ if (location.href.includes('netlify')) {
   environment = ENVIRONMENTS['dev']
 }
 
-export function env (): Environment {
+export function env(): Environment {
   return environment
 }
 
-export function logEnvironment (): void {
+export function logEnvironment(): void {
   console.log(environment)
 }
 
-export function extendEnvironment (extension: Partial<Environment>): void {
+export function extendEnvironment(extension: Partial<Environment>): void {
   Object.assign(environment, extension)
 }

@@ -85,33 +85,33 @@ export const store = new Vuex.Store<GlobalState>({
   },
 
   mutations: {
-    extendState (state: GlobalState, extension: Partial<GlobalState>): void {
+    extendState(state: GlobalState, extension: Partial<GlobalState>): void {
       Object.assign(state, extension)
     },
 
-    reset (state: GlobalState): void {
+    reset(state: GlobalState): void {
       Object.assign(state, DEF_STATE)
     },
 
-    setGhost (state: GlobalState, ghostMode = true): void {
+    setGhost(state: GlobalState, ghostMode = true): void {
       Object.assign(state, { ghostMode })
     },
 
-    setUser (state: GlobalState, uid: string): void {
+    setUser(state: GlobalState, uid: string): void {
       state.user = {
         ...state.user,
         uid,
       }
     },
 
-    addReleases (state: GlobalState, releases: Release[] = []): void {
+    addReleases(state: GlobalState, releases: Release[] = []): void {
       state.releases = {
         ...state.releases,
         ...by(releases, 'id'),
       }
     },
 
-    cleanAfterLastDay (state: GlobalState, lastDay: string): void {
+    cleanAfterLastDay(state: GlobalState, lastDay: string): void {
       const releases: { [id: string]: Release } = {}
 
       Object.values(state.releases).forEach(r => {
@@ -128,12 +128,12 @@ export const store = new Vuex.Store<GlobalState>({
 })
 
 // Shortcut function to get State, properly typed
-export function st (): GlobalState {
+export function st(): GlobalState {
   return store.state
 }
 
 // Shortcut
-export function extendState (payload: Partial<GlobalState>): void {
+export function extendState(payload: Partial<GlobalState>): void {
   store.commit('extendState', payload)
 }
 

@@ -1,20 +1,20 @@
 import { env } from '@/environment/environment'
 
 class AnalyticsService {
-  init (): void {
+  init(): void {
     // this.initGA()
     this.initHotjar()
   }
 
-  setUserId (userId: string): void {
+  setUserId(userId: string): void {
     window.gtag('set', { user_id: userId })
   }
 
-  pageView (pagePath: string): void {
+  pageView(pagePath: string): void {
     window.gtag('config', env().gaId, { page_path: pagePath })
   }
 
-  event (eventName: string, params: any = {}): void {
+  event(eventName: string, params: any = {}): void {
     window.gtag('event', eventName, params)
   }
 
@@ -31,14 +31,14 @@ class AnalyticsService {
     void loadScript(`https://www.googletagmanager.com/gtag/js?id=${env().gaId}`)
   }*/
 
-  private initHotjar (): void {
+  private initHotjar(): void {
     if (!env().hotjarId) {
       return
     }
-    ;(function (h, o, t, j) {
+    ;(function(h, o, t, j) {
       h.hj =
         h.hj ||
-        function () {
+        function() {
           ;(h.hj.q = h.hj.q || []).push(arguments)
         }
       h._hjSettings = { hjid: env().hotjarId, hjsv: 6 }

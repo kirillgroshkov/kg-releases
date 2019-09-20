@@ -11,7 +11,7 @@ declare module 'vue/types/vue' {
 }
 
 interface Progress {
-  start (): void
-  finish (): void
-  fail (): void
+  start(): void
+  finish(): void
+  fail(): void
 }

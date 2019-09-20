@@ -6,7 +6,7 @@ import Vue from 'vue'
 
 class SentryService {
   @memo()
-  init (): void {
+  init(): void {
     // if (!this.enabled) return
     const { sentryDsn: dsn, name: environment } = env()
 
@@ -25,7 +25,7 @@ class SentryService {
   }
 
   // Returns lastEventId
-  captureException (err: Error): string | undefined {
+  captureException(err: Error): string | undefined {
     // debugger;
     console.log('error in sentryService.captureException:')
     console.error(err)
@@ -36,11 +36,11 @@ class SentryService {
     return Sentry.lastEventId()
   }
 
-  setUser (ctx: any): void {
+  setUser(ctx: any): void {
     Sentry.setUser(ctx)
   }
 
-  setExtras (ctx: any): void {
+  setExtras(ctx: any): void {
     Sentry.setExtras(ctx)
   }
 }

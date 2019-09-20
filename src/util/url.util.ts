@@ -1,5 +1,5 @@
 class UrlUtil {
-  qs (): Record<string, string> {
+  qs(): Record<string, string> {
     const queryString = location.search
     const query: Record<string, string> = {}
     const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
