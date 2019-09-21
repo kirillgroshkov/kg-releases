@@ -10,7 +10,9 @@
       <md-input v-model="settings.notificationEmail" type="email" required></md-input>
     </md-field>
 
+    <!--
     <md-checkbox v-model="settings.notifyEmailRealtime">Notify on every release</md-checkbox><br />
+    -->
     <md-checkbox v-model="settings.notifyEmailDaily">Notify once a day</md-checkbox><br />
     <p>
       Please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your
