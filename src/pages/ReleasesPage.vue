@@ -2,14 +2,22 @@
   <div>
     <div>
       <div class="container releases">
-        <div class="row">
-          <div class="col">
-            <pre>
+        <table style="width: 100%; max-width: 500px;">
+          <tr>
+            <td>
+              <pre>
 Last updated: {{ state.releasesUpdaterLastFinished | unixtimePretty }}
 Starred repos: {{ state.userFM.starredReposCount }}
-            </pre>
-          </div>
-        </div>
+            </pre
+              >
+            </td>
+            <td style="text-align: right; padding-right: 20px;">
+              <md-button class="md-raised md-primary" @click="reload()" style="margin-top: -12px;"
+                >reload...</md-button
+              >
+            </td>
+          </tr>
+        </table>
 
         <div v-if="false">
           dayFirst={{ dayFirst }}, dayLast={{ dayLast }}
@@ -161,8 +169,12 @@ export default class ReleasesPage extends Vue {
     return days
   }
 
-  @Progress()
   async mounted() {
+    await this.reload()
+  }
+
+  @Progress()
+  async reload() {
     this.maxReleases = 30
     const today = dayjs.utc()
     const todayStr = today.toISODate()
