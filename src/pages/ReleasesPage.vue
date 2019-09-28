@@ -16,7 +16,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
           <div v-for="d in days" v-if="false">{{ d }} {{ (releasesByDay[d] || []).length }}</div>
         </div>
 
-        <div class="tableRow" style="margin: -10px -16px 0;">
+        <div class="tableRow" style="margin: -10px -16px 0; padding-bottom: 80px;">
           <template v-for="day in days">
             <table
               v-if="(releasesByDay[day] || []).length"
