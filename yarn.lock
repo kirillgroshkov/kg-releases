@@ -413,9 +413,9 @@
     glob-to-regexp "^0.3.0"
 
 "@naturalcycles/dev-lib@^8.1.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/dev-lib/-/dev-lib-8.3.0.tgz#5aeae75338eadee4272b2ea0cffc7635b24d7fa9"
-  integrity sha512-X5cFQHb20ayOR0zCedqe13xgxhhK9Nwb+nc62aPr6nFYgtdsHt13n3mD0417/DTyMw28MfYW5tWxHGIoHSLt0A==
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/dev-lib/-/dev-lib-8.4.0.tgz#7beb7ab2a889b219dbc477a784b46b5e6a333bc7"
+  integrity sha512-eEuC4sWYICKb2GmpgHvBczBMEUfvtXhyhqbX17QkuGjkmy5bFON76kMQ8nDrPoiDqtI+VIeNCjfvLGEL+9fRFg==
   dependencies:
     "@commitlint/cli" "^8.0.0"
     "@commitlint/config-conventional" "^8.0.0"
@@ -433,7 +433,7 @@
     execa "^2.0.3"
     fs-extra "^8.0.0"
     husky "^3.0.0"
-    jest-junit "^7.0.0"
+    jest-junit "^8.0.0"
     lint-staged "^8.0.4"
     loud-rejection "^2.1.0"
     mitm "^1.7.0"
@@ -4658,10 +4658,10 @@ jest-get-type@^24.9.0:
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-24.9.0.tgz#1684a0c8a50f2e4901b6644ae861f579eed2ef0e"
   integrity sha512-lUseMzAley4LhIcpSP9Jf+fTrQ4a1yHQwLNeeVa2cEmbCGeoZAtYPOIv8JaxLD/sUpKxetKGP+gsHl8f8TSj8Q==
 
-jest-junit@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-7.0.0.tgz#e2ab2dc3f4eb2768f3e4c43e4e4cd841133a8c0e"
-  integrity sha512-ljUdO0hLyu0A92xk7R2Wet3kj99fmazTo+ZFYQP6b7AGOBxJUj8ZkJWzJ632ajpXko2Y5oNoGR2kvOwiDdu6hg==
+jest-junit@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-8.0.0.tgz#d4f7ff67e292a5426dc60bc38694c9f77cb94178"
+  integrity sha512-cuD2XM2youMjrOxOu/7H2pLfsO8LfAG4D3WsBxd9fFyI9U0uPpmr/CORH64kbIyZ47X5x1Rbzb9ovUkAEvhEEA==
   dependencies:
     jest-validate "^24.0.0"
     mkdirp "^0.5.1"
