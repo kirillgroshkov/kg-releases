@@ -9,11 +9,12 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@naturalcycles/frontend-lib": "^1.0.0",
     "@naturalcycles/js-lib": "^8.2.1",
     "@naturalcycles/time-lib": "^1.4.0",
     "@sentry/browser": "^5.6.3",
     "@sentry/integrations": "^5.6.1",
-    "firebase": "^6.3.3",
+    "firebase": "^7.0.0",
     "ky": "^0.14.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
