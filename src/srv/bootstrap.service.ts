@@ -12,7 +12,7 @@ import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
 import { HttpError, memo } from '@naturalcycles/js-lib'
 import { pDelay } from '@naturalcycles/js-lib'
-import { HTTPError } from 'ky'
+import ky from 'ky'
 
 class BootstrapService {
   @memo()
@@ -60,7 +60,7 @@ class BootstrapService {
         let httpError: HttpError | undefined
 
         const { err } = resp
-        if (err instanceof HTTPError) {
+        if (err instanceof ky.HTTPError) {
           httpError = (err.response as ResponseWithHttpError).httpError
           if (httpError) {
             tokens.push(httpError.message)

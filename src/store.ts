@@ -1,7 +1,7 @@
 import { env } from '@/environment/environment'
 import { UserInfo } from '@/srv/firebase.service'
 import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
-import { _pick, by } from '@naturalcycles/js-lib'
+import { by, _pick } from '@naturalcycles/js-lib'
 import { dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Vuex from 'vuex'
