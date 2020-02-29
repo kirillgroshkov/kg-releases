@@ -14,7 +14,7 @@ export interface ResponseWithHttpError extends Response {
   httpError: HttpError
 }
 
-const beforeRequestHook: BeforeRequestHook = (input, options) => {
+const beforeRequestHook: BeforeRequestHook = (req, _options) => {
   const { uid, idToken } = st().user
   const headers: Record<string, string> = filterFalsyValues({
     idToken,
@@ -22,7 +22,7 @@ const beforeRequestHook: BeforeRequestHook = (input, options) => {
   })
 
   Object.keys(headers).forEach(k => {
-    options.headers.set(k, headers[k])
+    req.headers.set(k, headers[k])
   })
 }
 
@@ -33,7 +33,9 @@ const afterResponseHook: AfterResponseHook = async (input, options, response) =>
 
   console.warn('errorResponse', response)
 
-  const tokens = [`<< ${options.method} ${input} ERROR (${response.status} ${response.statusText})`] // generic error message
+  const tokens = [
+    `<< ${options.method} ${input.url} ERROR (${response.status} ${response.statusText})`,
+  ] // generic error message
 
   let text: string
   let json: any
