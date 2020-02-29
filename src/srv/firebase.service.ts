@@ -5,7 +5,7 @@ import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 import { urlUtil } from '@/util/url.util'
-import { deepCopy, memo, pDefer, _pick } from '@naturalcycles/js-lib'
+import { deepCopy, memo, pDeferredPromise, _pick } from '@naturalcycles/js-lib'
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/performance'
@@ -30,8 +30,7 @@ const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoUR
 const githubAuthProvider = new firebase.auth.GithubAuthProvider()
 
 class FirebaseService {
-  private authStateChangedDeferred = pDefer()
-  authStateChanged = this.authStateChangedDeferred.promise
+  authStateChanged = pDeferredPromise()
 
   @memo()
   async init(): Promise<void> {
@@ -104,7 +103,7 @@ class FirebaseService {
       })
     }
 
-    this.authStateChangedDeferred.resolve()
+    this.authStateChanged.resolve()
   }
 }
 

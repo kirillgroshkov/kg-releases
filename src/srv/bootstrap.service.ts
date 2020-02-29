@@ -46,9 +46,9 @@ class BootstrapService {
       },
       okFn(r: PromiseDecoratorResp) {
         store.commit('setGhost', false)
-        let cls: string = r.target && r.target.constructor && r.target.constructor.name
+        let cls: string = r?.target?.constructor?.name
         if (cls) cls += '.'
-        const args: string = r.args && r.args.length ? JSON.stringify(r.args) + ' ' : ''
+        const args: string = r.args?.length ? JSON.stringify(r.args) + ' ' : ''
         console.log(`@${r.decoratorName} ${cls}${r.propertyKey}() ${args}took ${r.millis} ms`)
         app.$Progress.finish()
         return r.res
@@ -71,7 +71,7 @@ class BootstrapService {
         console.warn(msg)
         alert(msg)
 
-        if (httpError && httpError.data.httpStatusCode === 401) {
+        if (httpError?.data.httpStatusCode === 401) {
           await firebaseService.logout()
           router.push('/')
           return
