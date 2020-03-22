@@ -1,4 +1,4 @@
-import { bootstrapDoneDefer } from '@/bootstrapDone'
+import { bootstrapDone } from '@/bootstrapDone'
 import { PromiseDecoratorResp } from '@/decorators/decorator.util'
 import { initProgressDecorator } from '@/decorators/progress.decorator'
 import { env, logEnvironment } from '@/environment/environment'
@@ -35,7 +35,7 @@ class BootstrapService {
     }
 
     void this.hideLoader()
-    bootstrapDoneDefer.resolve()
+    bootstrapDone.resolve()
   }
 
   private initDecorators(): void {
