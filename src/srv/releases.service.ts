@@ -7,7 +7,7 @@ import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model
 class ReleasesService {
   // @Progress()
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
-    console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
+    // console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
 
     const { releases } = await api
       .get('', {
