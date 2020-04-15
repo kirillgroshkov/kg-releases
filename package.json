@@ -4,14 +4,15 @@
   "author": "kirillgroshkov <1@inventix.ru>",
   "private": true,
   "scripts": {
+    "bt": "tsc && yarn test && yarn build",
     "serve": "vue-cli-service serve --port 4100",
     "lint": "vue-cli-service lint",
     "build": "vue-cli-service build"
   },
   "dependencies": {
     "@naturalcycles/frontend-lib": "^1.0.0",
-    "@naturalcycles/js-lib": "^10.1.0",
-    "@naturalcycles/time-lib": "^1.4.0",
+    "@naturalcycles/js-lib": "^11.1.0",
+    "@naturalcycles/time-lib": "^2.0.0",
     "@sentry/browser": "^5.6.3",
     "@sentry/integrations": "^5.6.1",
     "firebase": "^7.0.0",
