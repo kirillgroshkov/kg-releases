@@ -7,6 +7,7 @@
 [![](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Maintainability](https://api.codeclimate.com/v1/badges/864acacfc0e17f7531bc/maintainability)](https://codeclimate.com/github/kirillgroshkov/kg-releases/maintainability)
+[![Known Vulnerabilities](https://snyk.io/test/github/kirillgroshkov/kg-releases/badge.svg)](https://snyk.io/test/github/kirillgroshkov/kg-releases)
 
 <div align="center">
     <img width="160" src="https://releases.netlify.com/static/img/logo1.png" alt="Releases">
