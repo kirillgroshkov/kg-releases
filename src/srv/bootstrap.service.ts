@@ -7,11 +7,11 @@ import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st, store } from '@/store'
-import { memo } from '@naturalcycles/js-lib'
+import { _Memo } from '@naturalcycles/js-lib'
 import { pDelay } from '@naturalcycles/js-lib'
 
 class BootstrapService {
-  @memo()
+  @_Memo()
   async init(): Promise<void> {
     if (!env().dev) logEnvironment()
 

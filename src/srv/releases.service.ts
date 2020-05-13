@@ -1,7 +1,7 @@
 import { Progress } from '@/decorators/progress.decorator'
 import { api } from '@/srv/api.service'
 import { store } from '@/store'
-import { memo } from '@naturalcycles/js-lib'
+import { _Memo } from '@naturalcycles/js-lib'
 import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model'
 
 class ReleasesService {
@@ -70,7 +70,7 @@ class ReleasesService {
     return br
   }
 
-  @memo()
+  @_Memo()
   async init(): Promise<BackendResponse> {
     const br = await api.get(`init`).json<BackendResponse>()
 

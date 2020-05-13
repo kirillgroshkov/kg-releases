@@ -1,8 +1,7 @@
 import { env } from '@/environment/environment'
 import { st } from '@/store'
-import { getKy } from '@naturalcycles/frontend-lib'
-import { filterFalsyValues, HttpError } from '@naturalcycles/js-lib'
-import { BeforeRequestHook } from 'ky'
+import { BeforeRequestHook, getKy } from '@naturalcycles/frontend-lib'
+import { HttpError, _filterFalsyValues } from '@naturalcycles/js-lib'
 
 const { apiUrl } = env()
 
@@ -12,7 +11,7 @@ export interface ResponseWithHttpError extends Response {
 
 const beforeRequestHook: BeforeRequestHook = (req, _options) => {
   const { uid, idToken } = st().user
-  const headers: Record<string, string> = filterFalsyValues({
+  const headers = _filterFalsyValues({
     idToken,
     uid,
   })
@@ -28,7 +27,6 @@ export const api = getKy({
   // logResponse: true,
   topbar: true,
   alertOnError: true,
-}).extend({
   credentials: 'include',
   timeout: 30_000,
   prefixUrl: apiUrl,

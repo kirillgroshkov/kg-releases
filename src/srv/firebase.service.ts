@@ -5,7 +5,7 @@ import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 import { urlUtil } from '@/util/url.util'
-import { deepCopy, memo, pDefer, _pick } from '@naturalcycles/js-lib'
+import { pDefer, _deepCopy, _Memo, _pick } from '@naturalcycles/js-lib'
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/performance'
@@ -32,7 +32,7 @@ const githubAuthProvider = new firebase.auth.GithubAuthProvider()
 class FirebaseService {
   authStateChanged = pDefer()
 
-  @memo()
+  @_Memo()
   async init(): Promise<void> {
     firebase.initializeApp(CONFIG)
     firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
@@ -65,7 +65,7 @@ class FirebaseService {
   }
 
   private async onAuthStateChanged(_user?: UserInfo): Promise<void> {
-    console.log('onAuthStateChanged, user: ', deepCopy(_user))
+    console.log('onAuthStateChanged, user: ', _deepCopy(_user))
 
     // debug!
     const qs = urlUtil.qs()

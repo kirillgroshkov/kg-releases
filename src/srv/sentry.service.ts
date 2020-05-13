@@ -1,11 +1,11 @@
 import { env } from '@/environment/environment'
-import { memo } from '@naturalcycles/js-lib'
+import { _Memo } from '@naturalcycles/js-lib'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import Vue from 'vue'
 
 class SentryService {
-  @memo()
+  @_Memo()
   init(): void {
     // if (!this.enabled) return
     const { sentryDsn: dsn, name: environment } = env()

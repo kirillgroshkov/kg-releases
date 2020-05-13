@@ -118,7 +118,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
 
 <script lang="ts">
 import { ReleasesByDay } from '@/srv/model'
-import { Dayjs, dayjs } from '@naturalcycles/time-lib'
+import { IDayjs, dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Progress } from '@/decorators/progress.decorator'
@@ -192,7 +192,7 @@ export default class ReleasesPage extends Vue {
     store.commit('cleanAfterLastDay', this.dayLast)
   }
 
-  private async loadDay(day: Dayjs, loaded: number): Promise<string> {
+  private async loadDay(day: IDayjs, loaded: number): Promise<string> {
     const dayStr = day.toISODate()
     this.dayLoading = dayStr
     const nextDay = day.add(1, 'day')

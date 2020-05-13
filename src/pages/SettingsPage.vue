@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { UserSettings } from '@/srv/model'
-import { deepEquals } from '@naturalcycles/js-lib'
+import { _deepEquals } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Progress } from '@/decorators/progress.decorator'
@@ -57,7 +57,7 @@ export default class SettingsPage extends Vue {
   }
 
   get saveEnabled(): boolean {
-    return !deepEquals(this.settings, st().userFM.settings)
+    return !_deepEquals(this.settings, st().userFM.settings)
   }
 
   private init() {
