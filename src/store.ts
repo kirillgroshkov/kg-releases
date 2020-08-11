@@ -1,7 +1,7 @@
 import { env } from '@/environment/environment'
 import { UserInfo } from '@/srv/firebase.service'
 import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
-import { _by, _pick } from '@naturalcycles/js-lib'
+import { StringMap, _by, _pick, _stringMapValues } from '@naturalcycles/js-lib'
 import { dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -17,7 +17,7 @@ export interface GlobalState {
   // rateLimit: RateLimit
   lastStarred: string[]
   // starredReposNumber: number
-  releases: { [id: string]: Release }
+  releases: StringMap<Release>
   starredRepos: Repo[]
 }
 
@@ -59,7 +59,7 @@ export const store = new Vuex.Store<GlobalState>({
   getters: {
     getReleasesByDay: (state: GlobalState) => (): ReleasesByDay => {
       const m: ReleasesByDay = {}
-      Object.values(state.releases).forEach(r => {
+      _stringMapValues(state.releases).forEach(r => {
         const day = dayjs.unix(r.published).toISODate()
         if (!m[day]) m[day] = []
         m[day].push(r)
@@ -72,7 +72,7 @@ export const store = new Vuex.Store<GlobalState>({
     },
 
     getReleasesLastDay: (state: GlobalState) => (): string | undefined => {
-      const days = (Object.values(state.releases) || [])
+      const days = (_stringMapValues(state.releases) || [])
         .map(r => dayjs.unix(r.published).toISODate())
         .sort()
       return days.length ? days[0] : undefined
@@ -113,7 +113,7 @@ export const store = new Vuex.Store<GlobalState>({
     cleanAfterLastDay(state: GlobalState, lastDay: string): void {
       const releases: { [id: string]: Release } = {}
 
-      Object.values(state.releases).forEach(r => {
+      _stringMapValues(state.releases).forEach(r => {
         const day = dayjs.unix(r.published).toISODate()
         if (day >= lastDay) {
           // include, otherwise exclude
