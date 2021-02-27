@@ -62,7 +62,7 @@ export const store = new Vuex.Store<GlobalState>({
       _stringMapValues(state.releases).forEach(r => {
         const day = dayjs.unix(r.published).toISODate()
         if (!m[day]) m[day] = []
-        m[day].push(r)
+        m[day]!.push(r)
       })
 
       // sort

@@ -27,13 +27,13 @@ Watch releases of your Github starred repositories.
 
 One click to see release notes.
 
-Backend with all the magic is [here](https://github.com/kirillgroshkov/kg-backend).
+Backend with all the magic is [here](https://github.com/kirillgroshkov/kg-backend3).
 
 # Features
 
-- Free, opensource.
+- Free, open source.
 - Simple github login. Automatically gets github stars.
-- Built with free tier of cloud infrastructure. Big thanks to Now.sh, Firebase, Netlify.
+- Built with free tier of cloud infrastructure. Big thanks to Netlify, Firebase, GCP.
 - Near-realtime release notification (currently checks every 10 minutes).
 
 Feature requests, issues, PRs are welcome!

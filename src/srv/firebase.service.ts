@@ -6,7 +6,7 @@ import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 import { urlUtil } from '@/util/url.util'
 import { pDefer, _deepCopy, _Memo, _pick } from '@naturalcycles/js-lib'
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/performance'
 
@@ -68,11 +68,11 @@ class FirebaseService {
     console.log('onAuthStateChanged, user: ', _deepCopy(_user))
 
     // debug!
-    const qs = urlUtil.qs()
-    if (qs.uid) {
+    const { uid } = urlUtil.qs()
+    if (uid) {
       console.log('debug: ?uid')
       const user = {
-        uid: qs.uid,
+        uid,
       } as UserInfo
 
       sentryService.setUser(user)
