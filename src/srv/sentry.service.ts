@@ -8,7 +8,7 @@ class SentryService {
   @_Memo()
   init(): void {
     // if (!this.enabled) return
-    const { sentryDsn: dsn, name: environment } = env()
+    const { sentryDsn: dsn, name: environment } = env
 
     Sentry.init({
       dsn,

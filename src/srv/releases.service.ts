@@ -1,4 +1,4 @@
-import { Progress } from '@/decorators/progress.decorator'
+import { Progress } from '@/decorators/decorators'
 import { api } from '@/srv/api.service'
 import { store } from '@/store'
 import { _Memo } from '@naturalcycles/js-lib'
@@ -36,12 +36,12 @@ class ReleasesService {
 
   @Progress()
   async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
-    return api.get(`repos/${repoFullName}/releases`).json<Release[]>()
+    return await api.get(`repos/${repoFullName}/releases`).json<Release[]>()
   }
 
   @Progress()
   async fetchReleasesByRepo(repoFullName: string): Promise<Release[]> {
-    return api.get(`repos/${repoFullName}/releases/fetch`).json<Release[]>()
+    return await api.get(`repos/${repoFullName}/releases/fetch`).json<Release[]>()
   }
 
   @Progress()

@@ -1,9 +1,14 @@
 import { env } from '@/environment/environment'
+import { loadHotjar } from '@naturalcycles/frontend-lib'
+
+const { hotjarId } = env
 
 class AnalyticsService {
   init(): void {
     // this.initGA()
-    this.initHotjar()
+    if (hotjarId) {
+      loadHotjar(hotjarId)
+    }
   }
 
   setUserId(userId: string): void {
@@ -11,7 +16,7 @@ class AnalyticsService {
   }
 
   pageView(pagePath: string): void {
-    window.gtag('config', env().gaId, { page_path: pagePath })
+    window.gtag('config', env.gaId, { page_path: pagePath })
   }
 
   event(eventName: string, params: any = {}): void {
@@ -30,25 +35,6 @@ class AnalyticsService {
     // Only load real script if it's enabled (gaId)
     void loadScript(`https://www.googletagmanager.com/gtag/js?id=${env().gaId}`)
   }*/
-
-  private initHotjar(): void {
-    if (!env().hotjarId) {
-      return
-    }
-    ;(function(h, o, t, j) {
-      h.hj =
-        h.hj ||
-        function() {
-          ;(h.hj.q = h.hj.q || []).push(arguments)
-        }
-      h._hjSettings = { hjid: env().hotjarId, hjsv: 6 }
-      const a = o.getElementsByTagName('head')[0]
-      const r = o.createElement('script')
-      r.async = 1
-      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv
-      a.appendChild(r)
-    })(window as any, document as any, 'https://static.hotjar.com/c/hotjar-', '.js?sv=')
-  }
 }
 
 export const analyticsService = new AnalyticsService()

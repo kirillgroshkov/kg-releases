@@ -53,7 +53,7 @@ const initialState: GlobalState = {
 const releaseCompareDesc = (a: Release, b: Release) => b.published - a.published
 
 export const store = new Vuex.Store<GlobalState>({
-  strict: env().dev,
+  strict: env.dev,
   state: initialState,
 
   getters: {

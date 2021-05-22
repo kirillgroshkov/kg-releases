@@ -3,7 +3,7 @@ import { st } from '@/store'
 import { BeforeRequestHook, getKy } from '@naturalcycles/frontend-lib'
 import { HttpError, _filterFalsyValues } from '@naturalcycles/js-lib'
 
-const { apiUrl } = env()
+const { apiUrl } = env
 
 export interface ResponseWithHttpError extends Response {
   httpError: HttpError

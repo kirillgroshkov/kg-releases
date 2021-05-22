@@ -1,10 +1,9 @@
-import { Progress } from '@/decorators/progress.decorator'
+import { Progress } from '@/decorators/decorators'
 import { analyticsService } from '@/srv/analytics.service'
 import { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
-import { urlUtil } from '@/util/url.util'
 import { pDefer, _deepCopy, _Memo, _pick } from '@naturalcycles/js-lib'
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -65,10 +64,11 @@ class FirebaseService {
   }
 
   private async onAuthStateChanged(_user?: UserInfo): Promise<void> {
-    console.log('onAuthStateChanged, user: ', _deepCopy(_user))
+    console.log('onAuthStateChanged, user:', _deepCopy(_user))
 
     // debug!
-    const { uid } = urlUtil.qs()
+    const qs = new URLSearchParams(location.search)
+    const uid = qs.get('uid')
     if (uid) {
       console.log('debug: ?uid')
       const user = {

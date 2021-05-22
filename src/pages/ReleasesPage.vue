@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="container releases">
-        <table style="width: 100%; max-width: 500px;">
+        <table style="width: 100%; max-width: 500px">
           <tr>
             <td>
               <pre>
@@ -11,8 +11,8 @@ Starred repos: {{ state.userFM.starredReposCount }}
             </pre
               >
             </td>
-            <td style="text-align: right; padding-right: 20px;">
-              <md-button class="md-raised md-primary" @click="reload()" style="margin-top: -12px;"
+            <td style="text-align: right; padding-right: 20px">
+              <md-button class="md-raised md-primary" @click="reload()" style="margin-top: -12px"
                 >reload...</md-button
               >
             </td>
@@ -24,7 +24,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
           <div v-for="d in days" v-if="false">{{ d }} {{ (releasesByDay[d] || []).length }}</div>
         </div>
 
-        <div class="tableRow" style="margin: -10px -16px 0; padding-bottom: 80px;">
+        <div class="tableRow" style="margin: -10px -16px 0; padding-bottom: 80px">
           <template v-for="day in days">
             <table
               v-if="(releasesByDay[day] || []).length"
@@ -34,23 +34,21 @@ Starred repos: {{ state.userFM.starredReposCount }}
               class="table1"
             >
               <tr>
-                <td colspan="3" style="padding-left: 66px;">{{ day }}</td>
+                <td colspan="3" style="padding-left: 66px">{{ day }}</td>
               </tr>
             </table>
 
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
               <template v-for="r in releasesByDay[day]">
                 <tr class="mainTr" @click="toggleClick(r.id)">
-                  <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top;">
-                    <img :src="r.avatarUrl" style="width: 40px; height: 40px;" loading="lazy" />
+                  <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top">
+                    <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
                   </td>
-                  <td style="vertical-align: top; padding: 8px 0 0;">
+                  <td style="vertical-align: top; padding: 8px 0 0">
                     {{ r.repoFullName }} <br />
                     <span class="ver">{{ r.tagName }}</span>
                   </td>
-                  <td
-                    style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px;"
-                  >
+                  <td style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px">
                     {{ r.published | timeHM }}
                     <md-icon style="opacity: 0.4" v-if="expandedRows.has(r.id)"
                       >expand_less</md-icon
@@ -61,15 +59,14 @@ Starred repos: {{ state.userFM.starredReposCount }}
 
                 <transition name="slide">
                   <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id)">
-                    <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word;">
+                    <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
                       <div>
                         <md-button
                           class="md-dense md-primary1 md-raised"
-                          style="margin-left: -4px; margin-top: 10px;"
-                          :href="
-                            `https://github.com/${r.repoFullName}/releases/tag/${r.tagName ||
-                              'v' + r.v}`
-                          "
+                          style="margin-left: -4px; margin-top: 10px"
+                          :href="`https://github.com/${r.repoFullName}/releases/tag/${
+                            r.tagName || 'v' + r.v
+                          }`"
                           target="_blank"
                           rel="noopener"
                         >
@@ -117,11 +114,11 @@ Starred repos: {{ state.userFM.starredReposCount }}
 </template>
 
 <script lang="ts">
+import { Progress } from '@/decorators/decorators'
 import { ReleasesByDay } from '@/srv/model'
 import { IDayjs, dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Progress } from '@/decorators/progress.decorator'
 import { releasesService } from '@/srv/releases.service'
 import { GlobalState, st, store } from '@/store'
 import { pDelay } from '@naturalcycles/js-lib'
@@ -140,10 +137,7 @@ export default class ReleasesPage extends Vue {
   get dayNext(): string {
     if (!this.dayLast) return ''
 
-    return dayjs
-      .utc(this.dayLast)
-      .subtract(1, 'day')
-      .toISODate()
+    return dayjs.utc(this.dayLast).subtract(1, 'day').toISODate()
   }
 
   get state(): GlobalState {
@@ -220,10 +214,7 @@ export default class ReleasesPage extends Vue {
   async loadMore() {
     const releasesCount = Object.keys(st().releases).length
     this.maxReleases = releasesCount + 30
-    this.dayMax = dayjs
-      .utc(this.dayMax)
-      .subtract(30, 'day')
-      .toISODate()
+    this.dayMax = dayjs.utc(this.dayMax).subtract(30, 'day').toISODate()
     const dayNext = dayjs.utc(this.dayLast).subtract(1, 'day')
     this.dayLast = await this.loadDay(dayNext, releasesCount)
     this.dayLoading = ''

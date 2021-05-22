@@ -20,18 +20,21 @@
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
     "vue-material": "^1.0.0-beta-15",
-    "vue-progressbar": "^0.7.5",
     "vue-router": "^3.0.7",
     "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^10.2.0",
-    "@types/node": "^14.0.1",
+    "@naturalcycles/dev-lib": "^11.0.5",
+    "@types/node": "^15.6.0",
     "@vue/cli-plugin-typescript": "^4.0.5",
     "@vue/cli-service": "^4.0.5",
+    "jest": "^26.6.3",
     "sass": "^1.32.8",
     "sass-loader": "^10.0.0",
     "typescript": "^4.0.3",
     "vue-template-compiler": "^2.6.10"
+  },
+  "resolutions": {
+    "prettier": "^2.0.0"
   }
 }

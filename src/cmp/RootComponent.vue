@@ -1,7 +1,5 @@
 <template>
   <div>
-    <vue-progress-bar></vue-progress-bar>
-
     <LayoutComponent></LayoutComponent>
   </div>
 </template>

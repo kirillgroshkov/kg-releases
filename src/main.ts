@@ -41,19 +41,6 @@ Vue.use(MdIcon)
 Vue.use(MdField)
 Vue.use(MdCheckbox)
 
-// Progress bar
-const VueProgressBar = require('vue-progressbar')
-Vue.use(VueProgressBar, {
-  // color: '#3ffaf3',
-  // failedColor: '#874b4b',
-  thickness: '4px',
-  transition: {
-    speed: '0.2s',
-    opacity: '0.6',
-    termination: 500,
-  },
-})
-
 export const app = new Vue({
   router,
   store,

@@ -1,29 +1,19 @@
 import envDev from './environment.dev'
-import { Environment } from './environment.prod'
+import type { Environment } from './environment.prod'
 import envProd from './environment.prod'
 
-// const ENV_DEF = 'dev'
-const ENVIRONMENTS = {
-  prod: envProd,
-  dev: envDev,
-}
-
-let environment: Environment
+export let env: Environment
 
 if (location.href.includes('netlify')) {
-  environment = ENVIRONMENTS['prod']
+  env = envProd
 } else {
-  environment = ENVIRONMENTS['dev']
-}
-
-export function env(): Environment {
-  return environment
+  env = envDev
 }
 
 export function logEnvironment(): void {
-  console.log(environment)
+  console.log(env)
 }
 
 export function extendEnvironment(extension: Partial<Environment>): void {
-  Object.assign(environment, extension)
+  Object.assign(env, extension)
 }

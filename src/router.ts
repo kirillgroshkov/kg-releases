@@ -1,9 +1,4 @@
 import { bootstrapDone } from '@/bootstrapDone'
-import HomePage from '@/pages/HomePage.vue'
-import ProjectPage from '@/pages/ProjectPage.vue'
-import ProjectsPage from '@/pages/ProjectsPage.vue'
-import ReleasesPage from '@/pages/ReleasesPage.vue'
-import SettingsPage from '@/pages/SettingsPage.vue'
 import { analyticsService } from '@/srv/analytics.service'
 import { st } from '@/store'
 import Vue from 'vue'
@@ -31,27 +26,27 @@ export const router = new Router({
   routes: [
     {
       path: '/',
-      component: HomePage,
+      component: () => import('./pages/HomePage.vue'),
       beforeEnter: guestOnlyGuard,
     },
     {
       path: '/releases',
-      component: ReleasesPage,
+      component: () => import('./pages/ReleasesPage.vue'),
       beforeEnter: loggedInGuard,
     },
     {
       path: '/projects',
-      component: ProjectsPage,
+      component: () => import('./pages/ProjectsPage.vue'),
       beforeEnter: loggedInGuard,
     },
     {
       path: '/projects/:ownerName/:projectName',
-      component: ProjectPage,
+      component: () => import('./pages/ProjectPage.vue'),
       beforeEnter: loggedInGuard,
     },
     {
       path: '/settings',
-      component: SettingsPage,
+      component: () => import('./pages/SettingsPage.vue'),
       beforeEnter: loggedInGuard,
     },
   ],
