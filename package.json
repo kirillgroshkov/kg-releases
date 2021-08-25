@@ -17,7 +17,7 @@
     "@naturalcycles/time-lib": "^3.0.4",
     "@sentry/browser": "^6.2.0",
     "@sentry/integrations": "^6.2.0",
-    "firebase": "^8.2.9",
+    "firebase": "^9.0.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
     "vue-material": "^1.0.0-beta-15",

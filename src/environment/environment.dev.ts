@@ -1,18 +1,18 @@
 import { EnvironmentProd } from './environment.prod'
 
 export class EnvironmentDev extends EnvironmentProd {
-  name = 'dev'
-  prod = false
-  dev = true
+  override name = 'dev'
+  override prod = false
+  override dev = true
 
   // loginUrl = 'http://localhost:8000/login'
   // apiUrl = 'http://localhost:8080/releases'
 
-  sentryDsn = undefined
+  override sentryDsn = undefined
   // sentryEnabled = false
 
-  hotjarId = undefined
-  gaId = undefined
+  override hotjarId = undefined
+  override gaId = undefined
 }
 
 export default new EnvironmentDev()

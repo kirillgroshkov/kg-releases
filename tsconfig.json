@@ -3,8 +3,8 @@
   "compilerOptions": {
     // "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "inlineSources": true,
-    "sourceRoot": "/",
+//    "inlineSources": true,
+//    "sourceRoot": "/",
     "outDir": "dist/tsc",
     "baseUrl": ".",
     "paths": {

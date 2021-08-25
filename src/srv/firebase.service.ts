@@ -5,9 +5,15 @@ import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 import { pDefer, _deepCopy, _Memo, _pick } from '@naturalcycles/js-lib'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/performance'
+import { initializeApp } from 'firebase/app'
+import {
+  getAdditionalUserInfo,
+  getAuth,
+  GithubAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+} from 'firebase/auth'
+import { getPerformance } from 'firebase/performance'
 
 export interface UserInfo {
   uid: string
@@ -17,40 +23,42 @@ export interface UserInfo {
   idToken: string
 }
 
-const CONFIG = {
+const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
+
+const firebaseApp = initializeApp({
   apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
   authDomain: 'test124-1621f.firebaseapp.com',
   projectId: 'test124-1621f',
   appId: '1:755695435449:web:734140edc18237cc',
-}
-
-const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
-
-const githubAuthProvider = new firebase.auth.GithubAuthProvider()
+})
+const auth = getAuth(firebaseApp)
+const githubAuthProvider = new GithubAuthProvider()
 
 class FirebaseService {
   authStateChanged = pDefer()
 
   @_Memo()
   async init(): Promise<void> {
-    firebase.initializeApp(CONFIG)
-    firebase.auth().onAuthStateChanged(user => this.onAuthStateChanged(user as any))
+    onAuthStateChanged(auth, user => this.onAuthStateChanged(user as any))
 
     if (window.prod) {
-      firebase.performance()
+      const _perf = getPerformance(firebaseApp)
     }
   }
 
   async login(): Promise<BackendResponse> {
-    const userCredential = await firebase.auth().signInWithPopup(githubAuthProvider)
+    const result = await signInWithPopup(auth, githubAuthProvider)
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
-    console.log(userCredential)
-    const idToken = await firebase.auth().currentUser!.getIdToken()
+    console.log(result)
+    const idToken = await auth.currentUser!.getIdToken()
     // console.log('idToken', idToken)
 
+    const credential = GithubAuthProvider.credentialFromResult(result)!
+    const additionalUserInfo = getAdditionalUserInfo(result)!
+
     const br = await releasesService.auth({
-      username: userCredential.additionalUserInfo!.username!,
-      accessToken: (userCredential.credential as any).accessToken,
+      username: additionalUserInfo.username!,
+      accessToken: credential.accessToken!,
       idToken,
     })
 
@@ -59,7 +67,7 @@ class FirebaseService {
 
   @Progress()
   async logout(): Promise<void> {
-    await firebase.auth().signOut()
+    await auth.signOut()
     sentryService.setUser({})
   }
 
@@ -82,7 +90,7 @@ class FirebaseService {
         user,
       })
     } else if (_user) {
-      const idToken = await firebase.auth().currentUser!.getIdToken()
+      const idToken = await auth.currentUser!.getIdToken()
 
       // console.log('idToken', idToken)
       const user = {
