@@ -2,7 +2,7 @@
   <div>
     <div class="page-container">
       <md-app md-waterfall1 md-mode="fixed">
-        <md-app-toolbar class="md-primary" v-if="user.uid">
+        <md-app-toolbar v-if="user.uid" class="md-primary">
           <!--
           <span class="md-title">My Title</span>
           -->
@@ -19,9 +19,9 @@
                 <!--
                 <md-tab md-label="Home" to="/" exact="true"></md-tab>
                 -->
-                <md-tab md-label="Releases" to="/releases"></md-tab>
-                <md-tab md-label="Projects" to="/projects" v-if="false"></md-tab>
-                <md-tab md-label="Settings" to="/settings"></md-tab>
+                <md-tab md-label="Releases" to="/releases" />
+                <md-tab v-if="false" md-label="Projects" to="/projects" />
+                <md-tab md-label="Settings" to="/settings" />
               </md-tabs>
             </div>
 
@@ -34,7 +34,7 @@
         </md-app-toolbar>
 
         <md-app-content>
-          <router-view></router-view>
+          <router-view />
         </md-app-content>
       </md-app>
     </div>
@@ -60,8 +60,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { UserInfo } from '../srv/firebase.service'
-import { st } from '../store'
+import { UserInfo } from '@/srv/firebase.service'
+import { st } from '@/store'
 
 @Component
 export default class LayoutComponent extends Vue {
@@ -69,7 +69,7 @@ export default class LayoutComponent extends Vue {
     return st().user
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
     // this.loading = 'loading...'
     // await releasesService.fetchReleases()
     // this.loading = ''

@@ -5,11 +5,13 @@
       <a :href="`https://github.com/${fullName}`" target="_blank" rel="noopener">github</a>
     </div>
     <div>
-      <md-button class="md-raised md-primary" @click="fetchFromGithub()"
-        >Fetch from github</md-button
-      >
+      <md-button class="md-raised md-primary" @click="fetchFromGithub()">
+        Fetch from github
+      </md-button>
     </div>
-    <div v-if="releases">{{ releases.length }}</div>
+    <div v-if="releases">
+      {{ releases.length }}
+    </div>
     <div v-for="r in releases" :key="r.id">
       {{ r.id }} / {{ r.published | unixtimePretty }} / {{ r.created | unixtimePretty }}
     </div>
@@ -21,7 +23,7 @@ import { Release } from '@/srv/model'
 import { pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { releasesService } from '../srv/releases.service'
+import { releasesService } from '@/srv/releases.service'
 
 @Component
 export default class ProjectPage extends Vue {
@@ -32,15 +34,15 @@ export default class ProjectPage extends Vue {
     return [p['ownerName'], p['projectName']].join('/')
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
     await pDelay(500) // give time for animations to finish
     this.releases = await releasesService.getReleasesByRepo(this.fullName)
-    console.log('releases: ', [...this.releases])
+    console.log('releases:', [...this.releases])
   }
 
-  async fetchFromGithub() {
+  async fetchFromGithub(): Promise<void> {
     this.releases = await releasesService.fetchReleasesByRepo(this.fullName)
-    console.log('releases: ', [...this.releases])
+    console.log('releases:', [...this.releases])
   }
 }
 </script>

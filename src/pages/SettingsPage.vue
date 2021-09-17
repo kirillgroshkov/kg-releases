@@ -2,18 +2,18 @@
   <div class="form1">
     <md-field>
       <label>User ID</label>
-      <md-input v-model="userFM.id" disabled></md-input>
+      <md-input v-model="userFM.id" disabled />
     </md-field>
 
     <md-field>
       <label>Email for notifications</label>
-      <md-input v-model="settings.notificationEmail" type="email" required></md-input>
+      <md-input v-model="settings.notificationEmail" type="email" required />
     </md-field>
 
     <!--
     <md-checkbox v-model="settings.notifyEmailRealtime">Notify on every release</md-checkbox><br />
     -->
-    <md-checkbox v-model="settings.notifyEmailDaily">Notify once a day</md-checkbox><br />
+    <md-checkbox v-model="settings.notifyEmailDaily"> Notify once a day </md-checkbox><br />
     <p>
       Please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your
       Contacts if you discover that it goes to SPAM folder.
@@ -21,20 +21,21 @@
 
     <p>To unsubscribe - untick the boxes above and click save.</p>
 
-    <md-button class="md-raised md-primary" @click="save()" :disabled="!saveEnabled">Save</md-button
+    <md-button class="md-raised md-primary" :disabled="!saveEnabled" @click="save()">
+      Save </md-button
     ><br />
 
     <br />
     <hr />
     <br />
 
-    <md-button class="md-raised md-transparent" @click="logout()">Logout</md-button>
+    <md-button class="md-raised md-transparent" @click="logout()"> Logout </md-button>
   </div>
 </template>
 
 <script lang="ts">
 import { Progress } from '@/decorators/decorators'
-import { UserSettings } from '@/srv/model'
+import { UserFM, UserSettings } from '@/srv/model'
 import { _deepEquals } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
@@ -52,7 +53,7 @@ export default class SettingsPage extends Vue {
   // userFM: UserFM = {} as UserFM
   settings: UserSettings = {}
 
-  get userFM() {
+  get userFM(): UserFM {
     return st().userFM
   }
 
@@ -60,11 +61,11 @@ export default class SettingsPage extends Vue {
     return !_deepEquals(this.settings, st().userFM.settings)
   }
 
-  private init() {
+  private init(): void {
     this.settings = { ...st().userFM.settings }
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
     await releasesService.init()
     this.init()
   }
@@ -72,14 +73,14 @@ export default class SettingsPage extends Vue {
 
   // Save button (if changed!)
 
-  async logout() {
+  async logout(): Promise<void> {
     analyticsService.event('logoutClick')
     await firebaseService.logout()
-    router.push('/')
+    await router.push('/')
   }
 
   @Progress()
-  async save() {
+  async save(): Promise<void> {
     await releasesService.saveUserSettings(this.settings)
     this.init()
   }

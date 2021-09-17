@@ -12,17 +12,24 @@ Starred repos: {{ state.userFM.starredReposCount }}
               >
             </td>
             <td style="text-align: right; padding-right: 20px">
-              <md-button class="md-raised md-primary" @click="reload()" style="margin-top: -12px"
-                >reload...</md-button
-              >
+              <md-button class="md-raised md-primary" style="margin-top: -12px" @click="reload()">
+                reload...
+              </md-button>
             </td>
           </tr>
         </table>
 
+        <!--
         <div v-if="false">
           dayFirst={{ dayFirst }}, dayLast={{ dayLast }}
-          <div v-for="d in days" v-if="false">{{ d }} {{ (releasesByDay[d] || []).length }}</div>
+          <div
+            v-for="d in days"
+            v-if="false"
+          >
+            {{ d }} {{ (releasesByDay[d] || []).length }}
+          </div>
         </div>
+        -->
 
         <div class="tableRow" style="margin: -10px -16px 0; padding-bottom: 80px">
           <template v-for="day in days">
@@ -34,7 +41,9 @@ Starred repos: {{ state.userFM.starredReposCount }}
               class="table1"
             >
               <tr>
-                <td colspan="3" style="padding-left: 66px">{{ day }}</td>
+                <td colspan="3" style="padding-left: 66px">
+                  {{ day }}
+                </td>
               </tr>
             </table>
 
@@ -50,10 +59,10 @@ Starred repos: {{ state.userFM.starredReposCount }}
                   </td>
                   <td style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px">
                     {{ r.published | timeHM }}
-                    <md-icon style="opacity: 0.4" v-if="expandedRows.has(r.id)"
-                      >expand_less</md-icon
-                    >
-                    <md-icon style="opacity: 0.4" v-else>expand_more</md-icon>
+                    <md-icon v-if="expandedRows.has(r.id)" style="opacity: 0.4">
+                      expand_less
+                    </md-icon>
+                    <md-icon v-else style="opacity: 0.4"> expand_more </md-icon>
                   </td>
                 </tr>
 
@@ -74,7 +83,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
                         </md-button>
                       </div>
 
-                      <div class="md" v-html="r.descrHtml"></div>
+                      <div class="md" v-html="r.descrHtml" />
                     </td>
                   </tr>
                 </transition>
@@ -103,7 +112,9 @@ Starred repos: {{ state.userFM.starredReposCount }}
             </tr>
             <tr v-else>
               <td colspan="3">
-                <md-button class="md-raised md-primary" @click="loadMore()">load more...</md-button>
+                <md-button class="md-raised md-primary" @click="loadMore()">
+                  load more...
+                </md-button>
               </td>
             </tr>
           </table>
@@ -144,7 +155,7 @@ export default class ReleasesPage extends Vue {
     return this.$store.state
   }
 
-  /*get releasesByDay (): ReleasesByDay {
+  /* get releasesByDay (): ReleasesByDay {
     return store.getters.getReleasesByDay()
   }*/
 
@@ -163,12 +174,12 @@ export default class ReleasesPage extends Vue {
     return days
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
     await this.reload()
   }
 
   @Progress()
-  async reload() {
+  async reload(): Promise<void> {
     this.maxReleases = 30
     const today = dayjs.utc()
     const todayStr = today.toISODate()
@@ -205,13 +216,13 @@ export default class ReleasesPage extends Vue {
 
     if (loaded < this.maxReleases && dayStr > this.dayMax) {
       const yesterday = day.subtract(1, 'day')
-      return this.loadDay(yesterday, loaded)
+      return await this.loadDay(yesterday, loaded)
     }
 
     return dayStr
   }
 
-  async loadMore() {
+  async loadMore(): Promise<void> {
     const releasesCount = Object.keys(st().releases).length
     this.maxReleases = releasesCount + 30
     this.dayMax = dayjs.utc(this.dayMax).subtract(30, 'day').toISODate()
@@ -220,7 +231,7 @@ export default class ReleasesPage extends Vue {
     this.dayLoading = ''
   }
 
-  toggleClick(id: string) {
+  toggleClick(id: string): void {
     if (this.expandedRows.has(id)) {
       this.expandedRows.delete(id)
     } else {

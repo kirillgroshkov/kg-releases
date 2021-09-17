@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LayoutComponent></LayoutComponent>
+    <LayoutComponent />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import Component from 'vue-class-component'
   },
 })
 export default class RootComponent extends Vue {
-  async mounted() {
+  async mounted(): Promise<void> {
     // this.loading = 'loading...'
     // await releasesService.fetchReleases()
     // this.loading = ''

@@ -2,7 +2,9 @@
   <div>
     <div>Projects</div>
     <div v-for="r in starredRepos" :key="r.fullName">
-      <router-link :to="`/projects/${r.fullName}`">{{ r.fullName }}</router-link>
+      <router-link :to="`/projects/${r.fullName}`">
+        {{ r.fullName }}
+      </router-link>
     </div>
   </div>
 </template>
@@ -13,7 +15,7 @@ import { pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { releasesService } from '@/srv/releases.service'
-import { GlobalState, st, store } from '@/store'
+import { st } from '@/store'
 
 @Component
 export default class ProjectsPage extends Vue {
@@ -21,7 +23,7 @@ export default class ProjectsPage extends Vue {
     return st().starredRepos
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
     await pDelay(1000) // give time for animations to finish
     await releasesService.fetchRepos()
   }
