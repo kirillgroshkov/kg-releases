@@ -5,8 +5,8 @@
 #
 # force https
 #
-http://releases.netlify.com/* https://releases.netlify.com/:splat 301!
-http://pwa--releases.netlify.com/* https://pwa--releases.netlify.com/:splat 301!
+http://releases.netlify.app/* https://releases.netlify.app/:splat 301!
+http://pwa--releases.netlify.app/* https://pwa--releases.netlify.app/:splat 301!
 
 # SPA
 #/* /index.html 200

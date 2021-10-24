@@ -1,7 +1,7 @@
-import { env } from '@/environment/environment'
-import { st } from '@/store'
 import { BeforeRequestHook, getKy } from '@naturalcycles/frontend-lib'
 import { HttpError, _filterFalsyValues } from '@naturalcycles/js-lib'
+import { env } from '@/environment/environment'
+import { st } from '@/store'
 
 const { apiUrl } = env
 

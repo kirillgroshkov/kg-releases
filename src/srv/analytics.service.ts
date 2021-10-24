@@ -1,5 +1,5 @@
-import { env } from '@/environment/environment'
 import { loadHotjar } from '@naturalcycles/frontend-lib'
+import { env } from '@/environment/environment'
 
 const { hotjarId } = env
 

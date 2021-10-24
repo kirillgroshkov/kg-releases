@@ -125,14 +125,14 @@ Starred repos: {{ state.userFM.starredReposCount }}
 </template>
 
 <script lang="ts">
-import { Progress } from '@/decorators/decorators'
-import { ReleasesByDay } from '@/srv/model'
 import { IDayjs, dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { pDelay } from '@naturalcycles/js-lib'
+import { Progress } from '@/decorators/decorators'
+import { ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { GlobalState, st, store } from '@/store'
-import { pDelay } from '@naturalcycles/js-lib'
 
 @Component
 export default class ReleasesPage extends Vue {

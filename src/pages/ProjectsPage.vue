@@ -10,10 +10,10 @@
 </template>
 
 <script lang="ts">
-import { Repo } from '@/srv/model'
 import { pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { Repo } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { st } from '@/store'
 

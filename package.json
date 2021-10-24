@@ -30,6 +30,7 @@
     "@vue/cli-plugin-typescript": "^4.0.5",
     "@vue/cli-service": "^4.0.5",
     "jest": "^27.0.6",
+    "postcss": "^8.3.11",
     "prettier": "^2.0.0",
     "sass": "^1.32.8",
     "sass-loader": "^10.0.0",

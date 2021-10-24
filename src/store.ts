@@ -1,10 +1,10 @@
-import { env } from '@/environment/environment'
-import { UserInfo } from '@/srv/firebase.service'
-import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 import { StringMap, _by, _pick, _stringMapValues } from '@naturalcycles/js-lib'
 import { dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
+import { UserInfo } from '@/srv/firebase.service'
+import { env } from '@/environment/environment'
 
 Vue.use(Vuex)
 

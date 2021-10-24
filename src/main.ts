@@ -4,19 +4,8 @@
 import './scss/global.scss'
 
 import '@/polyfills'
-import { bootstrapService } from '@/srv/bootstrap.service'
 import { _deepCopy } from '@naturalcycles/js-lib'
 import Vue from 'vue'
-import './hooks' // must be defined BEFORE router is created!
-import { router } from '@/router'
-import { store } from '@/store'
-import '@/filters/filters.ts'
-import RootComponent from './cmp/RootComponent.vue'
-
-Vue.config.productionTip = false
-
-// Material
-// import VueMaterial from 'vue-material'
 import {
   MdApp,
   MdContent,
@@ -28,6 +17,17 @@ import {
   MdField,
   MdCheckbox,
 } from 'vue-material/dist/components'
+import RootComponent from './cmp/RootComponent.vue'
+import { bootstrapService } from '@/srv/bootstrap.service'
+import './hooks' // must be defined BEFORE router is created!
+import { router } from '@/router'
+import { store } from '@/store'
+import '@/filters/filters.ts'
+
+Vue.config.productionTip = false
+
+// Material
+// import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 // Vue.use(VueMaterial)

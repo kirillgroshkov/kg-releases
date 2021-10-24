@@ -1,8 +1,8 @@
-import { env } from '@/environment/environment'
 import { _Memo } from '@naturalcycles/js-lib'
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import Vue from 'vue'
+import { env } from '@/environment/environment'
 
 class SentryService {
   @_Memo()

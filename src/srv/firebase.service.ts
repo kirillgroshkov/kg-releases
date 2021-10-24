@@ -1,9 +1,3 @@
-import { Progress } from '@/decorators/decorators'
-import { analyticsService } from '@/srv/analytics.service'
-import { BackendResponse } from '@/srv/model'
-import { releasesService } from '@/srv/releases.service'
-import { sentryService } from '@/srv/sentry.service'
-import { extendState } from '@/store'
 import { pDefer, _deepCopy, _Memo, _pick } from '@naturalcycles/js-lib'
 import { initializeApp } from 'firebase/app'
 import {
@@ -14,6 +8,12 @@ import {
   signInWithPopup,
 } from 'firebase/auth'
 import { getPerformance } from 'firebase/performance'
+import { Progress } from '@/decorators/decorators'
+import { analyticsService } from '@/srv/analytics.service'
+import { BackendResponse } from '@/srv/model'
+import { releasesService } from '@/srv/releases.service'
+import { sentryService } from '@/srv/sentry.service'
+import { extendState } from '@/store'
 
 export interface UserInfo {
   uid: string

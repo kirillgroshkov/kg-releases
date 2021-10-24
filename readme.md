@@ -1,20 +1,19 @@
-# releases.netlify.com
+# releases.netlify.app
 
 > 🔥 Keep track of opensource releases 📦.
 
 [![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m780525367-7efd11da78ed3262679d967a.svg?style=flat-square)](https://stats.uptimerobot.com/LvXvNC2j5)
-![](https://circleci.com/gh/kirillgroshkov/kg-releases.svg?style=shield&circle-token=0726fc25e3099b913bea54e5f6980e8ba15abea9)
 [![](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Maintainability](https://api.codeclimate.com/v1/badges/864acacfc0e17f7531bc/maintainability)](https://codeclimate.com/github/kirillgroshkov/kg-releases/maintainability)
 [![Known Vulnerabilities](https://snyk.io/test/github/kirillgroshkov/kg-releases/badge.svg)](https://snyk.io/test/github/kirillgroshkov/kg-releases)
 
 <div align="center">
-    <img width="160" src="https://releases.netlify.com/static/img/logo1.png" alt="Releases">
+    <img width="160" src="https://releases.netlify.app/static/img/logo1.png" alt="Releases">
     <br>
     <br>
-    <img width="200" src="https://releases.netlify.com/static/img/screen/screen1.png">
-    <img width="200" src="https://releases.netlify.com/static/img/screen/screen2.png">
+    <img width="200" src="https://releases.netlify.app/static/img/screen/screen1.png" alt="screenshot">
+    <img width="200" src="https://releases.netlify.app/static/img/screen/screen2.png" alt="screenshot">
     <br>
     <br>
 </div>

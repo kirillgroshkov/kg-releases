@@ -1,3 +1,5 @@
+import { _Memo } from '@naturalcycles/js-lib'
+import { pDelay } from '@naturalcycles/js-lib'
 import { bootstrapDone } from '@/bootstrapDone'
 import { env, logEnvironment } from '@/environment/environment'
 import { analyticsService } from '@/srv/analytics.service'
@@ -5,8 +7,6 @@ import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { st } from '@/store'
-import { _Memo } from '@naturalcycles/js-lib'
-import { pDelay } from '@naturalcycles/js-lib'
 
 class BootstrapService {
   @_Memo()

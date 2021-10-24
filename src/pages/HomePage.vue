@@ -62,9 +62,9 @@
 </template>
 
 <script lang="ts">
-import { Progress } from '@/decorators/decorators'
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { Progress } from '@/decorators/decorators'
 import { router } from '@/router'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'

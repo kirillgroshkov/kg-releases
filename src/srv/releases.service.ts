@@ -1,8 +1,8 @@
+import { _Memo } from '@naturalcycles/js-lib'
+import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model'
 import { Progress } from '@/decorators/decorators'
 import { api } from '@/srv/api.service'
 import { store } from '@/store'
-import { _Memo } from '@naturalcycles/js-lib'
-import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model'
 
 class ReleasesService {
   // @Progress()

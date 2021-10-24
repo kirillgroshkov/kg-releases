@@ -1,6 +1,7 @@
-import { store } from '@/store'
 import { _createPromiseDecorator } from '@naturalcycles/js-lib'
+import { store } from '@/store'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const Progress = (): MethodDecorator =>
   _createPromiseDecorator({
     decoratorName: 'Progress',

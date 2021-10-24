@@ -1,9 +1,9 @@
-import { bootstrapDone } from '@/bootstrapDone'
-import { analyticsService } from '@/srv/analytics.service'
-import { st } from '@/store'
 import Vue from 'vue'
 import Router from 'vue-router'
 import { NavigationGuard } from 'vue-router/types/router'
+import { bootstrapDone } from '@/bootstrapDone'
+import { analyticsService } from '@/srv/analytics.service'
+import { st } from '@/store'
 
 Vue.use(Router)
 
