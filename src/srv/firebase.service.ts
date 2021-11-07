@@ -1,4 +1,4 @@
-import { pDefer, _deepCopy, _Memo, _pick } from '@naturalcycles/js-lib'
+import { pDefer, _Memo, _pick } from '@naturalcycles/js-lib'
 import { initializeApp } from 'firebase/app'
 import {
   getAdditionalUserInfo,
@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth'
 import { getPerformance } from 'firebase/performance'
 import { Progress } from '@/decorators/decorators'
-import { analyticsService } from '@/srv/analytics.service'
+import { analyticsService, mp } from '@/srv/analytics.service'
 import { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
@@ -69,10 +69,11 @@ class FirebaseService {
   async logout(): Promise<void> {
     await auth.signOut()
     sentryService.setUser({})
+    mp.reset()
   }
 
   private async onAuthStateChanged(_user?: UserInfo): Promise<void> {
-    console.log('onAuthStateChanged, user:', _deepCopy(_user))
+    // console.log('onAuthStateChanged, user:', _deepCopy(_user))
 
     // debug!
     const qs = new URLSearchParams(location.search)

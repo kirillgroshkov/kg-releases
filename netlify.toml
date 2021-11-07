@@ -4,5 +4,5 @@
   command = "yarn build-netlify"
 
 [build.environment]
-  YARN_VERSION = "1.22.10"
+  YARN_VERSION = "1.22.17"
   YARN_FLAGS = "--ignore-engines"

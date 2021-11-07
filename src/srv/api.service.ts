@@ -1,25 +1,10 @@
-import { BeforeRequestHook, getKy } from '@naturalcycles/frontend-lib'
-import { HttpError, _filterFalsyValues } from '@naturalcycles/js-lib'
+import { getKy } from '@naturalcycles/frontend-lib'
+import { _filterFalsyValues } from '@naturalcycles/js-lib'
+import { mp } from '@/srv/analytics.service'
 import { env } from '@/environment/environment'
 import { st } from '@/store'
 
 const { apiUrl } = env
-
-export interface ResponseWithHttpError extends Response {
-  httpError: HttpError
-}
-
-const beforeRequestHook: BeforeRequestHook = (req, _options) => {
-  const { uid, idToken } = st().user
-  const headers = _filterFalsyValues({
-    idToken,
-    uid,
-  })
-
-  Object.keys(headers).forEach(k => {
-    req.headers.set(k, headers[k])
-  })
-}
 
 export const api = getKy({
   // logStart: true,
@@ -31,6 +16,19 @@ export const api = getKy({
   timeout: 30_000,
   prefixUrl: apiUrl,
   hooks: {
-    beforeRequest: [beforeRequestHook],
+    beforeRequest: [
+      (req, _options) => {
+        const { uid, idToken } = st().user
+        const headers = _filterFalsyValues({
+          idToken,
+          uid,
+          distinctId: mp.get_distinct_id(),
+        })
+
+        Object.keys(headers).forEach(k => {
+          req.headers.set(k, headers[k])
+        })
+      },
+    ],
   },
 })

@@ -1,9 +1,14 @@
-### Supported Browsers
-
-> 5%
-last 2 versions
-not ie <= 11
-not ie_mob <= 11
-# not OperaMini >= 0 # todo: fix
-# maintained node versions
+#
+# Test it like this:
+# yarn browserslist
+#
+# "last 2 versions" is disabled, cause it brings e.g Android 4.4, etc, which is long-obsolete
+> 1%
+not ie > 0
+not ie_mob > 0
 not dead
+not op_mini all
+not op_mob > 0
+not and_uc > 0
+not kaios > 0
+not baidu > 0

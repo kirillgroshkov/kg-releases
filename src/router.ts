@@ -56,7 +56,9 @@ router.beforeEach(async (to, from, next) => {
   // ensure Bootstrap is finished before rendering any route
   await bootstrapDone
 
-  analyticsService.pageView(to.path)
-
   next()
+})
+
+router.afterEach(to => {
+  analyticsService.pageView(to.fullPath)
 })

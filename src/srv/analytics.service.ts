@@ -1,40 +1,55 @@
-import { loadHotjar } from '@naturalcycles/frontend-lib'
+import { loadGTag, loadHotjar } from '@naturalcycles/frontend-lib'
+import { AnyObject } from '@naturalcycles/js-lib'
+import * as mixpanel from 'mixpanel-browser'
 import { env } from '@/environment/environment'
+let mp = mixpanel
 
+const mixpanelToken = '20158c629a6a4226d9c975185238b7a7'
 const { hotjarId } = env
 
 class AnalyticsService {
   init(): void {
+    void loadGTag('UA-6342858-21', window.prod)
+
     // this.initGA()
     if (hotjarId) {
       loadHotjar(hotjarId)
     }
+
+    if (!window.prod) {
+      mp = {
+        identify() {},
+        track() {},
+        reset() {},
+        get_distinct_id() {},
+      } as any
+      return
+    }
+
+    mixpanel.init(mixpanelToken, {
+      autotrack: false,
+      disable_notifications: true,
+      track_pageview: false,
+      cross_subdomain_cookie: false,
+    })
   }
 
   setUserId(userId: string): void {
+    mp.identify(userId)
     window.gtag('set', { user_id: userId })
   }
 
-  pageView(pagePath: string): void {
-    window.gtag('config', env.gaId, { page_path: pagePath })
+  pageView(fullPath: string): void {
+    mp.track(`pageview ${fullPath}`)
+    window.gtag('config', env.gaId, { page_path: fullPath })
   }
 
-  event(eventName: string, params: any = {}): void {
-    window.gtag('event', eventName, params)
+  event(eventName: string, data: AnyObject = {}): void {
+    mp.track(eventName, data)
+    window.gtag('event', eventName, data)
   }
-
-  /*
-  private initGA (): void {
-    window.dataLayer = window.dataLayer || []
-    window.gtag = (...args: any[]) => window.dataLayer.push(...args)
-    window.gtag('js', new Date())
-    window.gtag('config', env().gaId)
-
-    if (!env().gaId) return
-
-    // Only load real script if it's enabled (gaId)
-    void loadScript(`https://www.googletagmanager.com/gtag/js?id=${env().gaId}`)
-  }*/
 }
 
 export const analyticsService = new AnalyticsService()
+
+export { mp }

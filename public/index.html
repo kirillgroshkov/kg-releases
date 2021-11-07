@@ -60,8 +60,6 @@
 
     <div id="app"></div>
 
-    <!-- GA -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6342858-21"></script>
     <script>
       window.prod = location.hostname.indexOf('releases.netlify.app') >= 0
 
@@ -70,13 +68,6 @@
           // navigator.serviceWorker.register('/sw.js')
         })
       }
-
-      window.dataLayer = window.dataLayer || []
-      function gtag() {
-        dataLayer.push(arguments)
-      }
-      gtag('js', new Date())
-      gtag('config', 'UA-6342858-21')
     </script>
     <noscript>Javascript is required</noscript>
   </body>
