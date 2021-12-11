@@ -49,7 +49,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
 
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
               <template v-for="r in releasesByDay[day]">
-                <tr class="mainTr" @click="toggleClick(r.id)">
+                <tr class="mainTr" @click="toggleClick(r.id, $event)">
                   <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top">
                     <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
                   </td>
@@ -67,7 +67,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
                 </tr>
 
                 <transition name="slide">
-                  <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id)">
+                  <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id, $event)">
                     <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
                       <div>
                         <md-button
@@ -83,7 +83,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
                         </md-button>
                       </div>
 
-                      <div class="md" v-html="r.descrHtml" />
+                      <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
                     </td>
                   </tr>
                 </transition>
@@ -231,13 +231,21 @@ export default class ReleasesPage extends Vue {
     this.dayLoading = ''
   }
 
-  toggleClick(id: string): void {
+  toggleClick(id: string, _$event: MouseEvent): void {
+    // console.log($event)
+
+    // if (($event?.target as any)?.nodeName === 'A') alert('target A!')
     if (this.expandedRows.has(id)) {
       this.expandedRows.delete(id)
     } else {
       this.expandedRows.add(id)
     }
     this.expandedRows = new Set(this.expandedRows)
+  }
+
+  descrClick($event: MouseEvent): void {
+    // $event.preventDefault()
+    $event.stopImmediatePropagation()
   }
 }
 </script>
