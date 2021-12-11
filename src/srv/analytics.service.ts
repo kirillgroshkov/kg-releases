@@ -27,6 +27,7 @@ class AnalyticsService {
     }
 
     mixpanel.init(mixpanelToken, {
+      api_host: 'https://api-eu.mixpanel.com',
       autotrack: false,
       disable_notifications: true,
       track_pageview: false,

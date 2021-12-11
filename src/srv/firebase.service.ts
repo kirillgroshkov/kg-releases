@@ -6,6 +6,7 @@ import {
   GithubAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
+  UserInfo,
 } from 'firebase/auth'
 import { getPerformance } from 'firebase/performance'
 import { Progress } from '@/decorators/decorators'
@@ -14,14 +15,15 @@ import { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
+export type { UserInfo }
 
-export interface UserInfo {
-  uid: string
-  displayName: string
-  email: string
-  photoURL: string
-  idToken: string
-}
+// export interface UserInfo {
+//   uid: string
+//   displayName: string
+//   email: string
+//   photoURL: string
+//   idToken: string
+// }
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']
 
@@ -39,7 +41,7 @@ class FirebaseService {
 
   @_Memo()
   async init(): Promise<void> {
-    onAuthStateChanged(auth, user => this.onAuthStateChanged(user as any))
+    onAuthStateChanged(auth, user => this.onAuthStateChanged(user))
 
     if (window.prod) {
       const _perf = getPerformance(firebaseApp)
@@ -72,7 +74,7 @@ class FirebaseService {
     mp.reset()
   }
 
-  private async onAuthStateChanged(_user?: UserInfo): Promise<void> {
+  private async onAuthStateChanged(userInfo: UserInfo | null): Promise<void> {
     // console.log('onAuthStateChanged, user:', _deepCopy(_user))
 
     // debug!
@@ -90,12 +92,12 @@ class FirebaseService {
       extendState({
         user,
       })
-    } else if (_user) {
+    } else if (userInfo) {
       const idToken = await auth.currentUser!.getIdToken()
 
       // console.log('idToken', idToken)
       const user = {
-        ..._pick(_user, USER_FIELDS),
+        ..._pick(userInfo, USER_FIELDS),
         idToken,
       }
 

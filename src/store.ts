@@ -10,7 +10,7 @@ Vue.use(Vuex)
 
 export interface GlobalState {
   counter: number
-  user: UserInfo
+  user: UserInfo & { idToken?: string }
   userFM: UserFM
   ghostMode: boolean
   releasesUpdaterLastFinished?: number
