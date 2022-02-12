@@ -30,7 +30,7 @@ class AnalyticsService {
       api_host: 'https://api-eu.mixpanel.com',
       autotrack: false,
       disable_notifications: true,
-      track_pageview: false,
+      // track_pageview: false,
       cross_subdomain_cookie: false,
     })
   }
