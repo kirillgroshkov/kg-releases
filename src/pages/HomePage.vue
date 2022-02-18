@@ -93,7 +93,7 @@ export default class HomePage extends Vue {
   height: 200px;
   // text-align: center;
   // width: 600px; height: 600px;
-  background: url(/static/img/logo1.png) no-repeat 50% 50%;
+  background: url(/public/static/img/logo1.png) no-repeat 50% 50%;
   background-size: contain;
 }
 
@@ -130,7 +130,7 @@ small {
 
 .flag-se {
   display: inline-block;
-  background: url(/static/img/flag-se.svg) no-repeat 50% 50%;
+  background: url(/public/static/img/flag-se.svg) no-repeat 50% 50%;
   background-size: contain;
   width: 16px;
   height: 10px;
