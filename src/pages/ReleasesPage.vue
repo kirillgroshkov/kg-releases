@@ -125,10 +125,9 @@ Starred repos: {{ state.userFM.starredReposCount }}
 </template>
 
 <script lang="ts">
-import { IDayjs, dayjs } from '@naturalcycles/time-lib'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { pDelay } from '@naturalcycles/js-lib'
+import { IsoDate, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
 import { Progress } from '@/decorators/decorators'
 import { ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
@@ -145,10 +144,10 @@ export default class ReleasesPage extends Vue {
   dayMax = ''
   releasesByDay: ReleasesByDay = {}
 
-  get dayNext(): string {
+  get dayNext(): IsoDate {
     if (!this.dayLast) return ''
 
-    return dayjs.utc(this.dayLast).subtract(1, 'day').toISODate()
+    return localDate(this.dayLast).subtract(1, 'day').toISODate()
   }
 
   get state(): GlobalState {
@@ -163,8 +162,9 @@ export default class ReleasesPage extends Vue {
     const days: string[] = []
     if (!this.dayFirst || !this.dayLast) return []
 
+    // range can be used here
     for (
-      let day = dayjs.utc(this.dayFirst);
+      let day = localDate(this.dayFirst);
       day.toISODate() >= this.dayLast;
       day = day.subtract(1, 'day')
     ) {
@@ -181,7 +181,7 @@ export default class ReleasesPage extends Vue {
   @Progress()
   async reload(): Promise<void> {
     this.maxReleases = 30
-    const today = dayjs.utc()
+    const today = LocalDate.todayUTC()
     const todayStr = today.toISODate()
     this.dayMax = today.subtract(30, 'day').toISODate()
     this.releasesByDay = store.getters.getReleasesByDay()
@@ -197,7 +197,7 @@ export default class ReleasesPage extends Vue {
     store.commit('cleanAfterLastDay', this.dayLast)
   }
 
-  private async loadDay(day: IDayjs, loaded: number): Promise<string> {
+  private async loadDay(day: LocalDate, loaded: number): Promise<string> {
     const dayStr = day.toISODate()
     this.dayLoading = dayStr
     const nextDay = day.add(1, 'day')
@@ -225,8 +225,8 @@ export default class ReleasesPage extends Vue {
   async loadMore(): Promise<void> {
     const releasesCount = Object.keys(st().releases).length
     this.maxReleases = releasesCount + 30
-    this.dayMax = dayjs.utc(this.dayMax).subtract(30, 'day').toISODate()
-    const dayNext = dayjs.utc(this.dayLast).subtract(1, 'day')
+    this.dayMax = localDate(this.dayMax).subtract(30, 'day').toISODate()
+    const dayNext = localDate(this.dayLast).subtract(1, 'day')
     this.dayLast = await this.loadDay(dayNext, releasesCount)
     this.dayLoading = ''
   }

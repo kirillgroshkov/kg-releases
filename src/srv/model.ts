@@ -1,3 +1,5 @@
+import { UnixTimestamp } from '@naturalcycles/js-lib'
+
 export interface ReleasesByDay {
   [day: string]: Release[]
 }
@@ -18,7 +20,7 @@ export interface Release {
   id: string
   repoFullName: string
   // created: number
-  published: number
+  published: UnixTimestamp
   // v: string // semver
   tagName: string
   descrHtml: string

@@ -1,22 +1,22 @@
-import { dayjs } from '@naturalcycles/time-lib'
+import { localTime } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 
 Vue.filter('unixtimePretty', (v: number) => {
   if (!v) return ''
-  return dayjs.unix(v).toPretty()
+  return localTime(v).toPretty()
 })
 
 Vue.filter('timePretty', (v: number) => {
   if (!v) return ''
-  return dayjs.unix(v).format('HH:mm:ss')
+  return localTime(v).toISOTime()
 })
 
 Vue.filter('timeHM', (v: number) => {
   if (!v) return ''
-  return dayjs.unix(v).format('HH:mm')
+  return localTime(v).toISOTime(false)
 })
 
 Vue.filter('timeAgo', (v: number) => {
   if (!v) return ''
-  return dayjs.unix(v).fromNow()
+  return localTime(v).fromNow()
 })

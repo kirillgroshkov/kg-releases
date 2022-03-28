@@ -1,5 +1,4 @@
-import { StringMap, _by, _pick, _stringMapValues } from '@naturalcycles/js-lib'
-import { dayjs } from '@naturalcycles/time-lib'
+import { StringMap, _by, _pick, _stringMapValues, localTime } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
@@ -60,7 +59,7 @@ export const store = new Vuex.Store<GlobalState>({
     getReleasesByDay: (state: GlobalState) => (): ReleasesByDay => {
       const m: ReleasesByDay = {}
       _stringMapValues(state.releases).forEach(r => {
-        const day = dayjs.unix(r.published).toISODate()
+        const day = localTime(r.published).toISODate()
         if (!m[day]) m[day] = []
         m[day]!.push(r)
       })
@@ -73,7 +72,7 @@ export const store = new Vuex.Store<GlobalState>({
 
     getReleasesLastDay: (state: GlobalState) => (): string | undefined => {
       const days = (_stringMapValues(state.releases) || [])
-        .map(r => dayjs.unix(r.published).toISODate())
+        .map(r => localTime(r.published).toISODate())
         .sort()
       return days.length ? days[0] : undefined
     },
@@ -114,7 +113,7 @@ export const store = new Vuex.Store<GlobalState>({
       const releases: { [id: string]: Release } = {}
 
       _stringMapValues(state.releases).forEach(r => {
-        const day = dayjs.unix(r.published).toISODate()
+        const day = localTime(r.published).toISODate()
         if (day >= lastDay) {
           // include, otherwise exclude
           releases[r.id] = r
