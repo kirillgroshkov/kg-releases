@@ -65,6 +65,9 @@ w.app = app
 w.clearReleases = () => {
   store.commit('extendState', { releases: {} })
 }
+w.throwError = () => {
+  throw new Error('my error')
+}
 
 declare global {
   interface Window {

@@ -1,7 +1,7 @@
 {
   "extends": "@naturalcycles/frontend-lib/cfg/tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true,
+    // "esModuleInterop": true,
     // "emitDecoratorMetadata": true,
     "sourceMap": true,
 //    "inlineSources": true,

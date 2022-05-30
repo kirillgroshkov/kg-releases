@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import envDev from './environment.dev'
 import type { Environment } from './environment.prod'
 import envProd from './environment.prod'
@@ -11,7 +13,7 @@ if (location.href.includes('netlify')) {
 }
 
 export function logEnvironment(): void {
-  console.log(env)
+  console.log(env, import.meta.env.MODE)
 }
 
 export function extendEnvironment(extension: Partial<Environment>): void {

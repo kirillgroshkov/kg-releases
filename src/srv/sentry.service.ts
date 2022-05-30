@@ -1,11 +1,8 @@
-import { _Memo } from '@naturalcycles/js-lib'
-import * as Sentry from '@sentry/browser'
-import * as Integrations from '@sentry/integrations'
+import * as Sentry from '@sentry/vue'
 import Vue from 'vue'
 import { env } from '@/environment/environment'
 
 class SentryService {
-  @_Memo()
   init(): void {
     // if (!this.enabled) return
     const { sentryDsn: dsn, name: environment } = env
@@ -13,20 +10,12 @@ class SentryService {
     Sentry.init({
       dsn,
       environment,
-      integrations: [
-        // new Integrations.CaptureConsole(),
-        new Integrations.Vue({
-          Vue,
-          attachProps: true,
-          logErrors: true,
-        }),
-      ],
+      Vue,
     })
   }
 
   // Returns lastEventId
   captureException(err: Error): string | undefined {
-    // debugger;
     console.log('error in sentryService.captureException:')
     console.error(err)
 
