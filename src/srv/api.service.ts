@@ -1,5 +1,5 @@
 import { getKy } from '@naturalcycles/frontend-lib'
-import { _filterFalsyValues } from '@naturalcycles/js-lib'
+import { _filterFalsyValues, _objectKeys } from '@naturalcycles/js-lib'
 import { mp } from '@/srv/analytics.service'
 import { env } from '@/environment/environment'
 import { st } from '@/store'
@@ -25,7 +25,7 @@ export const api = getKy({
           distinctId: mp.get_distinct_id(),
         })
 
-        Object.keys(headers).forEach(k => {
+        _objectKeys(headers).forEach(k => {
           req.headers.set(k, headers[k])
         })
       },
