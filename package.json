@@ -33,7 +33,7 @@
     "prettier": "^2.0.0",
     "sass": "^1.32.8",
     "typescript": "^4.0.3",
-    "vite": "^2.8.6"
+    "vite": "^3.0.0"
   },
   "resolutions": {
     "prettier": "^2.0.0"
