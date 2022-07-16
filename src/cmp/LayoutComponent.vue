@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { st } from '@/store'
+
+const user = computed(() => st().user)
+</script>
+
 <template>
   <div>
     <div class="page-container">
@@ -56,26 +63,6 @@
     </div>-->
   </div>
 </template>
-
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { UserInfo } from '@/srv/firebase.service'
-import { st } from '@/store'
-
-@Component
-export default class LayoutComponent extends Vue {
-  get user(): UserInfo {
-    return st().user
-  }
-
-  async mounted(): Promise<void> {
-    // this.loading = 'loading...'
-    // await releasesService.fetchReleases()
-    // this.loading = ''
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 // @import "../scss/var";

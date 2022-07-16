@@ -1,7 +1,7 @@
-import { UnixTimestampNumber } from '@naturalcycles/js-lib'
+import { IsoDateString, UnixTimestampNumber } from '@naturalcycles/js-lib'
 
 export interface ReleasesByDay {
-  [day: string]: Release[]
+  [day: IsoDateString]: Release[]
 }
 
 export interface RateLimit {

@@ -1,9 +1,9 @@
 import { StringMap, _by, _pick, _stringMapValues, localTime } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { prod } from '@/env'
 import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 import { UserInfo } from '@/srv/firebase.service'
-import { env } from '@/environment/environment'
 
 Vue.use(Vuex)
 
@@ -52,7 +52,7 @@ const initialState: GlobalState = {
 const releaseCompareDesc = (a: Release, b: Release) => b.published - a.published
 
 export const store = new Vuex.Store<GlobalState>({
-  strict: env.dev,
+  strict: !prod,
   state: initialState,
 
   getters: {

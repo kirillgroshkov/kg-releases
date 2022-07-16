@@ -1,8 +1,34 @@
+<script setup lang="ts">
+import { pDelay } from '@naturalcycles/js-lib'
+import { computed, onMounted, ref } from 'vue'
+import { router } from '@/router'
+import { Release } from '@/srv/model'
+import { releasesService } from '@/srv/releases.service'
+
+const releases = ref<Release[] | null>(null)
+
+const fullName = computed(() => {
+  const p = router.currentRoute.params
+  return [p['ownerName'], p['projectName']].join('/')
+})
+
+onMounted(async () => {
+  await pDelay(500) // give time for animations to finish
+  releases.value = await releasesService.getReleasesByRepo(fullName.value)
+  console.log('releases:', [...releases.value])
+})
+
+async function fetchFromGithub(): Promise<void> {
+  releases.value = await releasesService.fetchReleasesByRepo(fullName.value)
+  console.log('releases:', [...releases.value])
+}
+</script>
+
 <template>
   <div>
     <div>
       Project {{ fullName }}
-      <a :href="`https://github.com/${fullName}`" target="_blank" rel="noopener">github</a>
+      <a :href="`https://github.com/${fullName}`" target="_blank">github</a>
     </div>
     <div>
       <md-button class="md-raised md-primary" @click="fetchFromGithub()">
@@ -17,34 +43,5 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { pDelay } from '@naturalcycles/js-lib'
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Release } from '@/srv/model'
-import { releasesService } from '@/srv/releases.service'
-
-@Component
-export default class ProjectPage extends Vue {
-  releases: Release[] = false as any
-
-  get fullName(): string {
-    const p = this.$route.params
-    return [p['ownerName'], p['projectName']].join('/')
-  }
-
-  async mounted(): Promise<void> {
-    await pDelay(500) // give time for animations to finish
-    this.releases = await releasesService.getReleasesByRepo(this.fullName)
-    console.log('releases:', [...this.releases])
-  }
-
-  async fetchFromGithub(): Promise<void> {
-    this.releases = await releasesService.fetchReleasesByRepo(this.fullName)
-    console.log('releases:', [...this.releases])
-  }
-}
-</script>
 
 <style lang="scss" scoped></style>

@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import { _deepEquals } from '@naturalcycles/js-lib'
+import { computed, onMounted, ref } from 'vue'
+import { UserSettings } from '@/srv/model'
+import { withProgress } from '@/decorators/decorators'
+import { router } from '@/router'
+import { analyticsService } from '@/srv/analytics.service'
+import { firebaseService } from '@/srv/firebase.service'
+import { releasesService } from '@/srv/releases.service'
+import { st } from '@/store'
+
+const settings = ref<UserSettings>({})
+
+const userFM = computed(() => st().userFM)
+const saveEnabled = computed(() => !_deepEquals(settings.value, st().userFM.settings))
+
+function init(): void {
+  settings.value = { ...st().userFM.settings }
+}
+
+onMounted(async () => {
+  await releasesService.init()
+  init()
+})
+
+async function logout(): Promise<void> {
+  analyticsService.event('logoutClick')
+  await firebaseService.logout()
+  await router.push('/')
+}
+
+async function save(): Promise<void> {
+  await withProgress(async () => {
+    await releasesService.saveUserSettings(settings.value)
+    init()
+  })
+}
+</script>
+
 <template>
   <div class="form1">
     <md-field>
@@ -32,60 +71,6 @@
     <md-button class="md-raised md-transparent" @click="logout()"> Logout </md-button>
   </div>
 </template>
-
-<script lang="ts">
-import { _deepEquals } from '@naturalcycles/js-lib'
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { UserFM, UserSettings } from '@/srv/model'
-import { Progress } from '@/decorators/decorators'
-import { router } from '@/router'
-import { analyticsService } from '@/srv/analytics.service'
-import { firebaseService } from '@/srv/firebase.service'
-import { releasesService } from '@/srv/releases.service'
-import { st } from '@/store'
-
-@Component
-export default class SettingsPage extends Vue {
-  notificationEmail = ''
-  a = ''
-
-  // userFM: UserFM = {} as UserFM
-  settings: UserSettings = {}
-
-  get userFM(): UserFM {
-    return st().userFM
-  }
-
-  get saveEnabled(): boolean {
-    return !_deepEquals(this.settings, st().userFM.settings)
-  }
-
-  private init(): void {
-    this.settings = { ...st().userFM.settings }
-  }
-
-  async mounted(): Promise<void> {
-    await releasesService.init()
-    this.init()
-  }
-  // mount / enter > set notificationEmail
-
-  // Save button (if changed!)
-
-  async logout(): Promise<void> {
-    analyticsService.event('logoutClick')
-    await firebaseService.logout()
-    await router.push('/')
-  }
-
-  @Progress()
-  async save(): Promise<void> {
-    await releasesService.saveUserSettings(this.settings)
-    this.init()
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .form1 {

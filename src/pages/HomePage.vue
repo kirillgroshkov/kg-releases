@@ -1,3 +1,23 @@
+<script setup lang="ts">
+import { withProgress } from '@/decorators/decorators'
+import { router } from '@/router'
+import { analyticsService } from '@/srv/analytics.service'
+import { firebaseService } from '@/srv/firebase.service'
+
+async function login(): Promise<void> {
+  await withProgress(async () => {
+    analyticsService.event('loginClick')
+    const { newUser } = await firebaseService.login()
+    if (newUser) {
+      alert(
+        'Welcome to Releases!\nDepending on the number of stars it may take few minutes to import your starred repos and scan them.',
+      )
+    }
+    await router.push('/releases')
+  })
+}
+</script>
+
 <template>
   <div>
     <div class="logo1" />
@@ -15,7 +35,6 @@
     <a
       href="https://github.com/kirillgroshkov/kg-releases"
       target="_blank"
-      rel="noopener"
       class="github-corner"
       aria-label="View source on Github"
       ><svg
@@ -54,36 +73,10 @@
 
     <div class="copy1">
       &lt;/&gt; with &lt;3 in <span class="flag-se" /> by
-      <a href="https://twitter.com/kirillgroshkov" target="_blank" rel="noopener"
-        >@kirillgroshkov</a
-      >
+      <a href="https://twitter.com/kirillgroshkov" target="_blank">@kirillgroshkov</a>
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Progress } from '@/decorators/decorators'
-import { router } from '@/router'
-import { analyticsService } from '@/srv/analytics.service'
-import { firebaseService } from '@/srv/firebase.service'
-
-@Component
-export default class HomePage extends Vue {
-  @Progress()
-  async login(): Promise<void> {
-    analyticsService.event('loginClick')
-    const { newUser } = await firebaseService.login()
-    if (newUser) {
-      alert(
-        'Welcome to Releases!\nDepending on the number of stars it may take few minutes to import your starred repos and scan them.',
-      )
-    }
-    await router.push('/releases')
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .logo1 {
@@ -93,7 +86,7 @@ export default class HomePage extends Vue {
   height: 200px;
   // text-align: center;
   // width: 600px; height: 600px;
-  background: url(/public/static/img/logo1.png) no-repeat 50% 50%;
+  background: url('/public/static/img/logo1.png') no-repeat 50% 50%;
   background-size: contain;
 }
 
@@ -130,7 +123,7 @@ small {
 
 .flag-se {
   display: inline-block;
-  background: url(/public/static/img/flag-se.svg) no-repeat 50% 50%;
+  background: url('/public/static/img/flag-se.svg') no-repeat 50% 50%;
   background-size: contain;
   width: 16px;
   height: 10px;

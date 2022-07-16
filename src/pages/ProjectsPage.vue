@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { pDelay } from '@naturalcycles/js-lib'
+import { computed, onMounted } from 'vue'
+import { releasesService } from '@/srv/releases.service'
+import { st } from '@/store'
+
+const starredRepos = computed(() => st().starredRepos)
+
+onMounted(async () => {
+  await pDelay(1000) // give time for animations to finish
+  await releasesService.fetchRepos()
+})
+</script>
+
 <template>
   <div>
     <div>Projects</div>
@@ -8,26 +22,5 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { pDelay } from '@naturalcycles/js-lib'
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Repo } from '@/srv/model'
-import { releasesService } from '@/srv/releases.service'
-import { st } from '@/store'
-
-@Component
-export default class ProjectsPage extends Vue {
-  get starredRepos(): Repo[] {
-    return st().starredRepos
-  }
-
-  async mounted(): Promise<void> {
-    await pDelay(1000) // give time for animations to finish
-    await releasesService.fetchRepos()
-  }
-}
-</script>
 
 <style lang="scss" scoped></style>

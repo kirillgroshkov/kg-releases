@@ -1,4 +1,5 @@
 import { pDefer, _Memo, _pick } from '@naturalcycles/js-lib'
+import { User } from '@sentry/vue'
 import { initializeApp } from 'firebase/app'
 import {
   getAdditionalUserInfo,
@@ -9,11 +10,12 @@ import {
   UserInfo,
 } from 'firebase/auth'
 import { getPerformance } from 'firebase/performance'
-import { Progress } from '@/decorators/decorators'
+import { sentry } from '@/error'
+import { prod } from '@/env'
+import { withProgress } from '@/decorators/decorators'
 import { analyticsService, mp } from '@/srv/analytics.service'
 import { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
-import { sentryService } from '@/srv/sentry.service'
 import { extendState } from '@/store'
 export type { UserInfo }
 
@@ -43,7 +45,7 @@ class FirebaseService {
   async init(): Promise<void> {
     onAuthStateChanged(auth, user => this.onAuthStateChanged(user))
 
-    if (window.prod) {
+    if (prod) {
       const _perf = getPerformance(firebaseApp)
     }
   }
@@ -67,11 +69,12 @@ class FirebaseService {
     return br
   }
 
-  @Progress()
   async logout(): Promise<void> {
-    await auth.signOut()
-    sentryService.setUser({})
-    mp.reset()
+    await withProgress(async () => {
+      await auth.signOut()
+      sentry.setUser({})
+      mp.reset()
+    })
   }
 
   private async onAuthStateChanged(userInfo: UserInfo | null): Promise<void> {
@@ -82,15 +85,14 @@ class FirebaseService {
     const uid = qs.get('uid')
     if (uid) {
       console.log('debug: ?uid')
-      const user = {
-        uid,
-      } as UserInfo
 
-      sentryService.setUser(user)
-      analyticsService.setUserId(user.uid)
+      sentry.setUser({ uid })
+      analyticsService.setUserId(uid)
 
       extendState({
-        user,
+        user: {
+          uid,
+        } as UserInfo,
       })
     } else if (userInfo) {
       const idToken = await auth.currentUser!.getIdToken()
@@ -101,7 +103,7 @@ class FirebaseService {
         idToken,
       }
 
-      sentryService.setUser(user)
+      sentry.setUser(user as User)
       analyticsService.setUserId(user.uid)
 
       extendState({

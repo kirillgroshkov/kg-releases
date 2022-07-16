@@ -1,10 +1,9 @@
 import { getKy } from '@naturalcycles/frontend-lib'
 import { _filterFalsyValues, _objectKeys } from '@naturalcycles/js-lib'
 import { mp } from '@/srv/analytics.service'
-import { env } from '@/environment/environment'
 import { st } from '@/store'
 
-const { apiUrl } = env
+const apiUrl = 'https://kg-backend3.appspot.com/releases'
 
 export const api = getKy({
   // logStart: true,

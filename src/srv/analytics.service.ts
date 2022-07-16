@@ -1,24 +1,25 @@
 import { loadGTag, loadHotjar } from '@naturalcycles/frontend-lib'
 import { AnyObject } from '@naturalcycles/js-lib'
 import mixpanel from 'mixpanel-browser'
-import { env } from '@/environment/environment'
+import { prod } from '@/env'
 let mp = mixpanel
 
 // ;(window as any).mixpanel = mixpanel
 
 const mixpanelToken = '20158c629a6a4226d9c975185238b7a7'
-const { hotjarId } = env
+const hotjarId = 894902
+const gaId = 'UA-6342858-21'
 
 class AnalyticsService {
   init(): void {
-    void loadGTag('UA-6342858-21', window.prod)
+    void loadGTag('UA-6342858-21', prod)
 
     // this.initGA()
-    if (hotjarId) {
+    if (prod) {
       loadHotjar(hotjarId)
     }
 
-    if (!window.prod) {
+    if (!prod) {
       mp = {
         identify() {},
         track() {},
@@ -44,7 +45,7 @@ class AnalyticsService {
 
   pageView(fullPath: string): void {
     mp.track(`pageview ${fullPath}`)
-    window.gtag('config', env.gaId, { page_path: fullPath })
+    window.gtag('config', gaId, { page_path: fullPath })
   }
 
   event(eventName: string, data: AnyObject = {}): void {

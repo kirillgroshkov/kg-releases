@@ -4,7 +4,7 @@
 import './scss/global.scss'
 
 import '@/polyfills'
-import { _deepCopy } from '@naturalcycles/js-lib'
+import { _deepCopy, pDelay } from '@naturalcycles/js-lib'
 import Vue from 'vue'
 import {
   MdApp,
@@ -18,10 +18,14 @@ import {
   MdCheckbox,
 } from 'vue-material/dist/components'
 import RootComponent from './cmp/RootComponent.vue'
-import { bootstrapService } from '@/srv/bootstrap.service'
-import './hooks' // must be defined BEFORE router is created!
+import { bootstrapDone } from '@/bootstrapDone'
+import { prod } from '@/env'
+import { initSentry } from '@/error'
+import { analyticsService } from '@/srv/analytics.service'
+import { firebaseService } from '@/srv/firebase.service'
+import { releasesService } from '@/srv/releases.service'
 import { router } from '@/router'
-import { store } from '@/store'
+import { st, store } from '@/store'
 import '@/filters/filters.ts'
 
 Vue.config.productionTip = false
@@ -47,7 +51,34 @@ export const app = new Vue({
   render: h => h(RootComponent),
 }).$mount('#app')
 
-void bootstrapService.init()
+// eslint-disable-next-line unicorn/prefer-top-level-await
+void main()
+
+async function main() {
+  console.log({ prod })
+  initSentry()
+
+  analyticsService.init()
+
+  document.body.classList.add('ontouchstart' in document.documentElement ? 'touch' : 'no-touch')
+
+  await firebaseService.init()
+  await firebaseService.authStateChanged
+
+  if (st().user.uid) {
+    void releasesService.init()
+  }
+
+  void hideLoader()
+  bootstrapDone.resolve()
+}
+
+async function hideLoader(): Promise<void> {
+  const loader = document.querySelector('#loading0')!
+  await pDelay(500)
+  loader.addEventListener('transitionend', () => loader.remove())
+  loader.classList.add('opacity0')
+}
 
 // Debug
 const w: any = window
@@ -71,7 +102,6 @@ w.throwError = () => {
 
 declare global {
   interface Window {
-    prod: boolean
     dataLayer: any[]
     gtag(...args: any[]): void
   }

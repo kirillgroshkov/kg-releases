@@ -1,11 +1,9 @@
 import { _Memo } from '@naturalcycles/js-lib'
 import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model'
-import { Progress } from '@/decorators/decorators'
 import { api } from '@/srv/api.service'
 import { store } from '@/store'
 
 class ReleasesService {
-  // @Progress()
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
     // console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
 
@@ -25,7 +23,6 @@ class ReleasesService {
     }
   }
 
-  @Progress()
   async fetchRepos(): Promise<void> {
     const starredRepos = await api.get('repos').json<Repo[]>()
 
@@ -34,17 +31,14 @@ class ReleasesService {
     })
   }
 
-  @Progress()
   async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
     return await api.get(`repos/${repoFullName}/releases`).json<Release[]>()
   }
 
-  @Progress()
   async fetchReleasesByRepo(repoFullName: string): Promise<Release[]> {
     return await api.get(`repos/${repoFullName}/releases/fetch`).json<Release[]>()
   }
 
-  @Progress()
   async auth(json: AuthInput): Promise<BackendResponse> {
     const br = await api
       .post(`auth`, {

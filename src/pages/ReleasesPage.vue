@@ -1,3 +1,119 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { IsoDateString, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
+import { withProgress } from '@/decorators/decorators'
+import { ReleasesByDay } from '@/srv/model'
+import { releasesService } from '@/srv/releases.service'
+import { st, store } from '@/store'
+
+const expandedRows = ref(new Set<string>())
+const maxReleases = ref(30)
+const dayFirst = ref<IsoDateString>('')
+const dayLast = ref<IsoDateString>('')
+const dayLoading = ref<IsoDateString>('')
+const dayMax = ref<IsoDateString>('')
+const releasesByDay = ref<ReleasesByDay>({})
+
+// const dayNext = computed((): IsoDateString => {
+//   if (!dayLast.value) return ''
+//
+//   return localDate(dayLast.value).subtract(1, 'day').toISODate()
+// })
+
+const days = computed((): IsoDateString[] => {
+  const days: IsoDateString[] = []
+  if (!dayFirst.value || !dayLast.value) return []
+
+  // range can be used here
+  for (
+    let day = localDate(dayFirst.value);
+    day.toISODate() >= dayLast.value;
+    day = day.subtract(1, 'day')
+  ) {
+    days.push(day.toISODate())
+  }
+
+  return days
+})
+
+onMounted(async () => {
+  await reload()
+})
+
+async function reload(): Promise<void> {
+  await withProgress(async () => {
+    maxReleases.value = 30
+    const today = LocalDate.todayUTC()
+    const todayStr = today.toISODate()
+    dayMax.value = today.subtract(30, 'day').toISODate()
+    releasesByDay.value = store.getters.getReleasesByDay()
+    dayFirst.value = todayStr
+    dayLast.value = store.getters.getReleasesLastDay() || todayStr
+
+    await pDelay(1000) // give time for animations to finish
+    dayLast.value = await loadDay(today, 0)
+    dayLoading.value = ''
+    // console.log('dayLast end: ' + this.dayLast)
+
+    // cleanAfterLastDay
+    store.commit('cleanAfterLastDay', dayLast.value)
+  })
+}
+
+async function loadDay(day: LocalDate, loaded: number): Promise<string> {
+  const dayStr = day.toISODate()
+  dayLoading.value = dayStr
+  const nextDay = day.add(1, 'day')
+  const nextDayStr = nextDay.toISODate()
+  // this.loading = 'loading...'
+  // _this.dayLast = dayStr
+  dayLast.value = store.getters.getReleasesLastDay()
+  // console.log('dayLast: ' + this.dayLast)
+
+  const { releases = [] } = await releasesService.fetchReleases(dayStr, nextDayStr)
+  releasesByDay.value = store.getters.getReleasesByDay()
+  // this.loading = ''
+  // const releasesCount = Object.keys(st().releases).length
+  loaded += releases.length
+  // console.log('loaded: ' + loaded)
+
+  if (loaded < maxReleases.value && dayStr > dayMax.value) {
+    const yesterday = day.subtract(1, 'day')
+    return await loadDay(yesterday, loaded)
+  }
+
+  return dayStr
+}
+
+async function loadMore(): Promise<void> {
+  const releasesCount = Object.keys(st().releases).length
+  maxReleases.value = releasesCount + 30
+  dayMax.value = localDate(dayMax.value).subtract(30, 'day').toISODate()
+  const dayNext = localDate(dayLast.value).subtract(1, 'day')
+  dayLast.value = await loadDay(dayNext, releasesCount)
+  dayLoading.value = ''
+}
+
+function toggleClick(id: string, _$event: MouseEvent): void {
+  // console.log($event)
+
+  // if (($event?.target as any)?.nodeName === 'A') alert('target A!')
+  if (expandedRows.value.has(id)) {
+    expandedRows.value.delete(id)
+  } else {
+    expandedRows.value.add(id)
+  }
+  expandedRows.value = new Set(expandedRows.value)
+}
+
+function descrClick($event: MouseEvent): void {
+  // $event.preventDefault()
+  $event.stopImmediatePropagation()
+}
+
+const state = computed(() => store.state)
+</script>
+
 <template>
   <div>
     <div>
@@ -77,7 +193,6 @@ Starred repos: {{ state.userFM.starredReposCount }}
                             r.tagName || 'v' + r.v
                           }`"
                           target="_blank"
-                          rel="noopener"
                         >
                           view on github
                         </md-button>
@@ -123,132 +238,6 @@ Starred repos: {{ state.userFM.starredReposCount }}
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { IsoDate, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
-import { Progress } from '@/decorators/decorators'
-import { ReleasesByDay } from '@/srv/model'
-import { releasesService } from '@/srv/releases.service'
-import { GlobalState, st, store } from '@/store'
-
-@Component
-export default class ReleasesPage extends Vue {
-  expandedRows = new Set<string>()
-  // days: string[] = []
-  maxReleases = 30
-  dayFirst = ''
-  dayLast = ''
-  dayLoading = ''
-  dayMax = ''
-  releasesByDay: ReleasesByDay = {}
-
-  get dayNext(): IsoDate {
-    if (!this.dayLast) return ''
-
-    return localDate(this.dayLast).subtract(1, 'day').toISODate()
-  }
-
-  get state(): GlobalState {
-    return this.$store.state
-  }
-
-  /* get releasesByDay (): ReleasesByDay {
-    return store.getters.getReleasesByDay()
-  }*/
-
-  get days(): string[] {
-    const days: string[] = []
-    if (!this.dayFirst || !this.dayLast) return []
-
-    // range can be used here
-    for (
-      let day = localDate(this.dayFirst);
-      day.toISODate() >= this.dayLast;
-      day = day.subtract(1, 'day')
-    ) {
-      days.push(day.toISODate())
-    }
-
-    return days
-  }
-
-  async mounted(): Promise<void> {
-    await this.reload()
-  }
-
-  @Progress()
-  async reload(): Promise<void> {
-    this.maxReleases = 30
-    const today = LocalDate.todayUTC()
-    const todayStr = today.toISODate()
-    this.dayMax = today.subtract(30, 'day').toISODate()
-    this.releasesByDay = store.getters.getReleasesByDay()
-    this.dayFirst = todayStr
-    this.dayLast = store.getters.getReleasesLastDay() || todayStr
-
-    await pDelay(1000) // give time for animations to finish
-    this.dayLast = await this.loadDay(today, 0)
-    this.dayLoading = ''
-    // console.log('dayLast end: ' + this.dayLast)
-
-    // cleanAfterLastDay
-    store.commit('cleanAfterLastDay', this.dayLast)
-  }
-
-  private async loadDay(day: LocalDate, loaded: number): Promise<string> {
-    const dayStr = day.toISODate()
-    this.dayLoading = dayStr
-    const nextDay = day.add(1, 'day')
-    const nextDayStr = nextDay.toISODate()
-    // this.loading = 'loading...'
-    // _this.dayLast = dayStr
-    this.dayLast = store.getters.getReleasesLastDay()
-    // console.log('dayLast: ' + this.dayLast)
-
-    const { releases = [] } = await releasesService.fetchReleases(dayStr, nextDayStr)
-    this.releasesByDay = store.getters.getReleasesByDay()
-    // this.loading = ''
-    // const releasesCount = Object.keys(st().releases).length
-    loaded += releases.length
-    // console.log('loaded: ' + loaded)
-
-    if (loaded < this.maxReleases && dayStr > this.dayMax) {
-      const yesterday = day.subtract(1, 'day')
-      return await this.loadDay(yesterday, loaded)
-    }
-
-    return dayStr
-  }
-
-  async loadMore(): Promise<void> {
-    const releasesCount = Object.keys(st().releases).length
-    this.maxReleases = releasesCount + 30
-    this.dayMax = localDate(this.dayMax).subtract(30, 'day').toISODate()
-    const dayNext = localDate(this.dayLast).subtract(1, 'day')
-    this.dayLast = await this.loadDay(dayNext, releasesCount)
-    this.dayLoading = ''
-  }
-
-  toggleClick(id: string, _$event: MouseEvent): void {
-    // console.log($event)
-
-    // if (($event?.target as any)?.nodeName === 'A') alert('target A!')
-    if (this.expandedRows.has(id)) {
-      this.expandedRows.delete(id)
-    } else {
-      this.expandedRows.add(id)
-    }
-    this.expandedRows = new Set(this.expandedRows)
-  }
-
-  descrClick($event: MouseEvent): void {
-    // $event.preventDefault()
-    $event.stopImmediatePropagation()
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 @import '../scss/var';
