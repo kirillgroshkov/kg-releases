@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { _deepEquals } from '@naturalcycles/js-lib'
 import { computed, onMounted, ref } from 'vue'
+import { useStore } from '@/store'
 import { UserSettings } from '@/srv/model'
 import { withProgress } from '@/decorators/decorators'
 import { router } from '@/router'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
-import { st } from '@/store'
 
+const store = useStore()
 const settings = ref<UserSettings>({})
 
-const userFM = computed(() => st().userFM)
-const saveEnabled = computed(() => !_deepEquals(settings.value, st().userFM.settings))
+const saveEnabled = computed(() => !_deepEquals(settings.value, store.userFM.settings))
 
 function init(): void {
-  settings.value = { ...st().userFM.settings }
+  settings.value = { ...store.userFM.settings }
 }
 
 onMounted(async () => {
@@ -41,7 +41,7 @@ async function save(): Promise<void> {
   <div class="form1">
     <md-field>
       <label>User ID</label>
-      <md-input v-model="userFM.id" disabled />
+      <md-input v-model="store.userFM.id" disabled />
     </md-field>
 
     <md-field>

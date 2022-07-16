@@ -1,21 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { NavigationGuard } from 'vue-router/types/router'
+import { useStore } from '@/store'
 import { bootstrapDone } from '@/bootstrapDone'
 import { analyticsService } from '@/srv/analytics.service'
-import { st } from '@/store'
 
 Vue.use(Router)
 
 const loggedInGuard: NavigationGuard = (to, from, next) => {
-  const u = st().user
+  const u = useStore().user
   if (u.uid) return next()
   console.log('GUARD: loggedInGuard')
   next('/')
 }
 
 const guestOnlyGuard: NavigationGuard = (to, from, next) => {
-  const u = st().user
+  const u = useStore().user
   if (!u.uid) return next()
   console.log('GUARD: guestOnlyGuard')
   next('/releases')

@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { st } from '@/store'
+import { useStore } from '@/store'
 
-const user = computed(() => st().user)
+const store = useStore()
 </script>
 
 <template>
   <div>
     <div class="page-container">
       <md-app md-waterfall1 md-mode="fixed">
-        <md-app-toolbar v-if="user.uid" class="md-primary">
+        <md-app-toolbar v-if="store.user.uid" class="md-primary">
           <!--
           <span class="md-title">My Title</span>
           -->
@@ -33,8 +32,13 @@ const user = computed(() => st().user)
             </div>
 
             <div class="md-toolbar-section-end" style="flex: 0">
-              <md-avatar v-if="user.uid" class="md-elevation-1">
-                <img class="avatar" :src="user.photoURL" alt="user.displayName" loading="lazy" />
+              <md-avatar v-if="store.user.uid" class="md-elevation-1">
+                <img
+                  class="avatar"
+                  :src="store.user.photoURL"
+                  alt="user.displayName"
+                  loading="lazy"
+                />
               </md-avatar>
             </div>
           </div>

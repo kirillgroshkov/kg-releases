@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { IsoDateString, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
+import { useStore } from '@/store'
 import { withProgress } from '@/decorators/decorators'
 import { ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
-import { st, store } from '@/store'
 
 const expandedRows = ref(new Set<string>())
 const maxReleases = ref(30)
 const dayFirst = ref<IsoDateString>('')
-const dayLast = ref<IsoDateString>('')
+const dayLast = ref<IsoDateString | null>('')
 const dayLoading = ref<IsoDateString>('')
 const dayMax = ref<IsoDateString>('')
 const releasesByDay = ref<ReleasesByDay>({})
@@ -40,15 +40,17 @@ onMounted(async () => {
   await reload()
 })
 
+const store = useStore()
+
 async function reload(): Promise<void> {
   await withProgress(async () => {
     maxReleases.value = 30
     const today = LocalDate.todayUTC()
     const todayStr = today.toISODate()
     dayMax.value = today.subtract(30, 'day').toISODate()
-    releasesByDay.value = store.getters.getReleasesByDay()
+    releasesByDay.value = store.getReleasesByDay()
     dayFirst.value = todayStr
-    dayLast.value = store.getters.getReleasesLastDay() || todayStr
+    dayLast.value = store.getReleasesLastDay() || todayStr
 
     await pDelay(1000) // give time for animations to finish
     dayLast.value = await loadDay(today, 0)
@@ -56,7 +58,7 @@ async function reload(): Promise<void> {
     // console.log('dayLast end: ' + this.dayLast)
 
     // cleanAfterLastDay
-    store.commit('cleanAfterLastDay', dayLast.value)
+    store.cleanAfterLastDay(dayLast.value)
   })
 }
 
@@ -67,11 +69,11 @@ async function loadDay(day: LocalDate, loaded: number): Promise<string> {
   const nextDayStr = nextDay.toISODate()
   // this.loading = 'loading...'
   // _this.dayLast = dayStr
-  dayLast.value = store.getters.getReleasesLastDay()
+  dayLast.value = store.getReleasesLastDay()
   // console.log('dayLast: ' + this.dayLast)
 
   const { releases = [] } = await releasesService.fetchReleases(dayStr, nextDayStr)
-  releasesByDay.value = store.getters.getReleasesByDay()
+  releasesByDay.value = store.getReleasesByDay()
   // this.loading = ''
   // const releasesCount = Object.keys(st().releases).length
   loaded += releases.length
@@ -86,10 +88,10 @@ async function loadDay(day: LocalDate, loaded: number): Promise<string> {
 }
 
 async function loadMore(): Promise<void> {
-  const releasesCount = Object.keys(st().releases).length
+  const releasesCount = Object.keys(store.releases).length
   maxReleases.value = releasesCount + 30
   dayMax.value = localDate(dayMax.value).subtract(30, 'day').toISODate()
-  const dayNext = localDate(dayLast.value).subtract(1, 'day')
+  const dayNext = localDate(dayLast.value!).subtract(1, 'day')
   dayLast.value = await loadDay(dayNext, releasesCount)
   dayLoading.value = ''
 }
@@ -110,8 +112,6 @@ function descrClick($event: MouseEvent): void {
   // $event.preventDefault()
   $event.stopImmediatePropagation()
 }
-
-const state = computed(() => store.state)
 </script>
 
 <template>
@@ -122,8 +122,8 @@ const state = computed(() => store.state)
           <tr>
             <td>
               <pre>
-Last updated: {{ state.releasesUpdaterLastFinished | unixtimePretty }}
-Starred repos: {{ state.userFM.starredReposCount }}
+Last updated: {{ store.releasesUpdaterLastFinished | unixtimePretty }}
+Starred repos: {{ store.userFM.starredReposCount }}
             </pre
               >
             </td>
@@ -207,7 +207,7 @@ Starred repos: {{ state.userFM.starredReposCount }}
           </template>
 
           <table
-            v-if="!dayLoading && !$store.getters.getReleasesCount()"
+            v-if="!dayLoading && !store.getReleasesCount()"
             border="0"
             cellspacing="0"
             cellpadding="6"
@@ -268,7 +268,6 @@ Starred repos: {{ state.userFM.starredReposCount }}
   width: 100% !important;
   max-width: 500px;
   table-layout: fixed;
-  background-color1: pink;
 }
 
 @media (max-width: 800px) {

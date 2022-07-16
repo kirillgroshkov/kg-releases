@@ -10,13 +10,13 @@ import {
   UserInfo,
 } from 'firebase/auth'
 import { getPerformance } from 'firebase/performance'
+import { useStore } from '@/store'
 import { sentry } from '@/error'
 import { prod } from '@/env'
 import { withProgress } from '@/decorators/decorators'
 import { analyticsService, mp } from '@/srv/analytics.service'
 import { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
-import { extendState } from '@/store'
 export type { UserInfo }
 
 // export interface UserInfo {
@@ -79,6 +79,7 @@ class FirebaseService {
 
   private async onAuthStateChanged(userInfo: UserInfo | null): Promise<void> {
     // console.log('onAuthStateChanged, user:', _deepCopy(_user))
+    const store = useStore()
 
     // debug!
     const qs = new URLSearchParams(location.search)
@@ -89,11 +90,9 @@ class FirebaseService {
       sentry.setUser({ uid })
       analyticsService.setUserId(uid)
 
-      extendState({
-        user: {
-          uid,
-        } as UserInfo,
-      })
+      store.user = {
+        uid,
+      } as UserInfo
     } else if (userInfo) {
       const idToken = await auth.currentUser!.getIdToken()
 
@@ -106,14 +105,10 @@ class FirebaseService {
       sentry.setUser(user as User)
       analyticsService.setUserId(user.uid)
 
-      extendState({
-        user,
-      })
+      store.user = user
     } else {
-      extendState({
-        user: {} as any,
-        userFM: { settings: {} } as any,
-      })
+      store.user = {} as any
+      store.userFM = { settings: {} } as any
     }
 
     this.authStateChanged.resolve()

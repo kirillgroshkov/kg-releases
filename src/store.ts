@@ -1,11 +1,16 @@
-import { StringMap, _by, _pick, _stringMapValues, localTime } from '@naturalcycles/js-lib'
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { prod } from '@/env'
+import {
+  StringMap,
+  _by,
+  _pick,
+  _stringMapValues,
+  localTime,
+  _deepCopy,
+  _sortBy,
+  IsoDateString,
+} from '@naturalcycles/js-lib'
+import { defineStore } from 'pinia'
 import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 import { UserInfo } from '@/srv/firebase.service'
-
-Vue.use(Vuex)
 
 export interface GlobalState {
   counter: number
@@ -20,43 +25,38 @@ export interface GlobalState {
   starredRepos: Repo[]
 }
 
-const DEF_STATE: GlobalState = {
-  counter: 0,
-  user: {} as any,
-  userFM: {
-    settings: {},
-  } as any,
-  ghostMode: false,
-  // rateLimit: {} as any,
-  // starredReposNumber: 0,
-  releases: {},
-  lastStarred: [],
-  starredRepos: [],
+function getInitialState(): GlobalState {
+  return {
+    counter: 0,
+    user: {} as any,
+    userFM: {
+      settings: {},
+    } as any,
+    ghostMode: false,
+    // rateLimit: {} as any,
+    // starredReposNumber: 0,
+    releases: {},
+    lastStarred: [],
+    starredRepos: [],
+  }
 }
 
-const PERSIST: string[] = [
-  'counter',
-  'releases',
-  'starredRepos',
-  // '',
-]
+const persistKeys: (keyof GlobalState)[] = ['counter', 'releases', 'starredRepos']
 
-const initialState: GlobalState = {
-  ...DEF_STATE,
-  ...JSON.parse(localStorage.getItem('state') || '{}'),
-}
+const LS_ID = 'state'
 
-// const qs = urlUtil.qs()
-// if (qs.testUid) initialState = {...DEF_STATE}
+export const useStore = defineStore('main', {
+  state: () => {
+    const state: GlobalState = {
+      ...getInitialState(),
+      ...JSON.parse(localStorage.getItem(LS_ID) || '{}'),
+    }
 
-const releaseCompareDesc = (a: Release, b: Release) => b.published - a.published
-
-export const store = new Vuex.Store<GlobalState>({
-  strict: !prod,
-  state: initialState,
+    return state
+  },
 
   getters: {
-    getReleasesByDay: (state: GlobalState) => (): ReleasesByDay => {
+    getReleasesByDay: state => (): ReleasesByDay => {
       const m: ReleasesByDay = {}
       _stringMapValues(state.releases).forEach(r => {
         const day = localTime(r.published).toISODate()
@@ -65,54 +65,46 @@ export const store = new Vuex.Store<GlobalState>({
       })
 
       // sort
-      Object.values(m).forEach(releases => releases.sort(releaseCompareDesc))
+      Object.values(m).forEach(releases => _sortBy(releases, r => r.published, true, true))
 
       return m
     },
 
-    getReleasesLastDay: (state: GlobalState) => (): string | undefined => {
+    getReleasesLastDay: state => (): IsoDateString | null => {
       const days = (_stringMapValues(state.releases) || [])
         .map(r => localTime(r.published).toISODate())
         .sort()
-      return days.length ? days[0] : undefined
+      return days[0] || null
     },
 
-    getReleasesCount: (state: GlobalState) => (): number => {
+    getReleasesCount: state => (): number => {
       return Object.keys(state.releases).length
     },
   },
 
-  mutations: {
-    extendState(state: GlobalState, extension: Partial<GlobalState>): void {
-      Object.assign(state, extension)
+  actions: {
+    reset() {
+      Object.assign(this, getInitialState())
     },
 
-    reset(state: GlobalState): void {
-      Object.assign(state, DEF_STATE)
-    },
-
-    setGhost(state: GlobalState, ghostMode = true): void {
-      Object.assign(state, { ghostMode })
-    },
-
-    setUser(state: GlobalState, uid: string): void {
-      state.user = {
-        ...state.user,
+    setUser(uid: string): void {
+      this.user = {
+        ...this.user,
         uid,
       }
     },
 
-    addReleases(state: GlobalState, releases: Release[] = []): void {
-      state.releases = {
-        ...state.releases,
+    addReleases(releases: Release[] = []): void {
+      this.releases = {
+        ...this.releases,
         ..._by(releases, r => r.id),
       }
     },
 
-    cleanAfterLastDay(state: GlobalState, lastDay: string): void {
+    cleanAfterLastDay(lastDay: string): void {
       const releases: { [id: string]: Release } = {}
 
-      _stringMapValues(state.releases).forEach(r => {
+      _stringMapValues(this.releases).forEach(r => {
         const day = localTime(r.published).toISODate()
         if (day >= lastDay) {
           // include, otherwise exclude
@@ -120,36 +112,34 @@ export const store = new Vuex.Store<GlobalState>({
         }
       })
 
-      state.releases = releases
+      this.releases = releases
     },
 
-    onBackendResponse(state: GlobalState, br: BackendResponse = {}): void {
+    onBackendResponse(br: BackendResponse = {}): void {
       console.log('onBackendResponse', br)
       const { userFM, releasesUpdaterLastFinished } = br
 
       if (userFM) {
-        Object.assign(state, { userFM })
+        this.userFM = userFM
       }
 
       if (releasesUpdaterLastFinished) {
-        Object.assign(state, { releasesUpdaterLastFinished })
+        this.releasesUpdaterLastFinished = releasesUpdaterLastFinished
       }
     },
   },
 })
 
-// Shortcut function to get State, properly typed
-export function st(): GlobalState {
-  return store.state
-}
+let previousState = ''
 
-// Shortcut
-export function extendState(payload: Partial<GlobalState>): void {
-  store.commit('extendState', payload)
+export function initStore(): void {
+  const store = useStore()
+  store.$subscribe((mutation, state) => {
+    const newState = JSON.stringify(_pick(state, persistKeys))
+    if (newState === previousState) return
+    previousState = newState
+    localStorage.setItem(LS_ID, newState)
+    console.log('state >> ls')
+  })
+  ;(globalThis as any)['state'] = () => console.log(_deepCopy(store.$state))
 }
-
-// Persist
-store.subscribe((m, state) => {
-  // console.log('>>', m, JSON.stringify(state))
-  localStorage.setItem('state', JSON.stringify(_pick(state, PERSIST as any)))
-})

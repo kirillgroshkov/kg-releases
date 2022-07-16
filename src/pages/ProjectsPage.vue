@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { pDelay } from '@naturalcycles/js-lib'
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { useStore } from '@/store'
 import { releasesService } from '@/srv/releases.service'
-import { st } from '@/store'
 
-const starredRepos = computed(() => st().starredRepos)
+const store = useStore()
 
 onMounted(async () => {
   await pDelay(1000) // give time for animations to finish
@@ -15,7 +15,7 @@ onMounted(async () => {
 <template>
   <div>
     <div>Projects</div>
-    <div v-for="r in starredRepos" :key="r.fullName">
+    <div v-for="r in store.starredRepos" :key="r.fullName">
       <router-link :to="`/projects/${r.fullName}`">
         {{ r.fullName }}
       </router-link>

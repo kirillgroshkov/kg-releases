@@ -1,7 +1,7 @@
 import { _Memo } from '@naturalcycles/js-lib'
 import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model'
+import { useStore } from '@/store'
 import { api } from '@/srv/api.service'
-import { store } from '@/store'
 
 class ReleasesService {
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
@@ -16,7 +16,7 @@ class ReleasesService {
       })
       .json<BackendResponse>()
 
-    store.commit('addReleases', releases)
+    useStore().addReleases(releases)
 
     return {
       releases,
@@ -26,9 +26,7 @@ class ReleasesService {
   async fetchRepos(): Promise<void> {
     const starredRepos = await api.get('repos').json<Repo[]>()
 
-    store.commit('extendState', {
-      starredRepos,
-    })
+    useStore().starredRepos = starredRepos
   }
 
   async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
@@ -47,7 +45,7 @@ class ReleasesService {
       .json<BackendResponse>()
     // console.log('auth', br)
 
-    store.commit('onBackendResponse', br)
+    useStore().onBackendResponse(br)
 
     return br
   }
@@ -59,7 +57,7 @@ class ReleasesService {
       })
       .json<BackendResponse>()
 
-    store.commit('onBackendResponse', br)
+    useStore().onBackendResponse(br)
 
     return br
   }
@@ -68,7 +66,7 @@ class ReleasesService {
   async init(): Promise<BackendResponse> {
     const br = await api.get(`init`).json<BackendResponse>()
 
-    store.commit('onBackendResponse', br)
+    useStore().onBackendResponse(br)
 
     return br
   }

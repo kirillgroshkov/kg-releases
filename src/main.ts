@@ -4,7 +4,8 @@
 import './scss/global.scss'
 
 import '@/polyfills'
-import { _deepCopy, pDelay } from '@naturalcycles/js-lib'
+import { pDelay } from '@naturalcycles/js-lib'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 import Vue from 'vue'
 import {
   MdApp,
@@ -18,6 +19,7 @@ import {
   MdCheckbox,
 } from 'vue-material/dist/components'
 import RootComponent from './cmp/RootComponent.vue'
+import { initStore, useStore } from '@/store'
 import { bootstrapDone } from '@/bootstrapDone'
 import { prod } from '@/env'
 import { initSentry } from '@/error'
@@ -25,7 +27,6 @@ import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { router } from '@/router'
-import { st, store } from '@/store'
 import '@/filters/filters.ts'
 
 Vue.config.productionTip = false
@@ -45,17 +46,24 @@ Vue.use(MdIcon)
 Vue.use(MdField)
 Vue.use(MdCheckbox)
 
-export const app = new Vue({
+Vue.use(PiniaVuePlugin)
+
+const pinia = createPinia()
+
+new Vue({
+  el: '#app',
   router,
-  store,
   render: h => h(RootComponent),
-}).$mount('#app')
+  pinia,
+})
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
 void main()
 
 async function main() {
   console.log({ prod })
+
+  initStore()
   initSentry()
 
   analyticsService.init()
@@ -65,7 +73,8 @@ async function main() {
   await firebaseService.init()
   await firebaseService.authStateChanged
 
-  if (st().user.uid) {
+  const store = useStore()
+  if (store.user.uid) {
     void releasesService.init()
   }
 
@@ -81,24 +90,24 @@ async function hideLoader(): Promise<void> {
 }
 
 // Debug
-const w: any = window
-w.state = () => _deepCopy(store.state)
-w.commit = (type: string, payload?: any) => {
-  store.commit(type, payload)
-  return w.state()
-}
-w.reset = () => {
-  store.commit('reset')
-  return w.state()
-}
-w.getters = store.getters
-w.app = app
-w.clearReleases = () => {
-  store.commit('extendState', { releases: {} })
-}
-w.throwError = () => {
-  throw new Error('my error')
-}
+// const w: any = window
+// w.state = () => _deepCopy(store.state)
+// w.commit = (type: string, payload?: any) => {
+//   store.commit(type, payload)
+//   return w.state()
+// }
+// w.reset = () => {
+//   store.commit('reset')
+//   return w.state()
+// }
+// w.getters = store.getters
+// w.app = app
+// w.clearReleases = () => {
+//   store.commit('extendState', { releases: {} })
+// }
+// w.throwError = () => {
+//   throw new Error('my error')
+// }
 
 declare global {
   interface Window {

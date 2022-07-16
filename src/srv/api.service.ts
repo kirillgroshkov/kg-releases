@@ -1,7 +1,7 @@
 import { getKy } from '@naturalcycles/frontend-lib'
 import { _filterFalsyValues, _objectKeys } from '@naturalcycles/js-lib'
+import { useStore } from '@/store'
 import { mp } from '@/srv/analytics.service'
-import { st } from '@/store'
 
 const apiUrl = 'https://kg-backend3.appspot.com/releases'
 
@@ -17,7 +17,7 @@ export const api = getKy({
   hooks: {
     beforeRequest: [
       (req, _options) => {
-        const { uid, idToken } = st().user
+        const { uid, idToken } = useStore().user
         const headers = _filterFalsyValues({
           idToken,
           uid,
