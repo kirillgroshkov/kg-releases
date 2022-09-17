@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { IsoDateString, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
 import { useStore } from '@/store'
@@ -36,13 +37,21 @@ const days = computed((): IsoDateString[] => {
   return days
 })
 
+useEventListener(document, 'visibilitychange', async () => {
+  if (document.visibilityState !== 'visible') return
+  await reload()
+})
+
 onMounted(async () => {
   await reload()
 })
 
 const store = useStore()
+const loading = ref(false)
 
 async function reload(): Promise<void> {
+  if (loading.value) return // don't start new request
+  loading.value = true // a bit naive now
   await withProgress(async () => {
     maxReleases.value = 30
     const today = LocalDate.todayUTC()
@@ -60,6 +69,7 @@ async function reload(): Promise<void> {
     // cleanAfterLastDay
     store.cleanAfterLastDay(dayLast.value)
   })
+  loading.value = false
 }
 
 async function loadDay(day: LocalDate, loaded: number): Promise<string> {
@@ -128,7 +138,12 @@ Starred repos: {{ store.userFM.starredReposCount }}
               >
             </td>
             <td style="text-align: right; padding-right: 20px">
-              <md-button class="md-raised md-primary" style="margin-top: -12px" @click="reload()">
+              <md-button
+                class="md-raised md-primary"
+                style="margin-top: -12px"
+                :disabled="store.ghostMode"
+                @click="reload()"
+              >
                 reload...
               </md-button>
             </td>

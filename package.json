@@ -16,6 +16,7 @@
     "@naturalcycles/js-lib": "^14.3.0",
     "@sentry/browser": "^7.0.0",
     "@sentry/vue": "^7.0.0",
+    "@vueuse/core": "^9.2.0",
     "firebase": "^9.0.0",
     "mixpanel-browser": "^2.41.0",
     "pinia": "^2.0.16",
