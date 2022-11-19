@@ -33,7 +33,7 @@ Backend with all the magic is [here](https://github.com/kirillgroshkov/kg-backen
 - Free, open source.
 - Simple github login. Automatically gets github stars.
 - Built with free tier of cloud infrastructure. Big thanks to Netlify, Firebase, GCP.
-- Near-realtime release notification (currently checks every 10 minutes).
+- Near-realtime release notification (currently checks every hour).
 
 Feature requests, issues, PRs are welcome!
 
@@ -46,11 +46,11 @@ Feature requests, issues, PRs are welcome!
 
 # Stack (frontend)
 
-- Vue
-- Vue-material
+- Vue3
+- Vuetify3
 - Typescript
 - Firebase Auth
-- Hosted at amazing Netlify
+- Hosted at Netlify
 
 ## Develop
 
