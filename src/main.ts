@@ -1,24 +1,9 @@
-/* tslint:disable:ordered-imports */
-
-// css
-import './scss/global.scss'
-
 import '@/polyfills'
 import { pDelay } from '@naturalcycles/js-lib'
-import { createPinia, PiniaVuePlugin } from 'pinia'
-import Vue from 'vue'
-import {
-  MdApp,
-  MdContent,
-  MdToolbar,
-  MdButton,
-  MdIcon,
-  MdTabs,
-  MdAvatar,
-  MdField,
-  MdCheckbox,
-} from 'vue-material/dist/components'
-import RootComponent from './cmp/RootComponent.vue'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import { createVuetify } from 'vuetify'
+import App from './App.vue'
 import { initStore, useStore } from '@/store'
 import { bootstrapDone } from '@/bootstrapDone'
 import { prod } from '@/env'
@@ -27,35 +12,28 @@ import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { router } from '@/router'
-import '@/filters/filters.ts'
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
+import './scss/global.scss'
 
-Vue.config.productionTip = false
-
-// Material
-// import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css'
-// Vue.use(VueMaterial)
-Vue.use(MdApp)
-Vue.use(MdContent)
-Vue.use(MdToolbar)
-Vue.use(MdTabs)
-Vue.use(MdAvatar)
-Vue.use(MdButton)
-Vue.use(MdIcon)
-Vue.use(MdField)
-Vue.use(MdCheckbox)
-
-Vue.use(PiniaVuePlugin)
-
-const pinia = createPinia()
-
-new Vue({
-  el: '#app',
-  router,
-  render: h => h(RootComponent),
-  pinia,
+const vuetify = createVuetify({
+  theme: {
+    themes: {
+      light: {
+        colors: {
+          primary: '#448aff',
+          // secondary: '#b0bec5',
+          // accent: '#8c9eff',
+          // error: '#b71c1c',
+        },
+      },
+    },
+  },
 })
+
+const app = createApp(App).use(createPinia()).use(router).use(vuetify)
+
+app.mount('#app')
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
 void main()
@@ -64,7 +42,7 @@ async function main() {
   console.log({ prod })
 
   initStore()
-  initSentry()
+  initSentry(app)
 
   analyticsService.init()
 

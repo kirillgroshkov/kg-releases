@@ -1,5 +1,6 @@
 body {
   // padding-top: 30px;
+  font-size: 14px;
 }
 
 .md-app-scroller {
@@ -18,7 +19,21 @@ body {
 }
 
 .md {
+  p {
+    margin: 14px 0;
+  }
+
+  a {
+    color: #448aff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   ul {
+    margin: 14px 0;
     padding-left: 24px;
 
     // list-style-type: disc;

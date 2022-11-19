@@ -1,6 +1,6 @@
 import { _stringifyAny } from '@naturalcycles/js-lib'
 import * as sentry from '@sentry/vue'
-import Vue from 'vue'
+import { App } from 'vue'
 import { prod } from './env'
 
 export function errorDialog(err: any): void {
@@ -9,9 +9,9 @@ export function errorDialog(err: any): void {
   alert(_stringifyAny(err))
 }
 
-export function initSentry(): void {
+export function initSentry(app: App): void {
   sentry.init({
-    Vue,
+    app,
     dsn: prod ? 'https://f15980b092a741ff8e903824cf2769fe@sentry.io/1214161' : undefined,
     environment: prod ? 'prod' : 'dev',
     attachProps: true,

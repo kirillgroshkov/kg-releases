@@ -1,13 +1,10 @@
-import * as path from 'path'
+import * as path from 'node:path'
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue2'
+import vue from '@vitejs/plugin-vue'
+import vuetify from 'vite-plugin-vuetify'
 
 export default defineConfig({
-  plugins: [
-    vue({
-      // target: '',
-    }),
-  ],
+  plugins: [vue(), vuetify()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

@@ -29,7 +29,7 @@ async function login(): Promise<void> {
     </div>
 
     <div style="text-align: center">
-      <md-button class="md-raised md-primary" @click="login()"> Login with github </md-button>
+      <v-btn color="primary" @click="login()">Login with github</v-btn>
     </div>
 
     <a
@@ -64,10 +64,10 @@ async function login(): Promise<void> {
       <div class="screen screen2"></div>
       -->
       <div class="screen">
-        <img src="/static/img/screen/screen1.png" />
+        <img src="/static/img/screen/screen1.png" alt="screenshot1" />
       </div>
       <div class="screen">
-        <img src="/static/img/screen/screen2.png" />
+        <img src="/static/img/screen/screen2.png" alt="screenshot2" />
       </div>
     </div>
 
@@ -111,6 +111,10 @@ small {
   border: 1px solid rgba(0, 0, 0, 0.05);
   max-width: 166px;
   margin: 16px 4px;
+
+  & > img {
+    max-width: 100%;
+  }
 }
 
 .copy1 {

@@ -6,6 +6,7 @@ import { useStore } from '@/store'
 import { withProgress } from '@/decorators/decorators'
 import { ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
+import { timeHM, unixtimePretty } from '@/filters/filters'
 
 const expandedRows = ref(new Set<string>())
 const maxReleases = ref(30)
@@ -132,20 +133,20 @@ function descrClick($event: MouseEvent): void {
           <tr>
             <td>
               <pre>
-Last updated: {{ store.releasesUpdaterLastFinished | unixtimePretty }}
+Last updated: {{ unixtimePretty(store.releasesUpdaterLastFinished) }}
 Starred repos: {{ store.userFM.starredReposCount }}
             </pre
               >
             </td>
-            <td style="text-align: right; padding-right: 20px">
-              <md-button
-                class="md-raised md-primary"
+            <td style="text-align: right; padding-right: 10px">
+              <v-btn
+                color="primary"
                 style="margin-top: -12px"
                 :disabled="store.ghostMode"
                 @click="reload()"
               >
-                reload...
-              </md-button>
+                reload
+              </v-btn>
             </td>
           </tr>
         </table>
@@ -162,7 +163,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
         </div>
         -->
 
-        <div class="tableRow" style="margin: -10px -16px 0; padding-bottom: 80px">
+        <div class="tableRow" style="margin: 0 -16px; padding-bottom: 80px">
           <template v-for="day in days">
             <table
               v-if="(releasesByDay[day] || []).length"
@@ -189,11 +190,13 @@ Starred repos: {{ store.userFM.starredReposCount }}
                     <span class="ver">{{ r.tagName }}</span>
                   </td>
                   <td style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px">
-                    {{ r.published | timeHM }}
-                    <md-icon v-if="expandedRows.has(r.id)" style="opacity: 0.4">
-                      expand_less
-                    </md-icon>
-                    <md-icon v-else style="opacity: 0.4"> expand_more </md-icon>
+                    {{ timeHM(r.published) }}
+                    <v-icon
+                      v-if="expandedRows.has(r.id)"
+                      style="opacity: 0.4"
+                      icon="mdi-chevron-up"
+                    ></v-icon>
+                    <v-icon v-else style="opacity: 0.4" icon="mdi-chevron-down"></v-icon>
                   </td>
                 </tr>
 
@@ -201,8 +204,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
                   <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id, $event)">
                     <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
                       <div>
-                        <md-button
-                          class="md-dense md-primary1 md-raised"
+                        <v-btn
                           style="margin-left: -4px; margin-top: 10px"
                           :href="`https://github.com/${r.repoFullName}/releases/tag/${
                             r.tagName || 'v' + r.v
@@ -210,7 +212,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
                           target="_blank"
                         >
                           view on github
-                        </md-button>
+                        </v-btn>
                       </div>
 
                       <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
@@ -236,15 +238,19 @@ Starred repos: {{ store.userFM.starredReposCount }}
             </tr>
           </table>
 
-          <table border="0" cellspacing="0" cellpadding="6" class="table1">
+          <table
+            border="0"
+            cellspacing="0"
+            cellpadding="6"
+            class="table1"
+            style="padding: 16px 16px"
+          >
             <tr v-if="dayLoading">
               <td colspan="3">loading {{ dayLoading }}...</td>
             </tr>
             <tr v-else>
               <td colspan="3">
-                <md-button class="md-raised md-primary" @click="loadMore()">
-                  load more...
-                </md-button>
+                <v-btn color="primary" @click="loadMore()"> load more </v-btn>
               </td>
             </tr>
           </table>
@@ -258,6 +264,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
 @import '../scss/var';
 
 .releases {
+  padding: 16px;
   // padding-top: 20px;
 }
 

@@ -39,41 +39,50 @@ async function save(): Promise<void> {
 
 <template>
   <div class="form1">
-    <md-field>
-      <label>User ID</label>
-      <md-input v-model="store.userFM.id" disabled />
-    </md-field>
+    <v-text-field v-model="store.userFM.id" label="User ID" disabled></v-text-field>
 
-    <md-field>
-      <label>Email for notifications</label>
-      <md-input v-model="settings.notificationEmail" type="email" required />
-    </md-field>
+    <v-text-field
+      v-model="settings.notificationEmail"
+      style="margin-top: -10px"
+      label="Email for notifications"
+      type="email"
+      required
+    ></v-text-field>
 
     <!--
     <md-checkbox v-model="settings.notifyEmailRealtime">Notify on every release</md-checkbox><br />
     -->
-    <md-checkbox v-model="settings.notifyEmailDaily"> Notify once a day </md-checkbox><br />
-    <p>
+    <v-checkbox
+      v-model="settings.notifyEmailDaily"
+      label="Notify once a day"
+      style="margin-top: -20px"
+    ></v-checkbox>
+
+    <p style="margin-top: -20px">
       Please check your SPAM folder and add our sending email address (noreply@inventix.ru) to your
       Contacts if you discover that it goes to SPAM folder.
     </p>
 
-    <p>To unsubscribe - untick the boxes above and click save.</p>
+    <p style="margin-bottom: 20px">To unsubscribe - untick the boxes above and click save.</p>
 
-    <md-button class="md-raised md-primary" :disabled="!saveEnabled" @click="save()">
-      Save </md-button
-    ><br />
+    <v-btn class="md-raised md-primary" :disabled="!saveEnabled" @click="save()">Save</v-btn><br />
 
     <br />
     <hr />
     <br />
 
-    <md-button class="md-raised md-transparent" @click="logout()"> Logout </md-button>
+    <v-btn variant="flat" @click="logout()">Logout</v-btn>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .form1 {
+  padding: 16px;
   max-width: 400px;
+}
+
+p {
+  // font-size: 12px;
+  margin: 12px 0;
 }
 </style>

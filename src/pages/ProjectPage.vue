@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { pDelay } from '@naturalcycles/js-lib'
 import { computed, onMounted, ref } from 'vue'
-import { router } from '@/router'
 import { Release } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 
 const releases = ref<Release[] | null>(null)
 
 const fullName = computed(() => {
-  const p = router.currentRoute.params
-  return [p['ownerName'], p['projectName']].join('/')
+  // const p = router.currentRoute.params
+  // return [p['ownerName'], p['projectName']].join('/')
+  return ''
 })
 
 onMounted(async () => {
@@ -38,9 +38,7 @@ async function fetchFromGithub(): Promise<void> {
     <div v-if="releases">
       {{ releases.length }}
     </div>
-    <div v-for="r in releases" :key="r.id">
-      {{ r.id }} / {{ r.published | unixtimePretty }} / {{ r.created | unixtimePretty }}
-    </div>
+    <div v-for="r in releases" :key="r.id">{{ r.id }} / {{ r.published }}</div>
   </div>
 </template>
 

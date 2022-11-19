@@ -1,11 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import { NavigationGuard } from 'vue-router/types/router'
+import { createRouter, createWebHistory, NavigationGuard } from 'vue-router'
 import { useStore } from '@/store'
 import { bootstrapDone } from '@/bootstrapDone'
 import { analyticsService } from '@/srv/analytics.service'
-
-Vue.use(Router)
 
 const loggedInGuard: NavigationGuard = (to, from, next) => {
   const u = useStore().user
@@ -21,8 +17,8 @@ const guestOnlyGuard: NavigationGuard = (to, from, next) => {
   next('/releases')
 }
 
-export const router = new Router({
-  mode: 'history',
+export const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -34,16 +30,16 @@ export const router = new Router({
       component: () => import('./pages/ReleasesPage.vue'),
       beforeEnter: loggedInGuard,
     },
-    {
-      path: '/projects',
-      component: () => import('./pages/ProjectsPage.vue'),
-      beforeEnter: loggedInGuard,
-    },
-    {
-      path: '/projects/:ownerName/:projectName',
-      component: () => import('./pages/ProjectPage.vue'),
-      beforeEnter: loggedInGuard,
-    },
+    // {
+    //   path: '/projects',
+    //   component: () => import('./pages/ProjectsPage.vue'),
+    //   beforeEnter: loggedInGuard,
+    // },
+    // {
+    //   path: '/projects/:ownerName/:projectName',
+    //   component: () => import('./pages/ProjectPage.vue'),
+    //   beforeEnter: loggedInGuard,
+    // },
     {
       path: '/settings',
       component: () => import('./pages/SettingsPage.vue'),
