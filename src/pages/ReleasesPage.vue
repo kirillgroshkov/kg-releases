@@ -2,6 +2,7 @@
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { IsoDateString, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
+import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
 import { useStore } from '@/store'
 import { withProgress } from '@/decorators/decorators'
 import { ReleasesByDay } from '@/srv/model'
@@ -194,9 +195,9 @@ Starred repos: {{ store.userFM.starredReposCount }}
                     <v-icon
                       v-if="expandedRows.has(r.id)"
                       style="opacity: 0.4"
-                      icon="mdi-chevron-up"
+                      :icon="mdiChevronUp"
                     ></v-icon>
-                    <v-icon v-else style="opacity: 0.4" icon="mdi-chevron-down"></v-icon>
+                    <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
                   </td>
                 </tr>
 

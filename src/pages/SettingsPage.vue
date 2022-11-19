@@ -68,7 +68,7 @@ async function save(): Promise<void> {
     <v-btn class="md-raised md-primary" :disabled="!saveEnabled" @click="save()">Save</v-btn><br />
 
     <br />
-    <hr />
+    <v-divider></v-divider>
     <br />
 
     <v-btn variant="flat" @click="logout()">Logout</v-btn>

@@ -3,6 +3,7 @@ import { pDelay } from '@naturalcycles/js-lib'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import App from './App.vue'
 import { initStore, useStore } from '@/store'
 import { bootstrapDone } from '@/bootstrapDone'
@@ -12,19 +13,22 @@ import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { router } from '@/router'
-import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import './scss/global.scss'
 
 const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
   theme: {
     themes: {
       light: {
         colors: {
           primary: '#448aff',
-          // secondary: '#b0bec5',
-          // accent: '#8c9eff',
-          // error: '#b71c1c',
         },
       },
     },

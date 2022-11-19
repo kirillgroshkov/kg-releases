@@ -12,7 +12,7 @@
     "preview": "vite preview --open"
   },
   "dependencies": {
-    "@mdi/font": "^7.0.96",
+    "@mdi/js": "^7.0.96",
     "@naturalcycles/frontend-lib": "^3.0.0",
     "@naturalcycles/js-lib": "^14.3.0",
     "@sentry/browser": "^7.0.0",
