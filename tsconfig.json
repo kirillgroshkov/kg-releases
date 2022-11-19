@@ -3,6 +3,7 @@
   "compilerOptions": {
     // "esModuleInterop": true,
     // "emitDecoratorMetadata": true,
+    "skipLibCheck": true, // because of pinia
     "sourceMap": true,
 //    "inlineSources": true,
 //    "sourceRoot": "/",

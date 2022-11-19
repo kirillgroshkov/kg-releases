@@ -33,5 +33,9 @@
     "sass": "^1.32.8",
     "typescript": "^4.0.3",
     "vite": "^3.0.0"
+  },
+  "resolutions": {
+    "esbuild": "0.15.7",
+    "typescript": "~4.9.0"
   }
 }
