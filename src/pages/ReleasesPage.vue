@@ -183,7 +183,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
               <template v-for="r in releasesByDay[day]">
                 <tr class="mainTr" @click="toggleClick(r.id, $event)">
-                  <td style="width: 66px; padding: 10px 0 10px 12px; vertical-align: top">
+                  <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
                     <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
                   </td>
                   <td style="vertical-align: top; padding: 8px 0 0">
