@@ -9,8 +9,8 @@ const store = useStore()
     <div class="page-container">
       <v-app>
         <v-app-bar v-if="store.user.uid" color="primary" density="compact">
-          <v-btn to="/releases">Releases</v-btn>
-          <v-btn to="/settings">Settings</v-btn>
+          <v-btn to="/releases" color="primary">Releases</v-btn>
+          <v-btn to="/settings" color="primary">Settings</v-btn>
 
           <v-spacer></v-spacer>
 
