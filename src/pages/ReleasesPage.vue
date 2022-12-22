@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
-import { IsoDateString, LocalDate, localDate, pDelay } from '@naturalcycles/js-lib'
+import { IsoDateString, LocalDate, localDate } from '@naturalcycles/js-lib'
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
 import { useStore } from '@/store'
 import { withProgress } from '@/decorators/decorators'
@@ -63,7 +63,7 @@ async function reload(): Promise<void> {
     dayFirst.value = todayStr
     dayLast.value = store.getReleasesLastDay() || todayStr
 
-    await pDelay(1000) // give time for animations to finish
+    // await pDelay(1000) // give time for animations to finish
     dayLast.value = await loadDay(today, 0)
     dayLoading.value = ''
     // console.log('dayLast end: ' + this.dayLast)

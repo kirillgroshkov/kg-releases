@@ -7,14 +7,12 @@ class ReleasesService {
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
     // console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
 
-    const { releases } = await api
-      .get('', {
-        searchParams: {
-          minIncl,
-          maxExcl,
-        },
-      })
-      .json<BackendResponse>()
+    const { releases } = await api.getJson<BackendResponse>(``, {
+      searchParams: {
+        minIncl,
+        maxExcl,
+      },
+    })
 
     useStore().addReleases(releases)
 
@@ -24,25 +22,23 @@ class ReleasesService {
   }
 
   async fetchRepos(): Promise<void> {
-    const starredRepos = await api.get('repos').json<Repo[]>()
+    const starredRepos = await api.getJson<Repo[]>('repos')
 
     useStore().starredRepos = starredRepos
   }
 
   async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
-    return await api.get(`repos/${repoFullName}/releases`).json<Release[]>()
+    return await api.getJson<Release[]>(`repos/${repoFullName}/releases`)
   }
 
   async fetchReleasesByRepo(repoFullName: string): Promise<Release[]> {
-    return await api.get(`repos/${repoFullName}/releases/fetch`).json<Release[]>()
+    return await api.getJson<Release[]>(`repos/${repoFullName}/releases/fetch`)
   }
 
   async auth(json: AuthInput): Promise<BackendResponse> {
-    const br = await api
-      .post(`auth`, {
-        json,
-      })
-      .json<BackendResponse>()
+    const br = await api.postJson<BackendResponse>(`auth`, {
+      json,
+    })
     // console.log('auth', br)
 
     useStore().onBackendResponse(br)
@@ -51,11 +47,9 @@ class ReleasesService {
   }
 
   async saveUserSettings(json: UserSettings): Promise<BackendResponse> {
-    const br = await api
-      .put(`userSettings`, {
-        json,
-      })
-      .json<BackendResponse>()
+    const br = await api.putJson<BackendResponse>(`userSettings`, {
+      json,
+    })
 
     useStore().onBackendResponse(br)
 
@@ -64,7 +58,7 @@ class ReleasesService {
 
   @_Memo()
   async init(): Promise<BackendResponse> {
-    const br = await api.get(`init`).json<BackendResponse>()
+    const br = await api.getJson<BackendResponse>(`init`)
 
     useStore().onBackendResponse(br)
 

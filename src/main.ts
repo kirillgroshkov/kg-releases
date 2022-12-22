@@ -1,4 +1,3 @@
-import '@/polyfills'
 import { pDelay } from '@naturalcycles/js-lib'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
@@ -8,7 +7,7 @@ import App from './App.vue'
 import { initStore, useStore } from '@/store'
 import { bootstrapDone } from '@/bootstrapDone'
 import { prod } from '@/env'
-import { initSentry } from '@/error'
+import { errorDialog, initSentry } from '@/error'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
@@ -43,8 +42,25 @@ void main()
 async function main() {
   console.log({ prod })
 
-  initStore()
+  // Error handlers go first
   initSentry(app)
+
+  app.config.errorHandler = (err, _instance, info) => {
+    if (info) console.log('error info:', info)
+    errorDialog(err)
+  }
+
+  window.addEventListener('unhandledrejection', event => {
+    console.log('unhandledRejection')
+    const err = event.reason
+    if (err) {
+      event.preventDefault()
+      errorDialog(err)
+    }
+    // otherwise - let it propagate
+  })
+
+  initStore()
 
   // mount should happen after Sentry.init, according to Sentry
   app.mount('#app')
@@ -95,6 +111,6 @@ async function hideLoader(): Promise<void> {
 declare global {
   interface Window {
     dataLayer: any[]
-    gtag(...args: any[]): void
+    gtag: (...args: any[]) => void
   }
 }
