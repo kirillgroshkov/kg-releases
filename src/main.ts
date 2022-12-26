@@ -15,32 +15,32 @@ import { router } from '@/router'
 import 'vuetify/styles'
 import './scss/global.scss'
 
-const vuetify = createVuetify({
-  icons: {
-    defaultSet: 'mdi',
-    aliases,
-    sets: {
-      mdi,
-    },
-  },
-  theme: {
-    themes: {
-      light: {
-        colors: {
-          primary: '#448aff',
-        },
-      },
-    },
-  },
-})
-
-const app = createApp(App).use(createPinia()).use(router).use(vuetify)
-
 // eslint-disable-next-line unicorn/prefer-top-level-await
 void main()
 
 async function main() {
   console.log({ prod })
+
+  const vuetify = createVuetify({
+    icons: {
+      defaultSet: 'mdi',
+      aliases,
+      sets: {
+        mdi,
+      },
+    },
+    theme: {
+      themes: {
+        light: {
+          colors: {
+            primary: '#448aff',
+          },
+        },
+      },
+    },
+  })
+
+  const app = createApp(App).use(createPinia()).use(router).use(vuetify)
 
   // Error handlers go first
   initSentry(app)
