@@ -7,7 +7,7 @@ class ReleasesService {
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
     // console.log(`fetchReleases [${minIncl}; ${maxExcl})`)
 
-    const { releases } = await api.getJson<BackendResponse>(``, {
+    const { releases } = await api.get<BackendResponse>(``, {
       searchParams: {
         minIncl,
         maxExcl,
@@ -22,21 +22,21 @@ class ReleasesService {
   }
 
   async fetchRepos(): Promise<void> {
-    const starredRepos = await api.getJson<Repo[]>('repos')
+    const starredRepos = await api.get<Repo[]>('repos')
 
     useStore().starredRepos = starredRepos
   }
 
   async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
-    return await api.getJson<Release[]>(`repos/${repoFullName}/releases`)
+    return await api.get<Release[]>(`repos/${repoFullName}/releases`)
   }
 
   async fetchReleasesByRepo(repoFullName: string): Promise<Release[]> {
-    return await api.getJson<Release[]>(`repos/${repoFullName}/releases/fetch`)
+    return await api.get<Release[]>(`repos/${repoFullName}/releases/fetch`)
   }
 
   async auth(json: AuthInput): Promise<BackendResponse> {
-    const br = await api.postJson<BackendResponse>(`auth`, {
+    const br = await api.post<BackendResponse>(`auth`, {
       json,
     })
     // console.log('auth', br)
@@ -47,7 +47,7 @@ class ReleasesService {
   }
 
   async saveUserSettings(json: UserSettings): Promise<BackendResponse> {
-    const br = await api.putJson<BackendResponse>(`userSettings`, {
+    const br = await api.put<BackendResponse>(`userSettings`, {
       json,
     })
 
@@ -58,7 +58,7 @@ class ReleasesService {
 
   @_Memo()
   async init(): Promise<BackendResponse> {
-    const br = await api.getJson<BackendResponse>(`init`)
+    const br = await api.get<BackendResponse>(`init`)
 
     useStore().onBackendResponse(br)
 
