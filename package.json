@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@mdi/js": "^7.0.96",
-    "@naturalcycles/frontend-lib": "^3.0.0",
+    "@naturalcycles/frontend-lib": "^4.0.0",
     "@naturalcycles/js-lib": "^14.3.0",
     "@sentry/browser": "^7.0.0",
     "@sentry/vue": "^7.0.0",
