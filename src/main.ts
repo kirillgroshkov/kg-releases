@@ -18,7 +18,7 @@ import './scss/global.scss'
 // eslint-disable-next-line unicorn/prefer-top-level-await
 void main()
 
-async function main() {
+async function main(): Promise<void> {
   console.log({ prod })
 
   const vuetify = createVuetify({

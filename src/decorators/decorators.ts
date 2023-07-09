@@ -2,7 +2,7 @@ import { AnyFunction } from '@naturalcycles/js-lib'
 import { useStore } from '@/store'
 import { errorDialog } from '@/error'
 
-const catchFn = ({ err }: { err: any }) => errorDialog(err)
+const catchFn = ({ err }: { err: any }): void => errorDialog(err)
 
 export async function withProgress(fn: AnyFunction): Promise<void> {
   const store = useStore()
