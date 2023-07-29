@@ -44,7 +44,7 @@ const store = useStore()
 
     <div class="cont1">
       <router-view></router-view>
-    </div>-->
+    </div> -->
   </div>
 </template>
 

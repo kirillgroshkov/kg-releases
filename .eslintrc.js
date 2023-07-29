@@ -1,5 +1,9 @@
 module.exports = {
-  extends: './node_modules/@naturalcycles/dev-lib/cfg/eslint.config.js',
+  root: true,
+  extends: [
+    './node_modules/@naturalcycles/dev-lib/cfg/eslint.config.js',
+    './node_modules/@naturalcycles/dev-lib/cfg/eslint-vue3.config.js',
+  ],
   env: {
     browser: true,
   },

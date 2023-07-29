@@ -15,7 +15,7 @@ onMounted(async () => {
 <template>
   <div>
     <div>Projects</div>
-    <div v-for="r in store.starredRepos" :key="r.fullName">
+    <div v-for="r of store.starredRepos" :key="r.fullName">
       <router-link :to="`/projects/${r.fullName}`">
         {{ r.fullName }}
       </router-link>

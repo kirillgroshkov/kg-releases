@@ -38,7 +38,7 @@ async function fetchFromGithub(): Promise<void> {
     <div v-if="releases">
       {{ releases.length }}
     </div>
-    <div v-for="r in releases" :key="r.id">{{ r.id }} / {{ r.published }}</div>
+    <div v-for="r of releases" :key="r.id">{{ r.id }} / {{ r.published }}</div>
   </div>
 </template>
 

@@ -165,7 +165,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
         -->
 
         <div class="tableRow" style="margin: 0 -16px; padding-bottom: 80px">
-          <template v-for="day in days">
+          <template v-for="day of days">
             <table
               v-if="(releasesByDay[day] || []).length"
               border="0"
@@ -181,7 +181,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
             </table>
 
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
-              <template v-for="r in releasesByDay[day]">
+              <template v-for="r of releasesByDay[day]">
                 <tr class="mainTr" @click="toggleClick(r.id, $event)">
                   <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
                     <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
