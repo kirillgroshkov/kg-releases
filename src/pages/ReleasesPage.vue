@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
+import { IsoDateString, LocalDate, localDate } from '@naturalcycles/js-lib'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
-import { IsoDateString, LocalDate, localDate } from '@naturalcycles/js-lib'
-import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
-import { useStore } from '@/store'
 import { withProgress } from '@/decorators/decorators'
+import { timeHM, unixtimePretty } from '@/filters/filters'
 import { ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
-import { timeHM, unixtimePretty } from '@/filters/filters'
+import { useStore } from '@/store'
 
 const expandedRows = ref(new Set<string>())
 const maxReleases = ref(30)

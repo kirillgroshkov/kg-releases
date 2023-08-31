@@ -1,7 +1,7 @@
 import { _Memo } from '@naturalcycles/js-lib'
 import { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model'
-import { useStore } from '@/store'
 import { api } from '@/srv/api.service'
+import { useStore } from '@/store'
 
 class ReleasesService {
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {

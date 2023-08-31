@@ -10,13 +10,13 @@ import {
   UserInfo,
 } from 'firebase/auth'
 import { getPerformance } from 'firebase/performance'
-import { useStore } from '@/store'
-import { sentry } from '@/error'
-import { prod } from '@/env'
 import { withProgress } from '@/decorators/decorators'
+import { prod } from '@/env'
+import { sentry } from '@/error'
 import { analyticsService, mp } from '@/srv/analytics.service'
 import { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
+import { useStore } from '@/store'
 export type { UserInfo }
 
 // export interface UserInfo {

@@ -9,8 +9,8 @@ import {
   IsoDateString,
 } from '@naturalcycles/js-lib'
 import { defineStore } from 'pinia'
-import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 import { UserInfo } from '@/srv/firebase.service'
+import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 
 export interface GlobalState {
   counter: number

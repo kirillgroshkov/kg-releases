@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { pDelay } from '@naturalcycles/js-lib'
 import { onMounted } from 'vue'
-import { useStore } from '@/store'
 import { releasesService } from '@/srv/releases.service'
+import { useStore } from '@/store'
 
 const store = useStore()
 

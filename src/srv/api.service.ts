@@ -1,7 +1,7 @@
 import { topbar } from '@naturalcycles/frontend-lib'
 import { _filterFalsyValues, getFetcher } from '@naturalcycles/js-lib'
-import { useStore } from '@/store'
 import { mp } from '@/srv/analytics.service'
+import { useStore } from '@/store'
 
 const baseUrl = 'https://kg-backend3.appspot.com/releases'
 

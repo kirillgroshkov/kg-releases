@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { _deepEquals } from '@naturalcycles/js-lib'
 import { computed, onMounted, ref } from 'vue'
-import { useStore } from '@/store'
-import { UserSettings } from '@/srv/model'
 import { withProgress } from '@/decorators/decorators'
 import { router } from '@/router'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
+import { UserSettings } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
+import { useStore } from '@/store'
 
 const store = useStore()
 const settings = ref<UserSettings>({})
