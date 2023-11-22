@@ -65,7 +65,7 @@ export const useStore = defineStore('main', {
       })
 
       // sort
-      Object.values(m).forEach(releases => _sortBy(releases, r => r.published, true, true))
+      Object.values(m).forEach(releases => _sortBy(releases, r => r.published, true, 'desc'))
 
       return m
     },
