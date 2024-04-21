@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
-import { IsoDateString, LocalDate, localDate } from '@naturalcycles/js-lib'
+import { IsoDateString, LocalDate, localDate, localDateRange } from '@naturalcycles/js-lib'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
@@ -24,19 +24,11 @@ const releasesByDay = ref<ReleasesByDay>({})
 // })
 
 const days = computed((): IsoDateString[] => {
-  const days: IsoDateString[] = []
   if (!dayFirst.value || !dayLast.value) return []
 
-  // range can be used here
-  for (
-    let day = localDate(dayFirst.value);
-    day.toISODate() >= dayLast.value;
-    day = day.subtract(1, 'day')
-  ) {
-    days.push(day.toISODate())
-  }
-
-  return days
+  return localDateRange(dayLast.value, dayFirst.value, '[]')
+    .map(d => d.toISODate())
+    .reverse()
 })
 
 useEventListener(document, 'visibilitychange', async () => {
@@ -58,7 +50,7 @@ async function reload(): Promise<void> {
     maxReleases.value = 30
     const today = LocalDate.todayUTC()
     const todayStr = today.toISODate()
-    dayMax.value = today.subtract(30, 'day').toISODate()
+    dayMax.value = today.minus(30, 'day').toISODate()
     releasesByDay.value = store.getReleasesByDay()
     dayFirst.value = todayStr
     dayLast.value = store.getReleasesLastDay() || todayStr
@@ -77,7 +69,7 @@ async function reload(): Promise<void> {
 async function loadDay(day: LocalDate, loaded: number): Promise<string> {
   const dayStr = day.toISODate()
   dayLoading.value = dayStr
-  const nextDay = day.add(1, 'day')
+  const nextDay = day.plus(1, 'day')
   const nextDayStr = nextDay.toISODate()
   // this.loading = 'loading...'
   // _this.dayLast = dayStr
@@ -92,7 +84,7 @@ async function loadDay(day: LocalDate, loaded: number): Promise<string> {
   // console.log('loaded: ' + loaded)
 
   if (loaded < maxReleases.value && dayStr > dayMax.value) {
-    const yesterday = day.subtract(1, 'day')
+    const yesterday = day.minus(1, 'day')
     return await loadDay(yesterday, loaded)
   }
 
@@ -102,8 +94,8 @@ async function loadDay(day: LocalDate, loaded: number): Promise<string> {
 async function loadMore(): Promise<void> {
   const releasesCount = Object.keys(store.releases).length
   maxReleases.value = releasesCount + 30
-  dayMax.value = localDate(dayMax.value).subtract(30, 'day').toISODate()
-  const dayNext = localDate(dayLast.value!).subtract(1, 'day')
+  dayMax.value = localDate(dayMax.value).minus(30, 'day').toISODate()
+  const dayNext = localDate(dayLast.value!).minus(1, 'day')
   dayLast.value = await loadDay(dayNext, releasesCount)
   dayLoading.value = ''
 }
@@ -216,6 +208,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
                         </v-btn>
                       </div>
 
+                      <!-- eslint-disable-next-line vue/no-v-html -->
                       <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
                     </td>
                   </tr>
