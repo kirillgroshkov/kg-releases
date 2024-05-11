@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
-import { IsoDateString, LocalDate, localDate, localDateRange } from '@naturalcycles/js-lib'
+import { IsoDateString, LocalDate, localDate } from '@naturalcycles/js-lib'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
@@ -26,7 +26,8 @@ const releasesByDay = ref<ReleasesByDay>({})
 const days = computed((): IsoDateString[] => {
   if (!dayFirst.value || !dayLast.value) return []
 
-  return localDateRange(dayLast.value, dayFirst.value, '[]')
+  return localDate
+    .range(dayLast.value, dayFirst.value, '[]')
     .map(d => d.toISODate())
     .reverse()
 })
@@ -48,7 +49,7 @@ async function reload(): Promise<void> {
   loading.value = true // a bit naive now
   await withProgress(async () => {
     maxReleases.value = 30
-    const today = LocalDate.todayUTC()
+    const today = localDate.todayInUTC()
     const todayStr = today.toISODate()
     dayMax.value = today.minus(30, 'day').toISODate()
     releasesByDay.value = store.getReleasesByDay()

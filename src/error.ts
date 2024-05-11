@@ -1,4 +1,4 @@
-import { _stringifyAny } from '@naturalcycles/js-lib'
+import { _stringify } from '@naturalcycles/js-lib'
 import * as sentry from '@sentry/vue'
 import { App } from 'vue'
 import { prod } from './env'
@@ -6,7 +6,7 @@ import { prod } from './env'
 export function errorDialog(err: any): void {
   console.error(err)
   sentry.captureException(err)
-  alert(_stringifyAny(err))
+  alert(_stringify(err))
 }
 
 export function initSentry(app: App): void {
