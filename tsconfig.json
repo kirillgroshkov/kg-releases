@@ -1,7 +1,7 @@
 {
   "extends": "@naturalcycles/frontend-lib/cfg/tsconfig.json",
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2021",
     // "esModuleInterop": true,
     // "emitDecoratorMetadata": true,
     "skipLibCheck": true, // because of pinia
