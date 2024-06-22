@@ -61,7 +61,7 @@ export const useStore = defineStore('main', {
       _stringMapValues(state.releases).forEach(r => {
         const day = localTime(r.published).toISODate()
         m[day] ||= []
-        m[day]!.push(r)
+        m[day].push(r)
       })
 
       // sort
