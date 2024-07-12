@@ -18,7 +18,7 @@
     "@sentry/vue": "^8.0.0",
     "@vueuse/core": "^10.0.2",
     "firebase": "^10.0.0",
-    "mixpanel-browser": "^2.41.0",
+    "mixpanel-browser": "2.49.0",
     "pinia": "^2.0.16",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
