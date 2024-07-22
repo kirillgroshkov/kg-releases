@@ -1,4 +1,4 @@
-import { pDefer, _Memo, _pick } from '@naturalcycles/js-lib'
+import { _Memo, _pick, pDefer } from '@naturalcycles/js-lib'
 import { User } from '@sentry/vue'
 import { initializeApp } from 'firebase/app'
 import {

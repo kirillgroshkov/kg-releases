@@ -1,12 +1,12 @@
 import {
-  StringMap,
   _by,
-  _pick,
-  _stringMapValues,
-  localTime,
   _deepCopy,
+  _pick,
   _sortBy,
+  _stringMapValues,
   IsoDateString,
+  localTime,
+  StringMap,
 } from '@naturalcycles/js-lib'
 import { defineStore } from 'pinia'
 import { UserInfo } from '@/srv/firebase.service'
