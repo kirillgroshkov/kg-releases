@@ -5,9 +5,12 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
-    "bt": "tsc --noEmit && vue-tsc --noEmit && yarn build",
-    "dev": "vite --port 4100 --open",
     "build": "vite build",
+    "test": "dev-lib test",
+    "lint": "dev-lib lint",
+    "bt": "tsc --noEmit && vue-tsc --noEmit && yarn build",
+    "lbt": "dev-lib lint && yarn bt",
+    "dev": "vite --port 4100 --open",
     "build-netlify": "vite build",
     "preview": "vite preview --open"
   },
@@ -25,7 +28,7 @@
     "vuetify": "^3.0.1"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^14.1.3",
+    "@naturalcycles/dev-lib": "^15.0.6",
     "@types/mixpanel-browser": "^2.35.7",
     "@types/node": "^20.4.0",
     "@vitejs/plugin-vue": "^5.0.0",
