@@ -50,7 +50,7 @@ async function main(): Promise<void> {
     errorDialog(err)
   }
 
-  window.addEventListener('unhandledrejection', event => {
+  globalThis.addEventListener('unhandledrejection', event => {
     console.log('unhandledRejection')
     const err = event.reason
     if (err) {

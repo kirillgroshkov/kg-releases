@@ -3,14 +3,14 @@ import { bootstrapDone } from '@/bootstrapDone'
 import { analyticsService } from '@/srv/analytics.service'
 import { useStore } from '@/store'
 
-const loggedInGuard: NavigationGuard = (to, from, next) => {
+const loggedInGuard: NavigationGuard = (_to, _from, next) => {
   const u = useStore().user
   if (u.uid) return next()
   console.log('GUARD: loggedInGuard')
   next('/')
 }
 
-const guestOnlyGuard: NavigationGuard = (to, from, next) => {
+const guestOnlyGuard: NavigationGuard = (_to, _from, next) => {
   const u = useStore().user
   if (!u.uid) return next()
   console.log('GUARD: guestOnlyGuard')
@@ -48,7 +48,7 @@ export const router = createRouter({
   ],
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (_to, _from, next) => {
   // ensure Bootstrap is finished before rendering any route
   await bootstrapDone
 

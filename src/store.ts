@@ -134,7 +134,7 @@ let previousState = ''
 
 export function initStore(): void {
   const store = useStore()
-  store.$subscribe((mutation, state) => {
+  store.$subscribe((_mutation, state) => {
     const newState = JSON.stringify(_pick(state, persistKeys))
     if (newState === previousState) return
     previousState = newState

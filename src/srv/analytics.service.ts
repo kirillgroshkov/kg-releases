@@ -40,17 +40,17 @@ class AnalyticsService {
 
   setUserId(userId: string): void {
     mp.identify(userId)
-    window.gtag('set', { user_id: userId })
+    globalThis.gtag('set', { user_id: userId })
   }
 
   pageView(fullPath: string): void {
     mp.track(`pageview ${fullPath}`)
-    window.gtag('config', gaId, { page_path: fullPath })
+    globalThis.gtag('config', gaId, { page_path: fullPath })
   }
 
   event(eventName: string, data: AnyObject = {}): void {
     mp.track(eventName, data)
-    window.gtag('event', eventName, data)
+    globalThis.gtag('event', eventName, data)
   }
 }
 
