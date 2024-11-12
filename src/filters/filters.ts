@@ -1,4 +1,4 @@
-import { localTime } from '@naturalcycles/js-lib'
+import { localTime, UnixTimestamp } from '@naturalcycles/js-lib'
 
 // Vue.filter('unixtimePretty', (v: number) => {
 //   if (!v) return ''
@@ -20,12 +20,12 @@ import { localTime } from '@naturalcycles/js-lib'
 //   return localTime(v).fromNow()
 // })
 
-export function unixtimePretty(v?: number): string {
+export function unixtimePretty(v?: UnixTimestamp): string {
   if (!v) return ''
   return localTime(v).toPretty()
 }
 
-export function timeHM(v?: number): string {
+export function timeHM(v?: UnixTimestamp): string {
   if (!v) return ''
   return localTime(v).toISOTime(false)
 }

@@ -1,5 +1,4 @@
-import { topbar } from '@naturalcycles/frontend-lib'
-import { _filterFalsyValues, getFetcher } from '@naturalcycles/js-lib'
+import { _filterFalsyValues, getFetcher, topbar } from '@naturalcycles/js-lib'
 import { mp } from '@/srv/analytics.service'
 import { useStore } from '@/store'
 

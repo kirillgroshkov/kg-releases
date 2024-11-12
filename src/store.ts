@@ -4,9 +4,10 @@ import {
   _pick,
   _sortBy,
   _stringMapValues,
-  IsoDateString,
+  IsoDate,
   localTime,
   StringMap,
+  UnixTimestamp,
 } from '@naturalcycles/js-lib'
 import { defineStore } from 'pinia'
 import { UserInfo } from '@/srv/firebase.service'
@@ -17,7 +18,7 @@ export interface GlobalState {
   user: UserInfo & { idToken?: string }
   userFM: UserFM
   ghostMode: boolean
-  releasesUpdaterLastFinished?: number
+  releasesUpdaterLastFinished?: UnixTimestamp
   // rateLimit: RateLimit
   lastStarred: string[]
   // starredReposNumber: number
@@ -70,7 +71,7 @@ export const useStore = defineStore('main', {
       return m
     },
 
-    getReleasesLastDay: state => (): IsoDateString | null => {
+    getReleasesLastDay: state => (): IsoDate | null => {
       const days = (_stringMapValues(state.releases) || [])
         .map(r => localTime(r.published).toISODate())
         .sort()

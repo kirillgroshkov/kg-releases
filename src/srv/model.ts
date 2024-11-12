@@ -1,10 +1,10 @@
-import { IsoDateString, UnixTimestampNumber } from '@naturalcycles/js-lib'
+import { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib'
 
 // export interface ReleasesByDay {
-//   [day: IsoDateString]: Release[]
+//   [day: IsoDate]: Release[]
 // }
 
-export type ReleasesByDay = Record<IsoDateString, Release[]>
+export type ReleasesByDay = Record<IsoDate, Release[]>
 
 export interface RateLimit {
   limit: number
@@ -22,7 +22,7 @@ export interface Release {
   id: string
   repoFullName: string
   // created: number
-  published: UnixTimestampNumber
+  published: UnixTimestamp
   v: string // semver
   tagName: string
   descrHtml: string
@@ -68,5 +68,5 @@ export interface BackendResponse {
   newUser?: boolean
   userFM?: UserFM
   releases?: Release[]
-  releasesUpdaterLastFinished?: number
+  releasesUpdaterLastFinished?: UnixTimestamp
 }

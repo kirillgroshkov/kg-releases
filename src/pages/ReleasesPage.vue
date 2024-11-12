@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
-import { IsoDateString, LocalDate, localDate } from '@naturalcycles/js-lib'
+import { IsoDate, LocalDate, localDate } from '@naturalcycles/js-lib'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
@@ -11,19 +11,19 @@ import { useStore } from '@/store'
 
 const expandedRows = ref(new Set<string>())
 const maxReleases = ref(30)
-const dayFirst = ref<IsoDateString>('')
-const dayLast = ref<IsoDateString | null>('')
-const dayLoading = ref<IsoDateString>('')
-const dayMax = ref<IsoDateString>('')
+const dayFirst = ref<IsoDate>('' as IsoDate)
+const dayLast = ref<IsoDate | null>('' as IsoDate)
+const dayLoading = ref<IsoDate>('' as IsoDate)
+const dayMax = ref<IsoDate>('' as IsoDate)
 const releasesByDay = ref<ReleasesByDay>({})
 
-// const dayNext = computed((): IsoDateString => {
+// const dayNext = computed((): IsoDate => {
 //   if (!dayLast.value) return ''
 //
 //   return localDate(dayLast.value).subtract(1, 'day').toISODate()
 // })
 
-const days = computed((): IsoDateString[] => {
+const days = computed((): IsoDate[] => {
   if (!dayFirst.value || !dayLast.value) return []
 
   return localDate
@@ -58,7 +58,7 @@ async function reload(): Promise<void> {
 
     // await pDelay(1000) // give time for animations to finish
     dayLast.value = await loadDay(today, 0)
-    dayLoading.value = ''
+    dayLoading.value = '' as IsoDate
     // console.log('dayLast end: ' + this.dayLast)
 
     // cleanAfterLastDay
@@ -67,7 +67,7 @@ async function reload(): Promise<void> {
   loading.value = false
 }
 
-async function loadDay(day: LocalDate, loaded: number): Promise<string> {
+async function loadDay(day: LocalDate, loaded: number): Promise<IsoDate> {
   const dayStr = day.toISODate()
   dayLoading.value = dayStr
   const nextDay = day.plus(1, 'day')
@@ -98,7 +98,7 @@ async function loadMore(): Promise<void> {
   dayMax.value = localDate(dayMax.value).minus(30, 'day').toISODate()
   const dayNext = localDate(dayLast.value!).minus(1, 'day')
   dayLast.value = await loadDay(dayNext, releasesCount)
-  dayLoading.value = ''
+  dayLoading.value = '' as IsoDate
 }
 
 function toggleClick(id: string, _$event: MouseEvent): void {

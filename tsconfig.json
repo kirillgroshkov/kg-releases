@@ -1,5 +1,5 @@
 {
-  "extends": "@naturalcycles/frontend-lib/cfg/tsconfig.json",
+  "extends": "@naturalcycles/js-lib/cfg/frontend/tsconfig.json",
   "compilerOptions": {
     "target": "es2021",
     // "esModuleInterop": true,

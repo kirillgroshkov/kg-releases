@@ -1,10 +1,7 @@
-import { loadGTag, loadHotjar } from '@naturalcycles/frontend-lib'
-import { AnyObject } from '@naturalcycles/js-lib'
+import { AnyObject, loadGTag, loadHotjar } from '@naturalcycles/js-lib'
 import mixpanel from 'mixpanel-browser'
 import { prod } from '@/env'
 let mp = mixpanel
-
-// ;(window as any).mixpanel = mixpanel
 
 const mixpanelToken = '20158c629a6a4226d9c975185238b7a7'
 const hotjarId = 894902
@@ -57,3 +54,7 @@ class AnalyticsService {
 export const analyticsService = new AnalyticsService()
 
 export { mp }
+
+declare global {
+  var gtag: (...args: any[]) => void
+}
