@@ -15,7 +15,6 @@ export function initSentry(app: App): void {
     dsn: prod ? 'https://f15980b092a741ff8e903824cf2769fe@sentry.io/1214161' : undefined,
     environment: prod ? 'prod' : 'dev',
     attachProps: true,
-    logErrors: true,
     maxValueLength: 2000, // default is 250
     maxBreadcrumbs: 50, // to prevent "413 Request Entity Too Large"
   })

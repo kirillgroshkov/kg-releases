@@ -256,7 +256,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
 </template>
 
 <style lang="scss" scoped>
-@import '../scss/var';
+@use '../scss/var' as var;
 
 .releases {
   padding: 16px;
@@ -274,7 +274,7 @@ Starred repos: {{ store.userFM.starredReposCount }}
 .mainTr {
   transition: all 0.3s ease-out;
 
-  #{$active} {
+  #{var.$active} {
     background-color: rgba(0, 0, 0, 0.05);
     cursor: pointer;
     transition: all 0.1s ease-in;
