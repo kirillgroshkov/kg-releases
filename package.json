@@ -18,7 +18,7 @@
     "@mdi/js": "^7",
     "@naturalcycles/js-lib": "^14",
     "@sentry/vue": "^9",
-    "@vueuse/core": "^12",
+    "@vueuse/core": "^13",
     "firebase": "^11",
     "mixpanel-browser": "2.49.0",
     "pinia": "^3",
@@ -27,17 +27,17 @@
     "vuetify": "^3"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^15",
+    "@naturalcycles/dev-lib": "^16",
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
     "sass": "^1",
-    "typescript": "~5.7",
+    "typescript": "~5.8",
     "vite": "^6",
     "vite-plugin-vuetify": "^2",
     "vue-tsc": "^2"
   },
   "resolutions": {
-    "typescript": "~5.7"
+    "typescript": "~5.8"
   }
 }
