@@ -124,25 +124,27 @@ function descrClick($event: MouseEvent): void {
     <div>
       <div class="container releases">
         <table style="width: 100%; max-width: 500px">
-          <tr>
-            <td>
-              <pre>
-Last updated: {{ unixtimePretty(store.releasesUpdaterLastFinished) }}
-Starred repos: {{ store.userFM.starredReposCount }}
-            </pre
-              >
-            </td>
-            <td style="text-align: right; padding-right: 10px">
-              <v-btn
-                color="primary"
-                style="margin-top: -12px"
-                :disabled="store.ghostMode"
-                @click="reload()"
-              >
-                reload
-              </v-btn>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>
+                <pre>
+  Last updated: {{ unixtimePretty(store.releasesUpdaterLastFinished) }}
+  Starred repos: {{ store.userFM.starredReposCount }}
+              </pre
+                >
+              </td>
+              <td style="text-align: right; padding-right: 10px">
+                <v-btn
+                  color="primary"
+                  style="margin-top: -12px"
+                  :disabled="store.ghostMode"
+                  @click="reload()"
+                >
+                  reload
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
         </table>
 
         <!--
@@ -166,55 +168,61 @@ Starred repos: {{ store.userFM.starredReposCount }}
               cellpadding="6"
               class="table1"
             >
-              <tr>
-                <td colspan="3" style="padding-left: 66px">
-                  {{ day }}
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td colspan="3" style="padding-left: 66px">
+                    {{ day }}
+                  </td>
+                </tr>
+              </tbody>
             </table>
 
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
-              <template v-for="r of releasesByDay[day]">
-                <tr class="mainTr" @click="toggleClick(r.id, $event)">
-                  <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
-                    <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
-                  </td>
-                  <td style="vertical-align: top; padding: 8px 0 0">
-                    {{ r.repoFullName }} <br />
-                    <span class="ver">{{ r.tagName }}</span>
-                  </td>
-                  <td style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px">
-                    {{ timeHM(r.published) }}
-                    <v-icon
-                      v-if="expandedRows.has(r.id)"
-                      style="opacity: 0.4"
-                      :icon="mdiChevronUp"
-                    ></v-icon>
-                    <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
-                  </td>
-                </tr>
-
-                <transition name="slide">
-                  <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id, $event)">
-                    <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
-                      <div>
-                        <v-btn
-                          style="margin-left: -4px; margin-top: 10px"
-                          :href="`https://github.com/${r.repoFullName}/releases/tag/${
-                            r.tagName || 'v' + r.v
-                          }`"
-                          target="_blank"
-                        >
-                          view on github
-                        </v-btn>
-                      </div>
-
-                      <!-- eslint-disable-next-line vue/no-v-html -->
-                      <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
+              <tbody>
+                <template v-for="r of releasesByDay[day]">
+                  <tr class="mainTr" @click="toggleClick(r.id, $event)">
+                    <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
+                      <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
+                    </td>
+                    <td style="vertical-align: top; padding: 8px 0 0">
+                      {{ r.repoFullName }} <br />
+                      <span class="ver">{{ r.tagName }}</span>
+                    </td>
+                    <td
+                      style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px"
+                    >
+                      {{ timeHM(r.published) }}
+                      <v-icon
+                        v-if="expandedRows.has(r.id)"
+                        style="opacity: 0.4"
+                        :icon="mdiChevronUp"
+                      ></v-icon>
+                      <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
                     </td>
                   </tr>
-                </transition>
-              </template>
+
+                  <transition name="slide">
+                    <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id, $event)">
+                      <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
+                        <div>
+                          <v-btn
+                            style="margin-left: -4px; margin-top: 10px"
+                            :href="`https://github.com/${r.repoFullName}/releases/tag/${
+                              r.tagName || 'v' + r.v
+                            }`"
+                            target="_blank"
+                          >
+                            view on github
+                          </v-btn>
+                        </div>
+
+                        <!-- eslint-disable-next-line vue/no-v-html -->
+                        <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
+                      </td>
+                    </tr>
+                  </transition>
+                </template>
+              </tbody>
             </table>
           </template>
 
@@ -225,12 +233,14 @@ Starred repos: {{ store.userFM.starredReposCount }}
             cellpadding="6"
             class="table1"
           >
-            <tr>
-              <td colspan="3">
-                You have 0 releases in last 30 days. Either you have too few starred projects or
-                maybe there's a glitch in the system, so check back in 10 minutes.
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td colspan="3">
+                  You have 0 releases in last 30 days. Either you have too few starred projects or
+                  maybe there's a glitch in the system, so check back in 10 minutes.
+                </td>
+              </tr>
+            </tbody>
           </table>
 
           <table
