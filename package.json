@@ -33,6 +33,7 @@
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
     "sass": "^1",
+    "tsx": "^4.19.3",
     "typescript": "~5.8",
     "vite": "^6",
     "vite-plugin-vuetify": "^2",
