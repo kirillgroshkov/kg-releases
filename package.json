@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "kirillgroshkov <1@inventix.ru>",
   "private": true,
+  "type": "module",
   "scripts": {
     "prepare": "husky",
     "build": "vite build",

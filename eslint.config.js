@@ -1,6 +1,7 @@
-// prettier-ignore
-module.exports = [
-  ...require('@naturalcycles/dev-lib/cfg/eslint.config'),
+import sharedConfig from '@naturalcycles/dev-lib/cfg/eslint.config.js'
+
+export default [
+  ...sharedConfig,
   {
     rules: {
       'vue/require-v-for-key': 0,
