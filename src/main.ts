@@ -69,12 +69,13 @@ async function main(): Promise<void> {
 
   document.body.classList.add('ontouchstart' in document.documentElement ? 'touch' : 'no-touch')
 
-  await firebaseService.init()
-  await firebaseService.authStateChanged
-
   const store = useStore()
   if (store.user.uid) {
     void releasesService.init()
+  } else {
+    // only init releasesService if user is NOT logged in
+    await firebaseService.init()
+    await firebaseService.authStateChanged
   }
 
   void hideLoader()
