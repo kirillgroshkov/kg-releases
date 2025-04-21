@@ -1,8 +1,0 @@
-{
-  "public": "dist",
-  "cleanUrls": false,
-  "rewrites": [
-    { "source": "/releases", "destination": "/index.html" },
-    { "source": "/settings", "destination": "/index.html" }
-  ]
-}

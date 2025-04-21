@@ -1,4 +1,5 @@
-import 'vuetify/styles'
+// import 'vuetify/styles'
+import 'vuetify/lib/styles/main.css'
 import './scss/global.scss'
 import { pDelay } from '@naturalcycles/js-lib'
 import { createPinia } from 'pinia'

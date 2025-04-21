@@ -1,17 +1,8 @@
-import {
-  _by,
-  _deepCopy,
-  _pick,
-  _sortBy,
-  _stringMapValues,
-  IsoDate,
-  localTime,
-  StringMap,
-  UnixTimestamp,
-} from '@naturalcycles/js-lib'
+import type { IsoDate, StringMap, UnixTimestamp } from '@naturalcycles/js-lib'
+import { _by, _deepCopy, _pick, _sortBy, _stringMapValues, localTime } from '@naturalcycles/js-lib'
 import { defineStore } from 'pinia'
-import { UserInfo } from '@/srv/firebase.service'
-import { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
+import type { UserInfo } from '@/srv/firebase.service'
+import type { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'
 
 export interface GlobalState {
   counter: number

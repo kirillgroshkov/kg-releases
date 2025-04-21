@@ -1,4 +1,5 @@
-import { AnyObject, loadGTag, loadHotjar } from '@naturalcycles/js-lib'
+import type { AnyObject } from '@naturalcycles/js-lib'
+import { loadGTag, loadHotjar } from '@naturalcycles/js-lib'
 import mixpanel from 'mixpanel-browser'
 import { prod } from '@/env'
 let mp = mixpanel

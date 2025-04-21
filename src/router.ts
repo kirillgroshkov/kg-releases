@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory, NavigationGuard } from 'vue-router'
+import type { NavigationGuard } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { bootstrapDone } from '@/bootstrapDone'
 import { analyticsService } from '@/srv/analytics.service'
 import { useStore } from '@/store'

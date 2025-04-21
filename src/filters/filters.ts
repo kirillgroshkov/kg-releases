@@ -1,4 +1,5 @@
-import { localTime, UnixTimestamp } from '@naturalcycles/js-lib'
+import type { UnixTimestamp } from '@naturalcycles/js-lib'
+import { localTime } from '@naturalcycles/js-lib'
 
 // Vue.filter('unixtimePretty', (v: number) => {
 //   if (!v) return ''

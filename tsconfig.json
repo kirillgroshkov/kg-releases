@@ -1,12 +1,9 @@
 {
   "extends": "@naturalcycles/js-lib/cfg/frontend/tsconfig.json",
   "compilerOptions": {
-    "target": "es2021",
-    // "esModuleInterop": true,
-    // "emitDecoratorMetadata": true,
+    "target": "es2022",
+    "skipLibCheck": true, // vuetify
     "sourceMap": true,
-//    "inlineSources": true,
-//    "sourceRoot": "/",
     "outDir": "dist/tsc",
     "baseUrl": ".",
     "paths": {
@@ -16,6 +13,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "vite.config.ts"
   ]
 }

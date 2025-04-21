@@ -1,10 +1,10 @@
 import { _Memo, _pick, pDefer } from '@naturalcycles/js-lib'
-import { User } from '@sentry/vue'
+import type { User } from '@sentry/vue'
 import type { Auth, UserInfo } from 'firebase/auth'
 import { withProgress } from '@/decorators/decorators'
 import { sentry } from '@/error'
 import { analyticsService, mp } from '@/srv/analytics.service'
-import { BackendResponse } from '@/srv/model'
+import type { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { useStore } from '@/store'
 export type { UserInfo }

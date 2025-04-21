@@ -1,9 +1,9 @@
 {
   "name": "releases",
+  "type": "module",
   "version": "1.0.0",
   "author": "kirillgroshkov <1@inventix.ru>",
   "private": true,
-  "type": "module",
   "scripts": {
     "prepare": "husky",
     "build": "vite build",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@mdi/js": "^7",
-    "@naturalcycles/js-lib": "^14",
+    "@naturalcycles/js-lib": "^15",
     "@sentry/vue": "^9",
     "@vueuse/core": "^13",
     "firebase": "^11",
@@ -28,7 +28,7 @@
     "vuetify": "^3"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^16",
+    "@naturalcycles/dev-lib": "^18",
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
