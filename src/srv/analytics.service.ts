@@ -18,15 +18,15 @@ class AnalyticsService {
       loadHotjar(hotjarId)
     }
 
-    if (!prod) {
-      mp = {
-        identify() {},
-        track() {},
-        reset() {},
-        get_distinct_id() {},
-      } as any
-      return
-    }
+    // if (!prod) {
+    mp = {
+      identify() {},
+      track() {},
+      reset() {},
+      get_distinct_id() {},
+    } as any
+    return
+    // }
 
     // mixpanel.init(mixpanelToken, {
     //   api_host: 'https://api-eu.mixpanel.com',
