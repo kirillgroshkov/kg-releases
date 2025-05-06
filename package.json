@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@naturalcycles/dev-lib": "^18",
+    "@rollup/plugin-replace": "^6.0.2",
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
