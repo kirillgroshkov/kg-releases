@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { pDelay } from '@naturalcycles/js-lib'
 import { computed, onMounted, ref } from 'vue'
-import { Release } from '@/srv/model'
+import type { Release } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 
 const releases = ref<Release[] | null>(null)

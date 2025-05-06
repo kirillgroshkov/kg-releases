@@ -5,7 +5,7 @@ import { withProgress } from '@/decorators/decorators'
 import { router } from '@/router'
 import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
-import { UserSettings } from '@/srv/model'
+import type { UserSettings } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { useStore } from '@/store'
 

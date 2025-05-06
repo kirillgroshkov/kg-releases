@@ -1,7 +1,7 @@
 import { _stringify } from '@naturalcycles/js-lib'
 import * as sentry from '@sentry/vue'
 import type { App } from 'vue'
-import { prod } from './env'
+import { prod } from './env.ts'
 
 export function errorDialog(err: any): void {
   console.error(err)

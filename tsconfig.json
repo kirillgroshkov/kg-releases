@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "es2022",
     "skipLibCheck": true, // vuetify
+    "allowImportingTsExtensions": true,
     "sourceMap": true,
     "outDir": "dist/tsc",
     "baseUrl": ".",

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
-import { IsoDate, LocalDate, localDate } from '@naturalcycles/js-lib'
+import { type IsoDate, type LocalDate, localDate } from '@naturalcycles/js-lib'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
 import { timeHM, unixtimePretty } from '@/filters/filters'
-import { ReleasesByDay } from '@/srv/model'
+import type { ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { useStore } from '@/store'
 

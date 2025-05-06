@@ -2,7 +2,7 @@
   "name": "releases",
   "type": "module",
   "version": "1.0.0",
-  "author": "kirillgroshkov <1@inventix.ru>",
+  "author": "kirillgroshkov <kirill.groshkov5@gmail.com>",
   "private": true,
   "scripts": {
     "prepare": "husky",
@@ -32,8 +32,9 @@
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
+    "rollup-plugin-visualizer": "^5",
     "sass": "^1",
-    "tsx": "^4.19.3",
+    "tsx": "^4",
     "typescript": "~5.8",
     "vite": "^6",
     "vite-plugin-vuetify": "^2",
@@ -41,5 +42,6 @@
   },
   "resolutions": {
     "typescript": "~5.8"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }
