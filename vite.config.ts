@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
+import { analyzer } from 'vite-bundle-analyzer'
 
 export default defineConfig({
   define: {
@@ -14,16 +15,21 @@ export default defineConfig({
   plugins: [
     vue(),
     vuetify(),
-    visualizer({
-      template: 'flamegraph',
-      filename: 'dist/stats.html',
-      gzipSize: true,
-      sourcemap: true,
+    analyzer({
+      analyzerMode: 'static',
+      fileName: 'stats.html',
+      defaultSizes: 'gzip',
     }),
+    // visualizer({
+    //   template: 'flamegraph',
+    //   filename: 'dist/stats.html',
+    //   gzipSize: true,
+    //   sourcemap: true,
+    // }),
   ],
-  build: {
-    sourcemap: true,
-  },
+  // build: {
+  //   sourcemap: true,
+  // },
   resolve: {
     alias: {
       '@': `${import.meta.dirname}/src`,

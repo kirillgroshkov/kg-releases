@@ -32,11 +32,11 @@
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
-    "rollup-plugin-visualizer": "^5",
     "sass": "^1",
     "tsx": "^4",
     "typescript": "~5.8",
     "vite": "^6",
+    "vite-bundle-analyzer": "^0.20.1",
     "vite-plugin-vuetify": "^2",
     "vue-tsc": "^2"
   },
