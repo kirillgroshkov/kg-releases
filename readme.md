@@ -54,13 +54,13 @@ Feature requests, issues, PRs are welcome!
 
 ## Develop
 
-    yarn serve
+    pn dev
 
-    yarn build
+    pn build
 
 Serve `dist` folder (http://localhost:3000):
 
-    yarn global add serve
+    npm i -g add serve
     serve
 
 _Support me with a Star!_

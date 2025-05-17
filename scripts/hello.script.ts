@@ -1,6 +1,6 @@
 /*
 
-yarn tsx scripts/hello.script.ts
+pn tsx scripts/hello.script.ts
 
  */
 

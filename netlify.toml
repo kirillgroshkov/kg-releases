@@ -1,8 +1,6 @@
 
 [build]
   publish = "dist"
-  command = "yarn build-netlify"
+  command = "pnpm build-netlify"
 
 [build.environment]
-  YARN_VERSION = "1.22.22"
-  YARN_FLAGS = "--ignore-engines"

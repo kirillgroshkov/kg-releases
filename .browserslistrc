@@ -1,6 +1,6 @@
 #
 # Test it like this:
-# yarn browserslist
+# pn browserslist
 #
 # "last 2 versions" is disabled, cause it brings e.g Android 4.4, etc, which is long-obsolete
 > 1%

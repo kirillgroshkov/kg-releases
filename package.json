@@ -6,11 +6,12 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
+    "upd": "pnpm up --no-save",
     "build": "vite build",
     "test": "dev-lib test",
     "lint": "dev-lib lint",
-    "bt": "tsc --noEmit && vue-tsc --noEmit && yarn build",
-    "lbt": "dev-lib lint && yarn bt",
+    "bt": "dev-lib tsc && vue-tsc --noEmit && pnpm build",
+    "lbt": "dev-lib lint && pnpm bt",
     "dev": "vite --port 4100 --open",
     "build-netlify": "vite build",
     "preview": "vite preview --open"
@@ -23,15 +24,18 @@
     "firebase": "^11",
     "mixpanel-browser": "2.49.0",
     "pinia": "^3",
+    "tslib": "^2",
     "vue": "^3",
     "vue-router": "^4",
     "vuetify": "^3"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^18",
+    "@naturalcycles/dev-lib": "^19",
+    "@naturalcycles/nodejs-lib": "^14",
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
+    "husky": "^9",
     "sass": "^1",
     "tsx": "^4",
     "typescript": "~5.8",
@@ -43,5 +47,5 @@
   "resolutions": {
     "typescript": "~5.8"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "pnpm@10.11.0"
 }
