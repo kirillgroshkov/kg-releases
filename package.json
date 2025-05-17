@@ -35,6 +35,7 @@
     "@types/mixpanel-browser": "^2",
     "@types/node": "^22",
     "@vitejs/plugin-vue": "^5",
+    "husky": "^9",
     "sass": "^1",
     "tsx": "^4",
     "vite": "^6",

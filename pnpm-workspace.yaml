@@ -1,3 +1,10 @@
 ignoredBuiltDependencies:
   - '@firebase/util'
   - protobufjs
+
+# This allows to use these tools from the root project,
+# without declaring them as explicit dependencies.
+publicHoistPattern:
+  - eslint
+  - prettier
+  - '@biomejs/biome'
