@@ -1,4 +1,4 @@
-import { _Memo } from '@naturalcycles/js-lib'
+import { _Memo } from '@naturalcycles/js-lib/decorators'
 import { api } from '@/srv/api.service'
 import { useStore } from '@/store'
 import type { AuthInput, BackendResponse, Release, Repo, UserSettings } from './model.ts'

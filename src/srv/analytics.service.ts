@@ -1,5 +1,5 @@
-import type { AnyObject } from '@naturalcycles/js-lib'
-import { loadHotjar } from '@naturalcycles/js-lib'
+import { loadHotjar } from '@naturalcycles/js-lib/browser'
+import type { AnyObject } from '@naturalcycles/js-lib/types'
 // import mixpanel from 'mixpanel-browser'
 import { prod } from '@/env'
 // let mp = mixpanel
@@ -58,5 +58,6 @@ export const analyticsService = new AnalyticsService()
 export { mp }
 
 declare global {
+  // oxlint-disable-next-line no-var
   var gtag: (...args: any[]) => void
 }

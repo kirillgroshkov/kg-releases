@@ -1,10 +1,19 @@
+ignorePatchFailures: false
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - '@naturalcycles/*'
+  - vitest
+  - '@vitest/*'
 ignoredBuiltDependencies:
   - '@firebase/util'
   - protobufjs
 
-# This allows to use these tools from the root project,
-# without declaring them as explicit dependencies.
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver
+
 publicHoistPattern:
   - eslint
+  - oxlint
   - prettier
   - '@biomejs/biome'

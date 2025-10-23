@@ -1,4 +1,4 @@
-import { _stringify } from '@naturalcycles/js-lib'
+import { _stringify } from '@naturalcycles/js-lib/string'
 import * as sentry from '@sentry/vue'
 import type { App } from 'vue'
 import { prod } from './env.ts'

@@ -1,4 +1,6 @@
-import { _Memo, _pick, pDefer } from '@naturalcycles/js-lib'
+import { _Memo } from '@naturalcycles/js-lib/decorators'
+import { _pick } from '@naturalcycles/js-lib/object'
+import { pDefer } from '@naturalcycles/js-lib/promise'
 import type { User } from '@sentry/vue'
 import type { Auth, UserInfo } from 'firebase/auth'
 import { withProgress } from '@/decorators/decorators'

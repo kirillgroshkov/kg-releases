@@ -1,7 +1,7 @@
 // import 'vuetify/styles'
 import 'vuetify/lib/styles/main.css'
 import './scss/global.scss'
-import { pDelay } from '@naturalcycles/js-lib'
+import { pDelay } from '@naturalcycles/js-lib/promise'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
@@ -16,7 +16,7 @@ import { releasesService } from '@/srv/releases.service'
 import { initStore, useStore } from '@/store'
 import App from './App.vue'
 
-// eslint-disable-next-line unicorn/prefer-top-level-await
+// oxlint-disable-next-line unicorn/prefer-top-level-await
 void main()
 
 async function main(): Promise<void> {

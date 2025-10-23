@@ -1,4 +1,4 @@
-import type { AnyFunction } from '@naturalcycles/js-lib'
+import type { AnyFunction } from '@naturalcycles/js-lib/types'
 import { errorDialog } from '@/error'
 import { useStore } from '@/store'
 

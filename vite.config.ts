@@ -4,6 +4,7 @@ import vuetify from 'vite-plugin-vuetify'
 // import { visualizer } from 'rollup-plugin-visualizer'
 import { analyzer } from 'vite-bundle-analyzer'
 
+// oxlint-disable-next-line import/no-default-export
 export default defineConfig({
   define: {
     __SENTRY_DEBUG__: false,

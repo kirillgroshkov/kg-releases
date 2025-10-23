@@ -1,11 +1,12 @@
 {
-  "extends": "@naturalcycles/js-lib/cfg/frontend/tsconfig.json",
+  "extends": "@naturalcycles/dev-lib/cfg/tsconfig.frontend.json",
   "compilerOptions": {
     "target": "es2022",
     "skipLibCheck": true, // vuetify
     "allowImportingTsExtensions": true,
     "sourceMap": true,
     "outDir": "dist/tsc",
+    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

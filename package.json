@@ -10,8 +10,8 @@
     "build": "vite build",
     "test": "dev-lib test",
     "lint": "dev-lib lint",
-    "bt": "dev-lib tsc && vue-tsc --noEmit && pnpm build",
-    "lbt": "dev-lib lint && pnpm bt",
+    "bt": "dev-lib typecheck && vue-tsc --noEmit && pnpm build",
+    "check": "dev-lib lint && pnpm bt",
     "dev": "vite --port 4100 --open",
     "build-netlify": "vite build",
     "preview": "vite preview --open"
@@ -19,9 +19,9 @@
   "dependencies": {
     "@mdi/js": "^7",
     "@naturalcycles/js-lib": "^15",
-    "@sentry/vue": "^9",
-    "@vueuse/core": "^13",
-    "firebase": "^11",
+    "@sentry/vue": "^10",
+    "@vueuse/core": "^14",
+    "firebase": "^12",
     "mixpanel-browser": "2.49.0",
     "pinia": "^3",
     "tslib": "^2",
@@ -30,21 +30,22 @@
     "vuetify": "^3"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^19",
-    "@naturalcycles/nodejs-lib": "^14",
-    "@types/mixpanel-browser": "^2",
-    "@types/node": "^22",
-    "@vitejs/plugin-vue": "^5",
+    "@naturalcycles/dev-lib": "^20",
+    "@naturalcycles/nodejs-lib": "^15",
+    "@types/mixpanel-browser": "2.60.0",
+    "@types/node": "^24",
+    "@vitejs/plugin-vue": "^6",
     "husky": "^9",
     "sass": "^1",
     "tsx": "^4",
-    "vite": "^6",
-    "vite-bundle-analyzer": "^0.20.1",
+    "typescript": "~5.9",
+    "vite": "^7",
+    "vite-bundle-analyzer": "^1",
     "vite-plugin-vuetify": "^2",
-    "vue-tsc": "^2"
+    "vue-tsc": "^3"
   },
   "resolutions": {
-    "typescript": "~5.8"
+    "typescript": "~5.9"
   },
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.19.0"
 }

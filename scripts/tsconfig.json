@@ -1,11 +1,9 @@
-//
-// tsconfig.json for /scripts
-//
 {
-  "extends": "@naturalcycles/dev-lib/scripts/tsconfig.json",
+  "extends": "@naturalcycles/dev-lib/cfg/tsconfig.scripts.json",
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "../dist",
+    "lib": ["esnext", "dom"]
+    // "baseUrl": "./",
+    // "outDir": "../dist"
   },
-  "exclude": ["**/__exclude"],
+  "exclude": ["**/__exclude"]
 }

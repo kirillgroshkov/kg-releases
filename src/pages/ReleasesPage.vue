@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
-import { type IsoDate, type LocalDate, localDate } from '@naturalcycles/js-lib'
+import type { IsoDate } from '@naturalcycles/js-lib/types'
+import { type LocalDate, localDate } from '@naturalcycles/js-lib/datetime'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'

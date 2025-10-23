@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["node_modules/@naturalcycles/dev-lib/cfg/oxlint.config.json"],
+  "ignorePatterns": ["__exclude", "docs"],
+  "rules": {},
+  "settings": {
+    "jsdoc": {
+      "tagNamePreference": {
+        "experimental": "experimental"
+      }
+    }
+  }
+}

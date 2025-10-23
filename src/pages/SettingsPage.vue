@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { _deepEquals } from '@naturalcycles/js-lib'
+import { _deepEquals } from '@naturalcycles/js-lib/object'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
 import { router } from '@/router'

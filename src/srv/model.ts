@@ -1,4 +1,4 @@
-import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib'
+import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 
 // export interface ReleasesByDay {
 //   [day: IsoDate]: Release[]

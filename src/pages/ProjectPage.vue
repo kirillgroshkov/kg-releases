@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pDelay } from '@naturalcycles/js-lib'
+import { pDelay } from '@naturalcycles/js-lib/promise'
 import { computed, onMounted, ref } from 'vue'
 import type { Release } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
