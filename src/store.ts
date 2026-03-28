@@ -1,12 +1,8 @@
 import { _by, _sortBy } from '@naturalcycles/js-lib/array'
 import { localTime } from '@naturalcycles/js-lib/datetime'
 import { _deepCopy, _pick } from '@naturalcycles/js-lib/object'
-import {
-  _stringMapValues,
-  type IsoDate,
-  type StringMap,
-  type UnixTimestamp,
-} from '@naturalcycles/js-lib/types'
+import { _stringMapValues } from '@naturalcycles/js-lib/types'
+import type { IsoDate, StringMap, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { defineStore } from 'pinia'
 import type { UserInfo } from '@/srv/firebase.service'
 import type { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '@/srv/model'

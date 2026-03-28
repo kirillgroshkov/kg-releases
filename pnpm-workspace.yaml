@@ -1,11 +1,15 @@
+# minimumReleaseAge: 1440
+# minimumReleaseAgeExclude:
+#   - '@naturalcycles/*'
+#   - vitest
+#   - '@vitest/*'
+
+blockExoticSubdeps: true
 ignorePatchFailures: false
-minimumReleaseAge: 1440
-minimumReleaseAgeExclude:
-  - '@naturalcycles/*'
-  - vitest
-  - '@vitest/*'
+
 ignoredBuiltDependencies:
   - '@firebase/util'
+  - '@parcel/watcher'
   - protobufjs
 
 onlyBuiltDependencies:
@@ -13,7 +17,6 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 publicHoistPattern:
-  - eslint
   - oxlint
-  - prettier
-  - '@biomejs/biome'
+  - oxlint-tsgolint
+  - oxfmt

@@ -47,9 +47,8 @@ class FirebaseService {
 
   async login(): Promise<BackendResponse> {
     const auth = await this.getAuth()
-    const { signInWithPopup, getAdditionalUserInfo, GithubAuthProvider } = await import(
-      'firebase/auth'
-    )
+    const { signInWithPopup, getAdditionalUserInfo, GithubAuthProvider } =
+      await import('firebase/auth')
     const githubAuthProvider = new GithubAuthProvider()
 
     const result = await signInWithPopup(auth, githubAuthProvider)

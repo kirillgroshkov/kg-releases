@@ -1,4 +1,3 @@
-import { loadHotjar } from '@naturalcycles/js-lib/browser'
 import type { AnyObject } from '@naturalcycles/js-lib/types'
 // import mixpanel from 'mixpanel-browser'
 import { prod } from '@/env'
@@ -6,7 +5,7 @@ import { prod } from '@/env'
 let mp = {} as any
 
 // const mixpanelToken = '20158c629a6a4226d9c975185238b7a7'
-const hotjarId = 894902
+// const hotjarId = 894902
 // const gaId = 'UA-6342858-21'
 
 class AnalyticsService {
@@ -15,7 +14,7 @@ class AnalyticsService {
 
     // this.initGA()
     if (prod) {
-      loadHotjar(hotjarId)
+      // loadHotjar(hotjarId)
     }
 
     // if (!prod) {
@@ -58,6 +57,5 @@ export const analyticsService = new AnalyticsService()
 export { mp }
 
 declare global {
-  // oxlint-disable-next-line no-var
   var gtag: (...args: any[]) => void
 }

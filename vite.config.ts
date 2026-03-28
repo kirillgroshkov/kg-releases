@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vuetify from 'vite-plugin-vuetify'
+import { defineConfig } from 'vite'
 // import { visualizer } from 'rollup-plugin-visualizer'
 import { analyzer } from 'vite-bundle-analyzer'
+import vuetify from 'vite-plugin-vuetify'
 
 // oxlint-disable-next-line import/no-default-export
 export default defineConfig({

@@ -1,21 +1,14 @@
 {
   "extends": "@naturalcycles/dev-lib/cfg/tsconfig.frontend.json",
   "compilerOptions": {
-    "target": "es2022",
-    "skipLibCheck": true, // vuetify
     "allowImportingTsExtensions": true,
+    "noEmit": true,
     "sourceMap": true,
     "outDir": "dist/tsc",
     "rootDir": ".",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "vite.config.ts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"]
 }

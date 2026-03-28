@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
+import { localDate } from '@naturalcycles/js-lib/datetime'
+import type { LocalDate } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate } from '@naturalcycles/js-lib/types'
-import { type LocalDate, localDate } from '@naturalcycles/js-lib/datetime'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
@@ -33,8 +34,12 @@ const days = computed((): IsoDate[] => {
     .reverse()
 })
 
+let lastAutoReload = 0
+
 useEventListener(document, 'visibilitychange', async () => {
   if (document.visibilityState !== 'visible') return
+  if (Date.now() - lastAutoReload < 60_000) return
+  lastAutoReload = Date.now()
   await reload()
 })
 
@@ -141,7 +146,7 @@ function descrClick($event: MouseEvent): void {
                   :disabled="store.ghostMode"
                   @click="reload()"
                 >
-                  reload
+                  Reload
                 </v-btn>
               </td>
             </tr>
@@ -161,7 +166,7 @@ function descrClick($event: MouseEvent): void {
         -->
 
         <div class="tableRow" style="margin: 0 -16px; padding-bottom: 80px">
-          <template v-for="day of days">
+          <template v-for="day of days" :key="day">
             <table
               v-if="(releasesByDay[day] || []).length"
               border="0"
@@ -180,7 +185,7 @@ function descrClick($event: MouseEvent): void {
 
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
               <tbody>
-                <template v-for="r of releasesByDay[day]">
+                <template v-for="r of releasesByDay[day]" :key="r.id">
                   <tr class="mainTr" @click="toggleClick(r.id, $event)">
                     <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
                       <img :src="r.avatarUrl" style="width: 40px; height: 40px" loading="lazy" />
@@ -256,7 +261,7 @@ function descrClick($event: MouseEvent): void {
             </tr>
             <tr v-else>
               <td colspan="3">
-                <v-btn color="primary" @click="loadMore()"> load more </v-btn>
+                <v-btn color="primary" @click="loadMore()">Load more</v-btn>
               </td>
             </tr>
           </table>
@@ -296,6 +301,10 @@ function descrClick($event: MouseEvent): void {
   width: 100% !important;
   max-width: 500px;
   table-layout: fixed;
+}
+
+.container pre {
+  margin: 0;
 }
 
 @media (max-width: 800px) {

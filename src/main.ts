@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import App from './App.vue'
 import { bootstrapDone } from '@/bootstrapDone'
 import { prod } from '@/env'
 import { errorDialog, initSentry } from '@/error'
@@ -14,7 +15,6 @@ import { analyticsService } from '@/srv/analytics.service'
 import { firebaseService } from '@/srv/firebase.service'
 import { releasesService } from '@/srv/releases.service'
 import { initStore, useStore } from '@/store'
-import App from './App.vue'
 
 // oxlint-disable-next-line unicorn/prefer-top-level-await
 void main()

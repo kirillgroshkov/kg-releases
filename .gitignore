@@ -29,6 +29,7 @@ node_modules
 /log.txt
 /.sass-cache
 /.sourcemaps
+/.claude/*.local.*
 
 /coverage
 /report

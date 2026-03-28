@@ -1,9 +1,0 @@
-#
-# .prettierignore
-#
-
-/node_modules
-/package.json
-/tsconfig.json
-/pnpm-*.yaml
-/www

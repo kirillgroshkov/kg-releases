@@ -1,6 +1,6 @@
 
 [build]
-  publish = "dist"
-  command = "pnpm build-netlify"
+publish = "dist"
+command = "pnpm build-netlify"
 
 [build.environment]
