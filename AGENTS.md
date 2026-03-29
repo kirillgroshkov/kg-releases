@@ -24,6 +24,36 @@ dev-lib typecheck     # TypeScript check
 vue-tsc --noEmit      # Vue SFC type check
 ```
 
+Always run `pnpm check` before handing over the work.
+
+## Code Style & Standards
+
+- **Performance:** All code must be performance-optimized by default.
+- **Consistency:** Strictly adhere to the existing codebase patterns.
+- **Linting:** In-place rule overrides are permitted if necessary for working code; provide a brief
+  justification for the override.
+
+**Function ordering:** Follow top-down "newspaper style" - callers above callees. If function A
+calls function B, A must appear above B in the file. Entry points and high-level logic at the top,
+helper/implementation functions below. Read the file top-to-bottom like a newspaper: headline first,
+then details.
+
+```ts
+// correct: caller above callee
+function foo() {
+  bar()
+}
+function bar() {}
+
+// wrong: callee above caller
+function bar() {}
+function foo() {
+  bar()
+}
+```
+
+When changing code - DON'T remove pre-existing code comments, preserve them instead.
+
 ## Tech Stack
 
 - **Vue 3** with `<script setup>` composition API, **Vuetify 3** (Material Design), **Pinia** state

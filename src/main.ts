@@ -31,6 +31,7 @@ async function main(): Promise<void> {
       },
     },
     theme: {
+      defaultTheme: 'light',
       themes: {
         light: {
           colors: {
