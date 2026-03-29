@@ -2,7 +2,7 @@
   "name": "Releases",
   "short_name": "Releases",
   "start_url": "/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "orientation": "portrait",
   "icons": [
     {
