@@ -2,16 +2,24 @@
 import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
 import { localDate } from '@naturalcycles/js-lib/datetime'
 import type { LocalDate } from '@naturalcycles/js-lib/datetime'
-import type { IsoDate } from '@naturalcycles/js-lib/types'
+import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '@/decorators/decorators'
 import { timeHM, unixtimePretty } from '@/filters/filters'
-import type { ReleasesByDay } from '@/srv/model'
+import type { Release, ReleasesByDay } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { useStore } from '@/store'
 
+interface ReleaseGroup {
+  repo: string
+  avatarUrl?: string
+  latestPublished: UnixTimestamp
+  releases: Release[]
+}
+
 const expandedRows = ref(new Set<string>())
+const expandedGroups = ref(new Set<string>())
 const maxReleases = ref(30)
 const dayFirst = ref<IsoDate>('' as IsoDate)
 const dayLast = ref<IsoDate | null>('' as IsoDate)
@@ -33,6 +41,42 @@ const days = computed((): IsoDate[] => {
     .map(d => d.toISODate())
     .reverse()
 })
+
+const groupsByDay = computed((): Record<IsoDate, ReleaseGroup[]> => {
+  const result: Record<IsoDate, ReleaseGroup[]> = {}
+
+  for (const day of days.value) {
+    const releases = releasesByDay.value[day] || []
+    const repoMap: Record<string, Release[]> = {}
+
+    for (const r of releases) {
+      ;(repoMap[r.repoFullName] ||= []).push(r)
+    }
+
+    result[day] = Object.entries(repoMap).map(([repo, groupReleases]) => ({
+      repo,
+      avatarUrl: groupReleases[0]!.avatarUrl,
+      latestPublished: groupReleases[0]!.published,
+      releases: groupReleases,
+    }))
+  }
+
+  return result
+})
+
+function groupKey(day: IsoDate, repo: string): string {
+  return `${day}_${repo}`
+}
+
+function toggleGroup(day: IsoDate, repo: string): void {
+  const key = groupKey(day, repo)
+  if (expandedGroups.value.has(key)) {
+    expandedGroups.value.delete(key)
+  } else {
+    expandedGroups.value.add(key)
+  }
+  expandedGroups.value = new Set(expandedGroups.value)
+}
 
 let lastAutoReload = 0
 
@@ -119,6 +163,10 @@ function toggleClick(id: string, _$event: MouseEvent): void {
   expandedRows.value = new Set(expandedRows.value)
 }
 
+function unstarClick(repoFullName: string): void {
+  globalThis.alert(`unstar ${repoFullName}: will be implemented later`)
+}
+
 function descrClick($event: MouseEvent): void {
   // $event.preventDefault()
   $event.stopImmediatePropagation()
@@ -185,52 +233,186 @@ function descrClick($event: MouseEvent): void {
 
             <table border="0" cellspacing="0" cellpadding="6" class="table1">
               <tbody>
-                <template v-for="r of releasesByDay[day]" :key="r.id">
-                  <tr class="mainTr" @click="toggleClick(r.id, $event)">
-                    <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
-                      <img
-                        :src="r.avatarUrl + '&s=80'"
-                        style="width: 40px; height: 40px"
-                        loading="lazy"
-                      />
-                    </td>
-                    <td style="vertical-align: top; padding: 8px 0 0">
-                      {{ r.repoFullName }} <br />
-                      <span class="ver">{{ r.tagName }}</span>
-                    </td>
-                    <td
-                      style="width: 80px; text-align: right; vertical-align: top; padding-top: 7px"
-                    >
-                      {{ timeHM(r.published) }}
-                      <v-icon
-                        v-if="expandedRows.has(r.id)"
-                        style="opacity: 0.4"
-                        :icon="mdiChevronUp"
-                      ></v-icon>
-                      <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
-                    </td>
-                  </tr>
-
-                  <transition name="slide">
-                    <tr v-if="expandedRows.has(r.id)" @click="toggleClick(r.id, $event)">
-                      <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
-                        <div>
-                          <v-btn
-                            style="margin-left: -4px; margin-top: 10px"
-                            :href="`https://github.com/${r.repoFullName}/releases/tag/${
-                              r.tagName || 'v' + r.v
-                            }`"
-                            target="_blank"
-                          >
-                            view on github
-                          </v-btn>
-                        </div>
-
-                        <!-- eslint-disable-next-line vue/no-v-html -->
-                        <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
+                <template v-for="group of groupsByDay[day]" :key="group.repo">
+                  <!-- Ungrouped: single release from this org, render as before -->
+                  <template v-if="group.releases.length === 1">
+                    <tr class="mainTr" @click="toggleClick(group.releases[0]!.id, $event)">
+                      <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
+                        <img
+                          :src="group.releases[0]!.avatarUrl + '&s=80'"
+                          style="width: 40px; height: 40px"
+                          loading="lazy"
+                        />
+                      </td>
+                      <td style="vertical-align: top; padding: 8px 0 0">
+                        {{ group.releases[0]!.repoFullName }} <br />
+                        <span class="ver">{{ group.releases[0]!.tagName }}</span>
+                      </td>
+                      <td
+                        style="
+                          width: 80px;
+                          text-align: right;
+                          vertical-align: top;
+                          padding-top: 7px;
+                        "
+                      >
+                        {{ timeHM(group.releases[0]!.published) }}
+                        <v-icon
+                          v-if="expandedRows.has(group.releases[0]!.id)"
+                          style="opacity: 0.4"
+                          :icon="mdiChevronUp"
+                        ></v-icon>
+                        <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
                       </td>
                     </tr>
-                  </transition>
+
+                    <transition name="slide">
+                      <tr
+                        v-if="expandedRows.has(group.releases[0]!.id)"
+                        @click="toggleClick(group.releases[0]!.id, $event)"
+                      >
+                        <td colspan="3" style="padding: 0 10px 10px 16px; word-wrap: break-word">
+                          <div>
+                            <v-btn
+                              style="margin-left: -4px; margin-top: 10px"
+                              :href="`https://github.com/${group.releases[0]!.repoFullName}/releases/tag/${
+                                group.releases[0]!.tagName || 'v' + group.releases[0]!.v
+                              }`"
+                              target="_blank"
+                            >
+                              view on github
+                            </v-btn>
+                            <v-btn
+                              style="margin-left: 8px; margin-top: 10px"
+                              @click.stop="unstarClick(group.releases[0]!.repoFullName)"
+                            >
+                              unstar
+                            </v-btn>
+                          </div>
+
+                          <!-- eslint-disable-next-line vue/no-v-html -->
+                          <div
+                            class="md"
+                            @click="descrClick($event)"
+                            v-html="group.releases[0]!.descrHtml"
+                          />
+                        </td>
+                      </tr>
+                    </transition>
+                  </template>
+
+                  <!-- Grouped: multiple releases from this org -->
+                  <template v-else>
+                    <!-- Group header row -->
+                    <tr class="mainTr" @click="toggleGroup(day, group.repo)">
+                      <td style="width: 66px; padding: 8px 0 0px 12px; vertical-align: top">
+                        <img
+                          :src="group.avatarUrl + '&s=80'"
+                          style="width: 40px; height: 40px"
+                          loading="lazy"
+                        />
+                      </td>
+                      <td style="vertical-align: top; padding: 8px 0 0">
+                        {{ group.repo }}
+                        <div class="groupTags">
+                          <div
+                            v-for="r of group.releases.slice(0, group.releases.length > 3 ? 2 : 3)"
+                            :key="r.id"
+                            class="ver"
+                          >
+                            {{ r.tagName }}
+                          </div>
+                          <div v-if="group.releases.length > 3" class="ver">
+                            +{{ group.releases.length - 2 }} more
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        style="
+                          width: 80px;
+                          text-align: right;
+                          vertical-align: top;
+                          padding-top: 7px;
+                        "
+                      >
+                        {{ timeHM(group.latestPublished) }}
+                        <v-icon
+                          v-if="expandedGroups.has(groupKey(day, group.repo))"
+                          style="opacity: 0.4"
+                          :icon="mdiChevronUp"
+                        ></v-icon>
+                        <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
+                      </td>
+                    </tr>
+
+                    <!-- Expanded group: individual releases -->
+                    <template v-if="expandedGroups.has(groupKey(day, group.repo))">
+                      <template v-for="r of group.releases" :key="r.id">
+                        <tr class="mainTr groupChildTr" @click="toggleClick(r.id, $event)">
+                          <td style="width: 66px; padding: 4px 0 4px 24px; vertical-align: middle">
+                            <img
+                              :src="r.avatarUrl + '&s=80'"
+                              style="width: 32px; height: 32px; display: block"
+                              loading="lazy"
+                            />
+                          </td>
+                          <td style="vertical-align: middle; padding: 4px 0">
+                            <span class="ver">{{ r.tagName }}</span>
+                          </td>
+                          <td
+                            style="
+                              width: 80px;
+                              text-align: right;
+                              vertical-align: middle;
+                              padding: 4px 0;
+                            "
+                          >
+                            {{ timeHM(r.published) }}
+                            <v-icon
+                              v-if="expandedRows.has(r.id)"
+                              style="opacity: 0.4"
+                              :icon="mdiChevronUp"
+                            ></v-icon>
+                            <v-icon v-else style="opacity: 0.4" :icon="mdiChevronDown"></v-icon>
+                          </td>
+                        </tr>
+
+                        <transition name="slide">
+                          <tr
+                            v-if="expandedRows.has(r.id)"
+                            class="groupChildTr"
+                            @click="toggleClick(r.id, $event)"
+                          >
+                            <td
+                              colspan="3"
+                              style="padding: 0 10px 10px 24px; word-wrap: break-word"
+                            >
+                              <div>
+                                <v-btn
+                                  style="margin-left: -4px; margin-top: 10px"
+                                  :href="`https://github.com/${r.repoFullName}/releases/tag/${
+                                    r.tagName || 'v' + r.v
+                                  }`"
+                                  target="_blank"
+                                >
+                                  view on github
+                                </v-btn>
+                                <v-btn
+                                  style="margin-left: 8px; margin-top: 10px"
+                                  @click.stop="unstarClick(r.repoFullName)"
+                                >
+                                  unstar
+                                </v-btn>
+                              </div>
+
+                              <!-- eslint-disable-next-line vue/no-v-html -->
+                              <div class="md" @click="descrClick($event)" v-html="r.descrHtml" />
+                            </td>
+                          </tr>
+                        </transition>
+                      </template>
+                    </template>
+                  </template>
                 </template>
               </tbody>
             </table>
@@ -299,6 +481,15 @@ function descrClick($event: MouseEvent): void {
     cursor: pointer;
     transition: all 0.1s ease-in;
   }
+}
+
+.groupTags {
+  margin-top: 2px;
+  padding-bottom: 6px;
+}
+
+.groupChildTr {
+  background-color: rgba(0, 0, 0, 0.025);
 }
 
 .table1 {
