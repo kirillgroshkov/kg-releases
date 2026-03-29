@@ -77,7 +77,8 @@ async function main(): Promise<void> {
   } else {
     // only init releasesService if user is NOT logged in
     await firebaseService.init()
-    await firebaseService.authStateChanged
+    // Timeout prevents hanging on the splashscreen if Firebase auth stalls (e.g. iOS multi-tab IndexedDB contention)
+    await Promise.race([firebaseService.authStateChanged, pDelay(10_000)])
   }
 
   void hideLoader()
@@ -86,7 +87,7 @@ async function main(): Promise<void> {
 
 async function hideLoader(): Promise<void> {
   const loader = document.querySelector('#loading0')!
-  await pDelay(500)
+  // await pDelay(100)
   loader.addEventListener('transitionend', () => loader.remove())
   loader.classList.add('opacity0')
 }

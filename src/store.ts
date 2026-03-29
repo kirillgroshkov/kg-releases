@@ -36,7 +36,7 @@ function getInitialState(): GlobalState {
   }
 }
 
-const persistKeys: (keyof GlobalState)[] = ['counter', 'releases', 'starredRepos']
+const persistKeys: (keyof GlobalState)[] = ['counter', 'releases', 'starredRepos', 'user']
 
 const LS_ID = 'state'
 
