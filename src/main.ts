@@ -1,11 +1,11 @@
-// import 'vuetify/styles'
-import 'vuetify/lib/styles/main.css'
+import 'vuetify/lib/styles/core.css'
 import './scss/global.scss'
+import { mdiCheckboxBlankOutline, mdiCheckboxMarked, mdiMinusBox } from '@mdi/js'
 import { pDelay } from '@naturalcycles/js-lib/promise'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createVuetify } from 'vuetify'
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import { mdi } from 'vuetify/iconsets/mdi-svg'
 import App from './App.vue'
 import { bootstrapDone } from '@/bootstrapDone'
 import { prod } from '@/env'
@@ -25,7 +25,11 @@ async function main(): Promise<void> {
   const vuetify = createVuetify({
     icons: {
       defaultSet: 'mdi',
-      aliases,
+      aliases: {
+        checkboxOn: mdiCheckboxMarked,
+        checkboxOff: mdiCheckboxBlankOutline,
+        checkboxIndeterminate: mdiMinusBox,
+      },
       sets: {
         mdi,
       },
