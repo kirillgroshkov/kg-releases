@@ -20,7 +20,12 @@ const store = useStore()
             class="elevation-1"
             style="margin-right: 8px"
           >
-            <img class="avatar" :src="store.user.photoURL" alt="user.displayName" loading="lazy" />
+            <img
+              class="avatar"
+              :src="store.user.photoURL + '&s=80'"
+              alt="user.displayName"
+              loading="lazy"
+            />
           </v-avatar>
         </v-app-bar>
 
