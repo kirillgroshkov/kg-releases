@@ -1,22 +1,26 @@
-# minimumReleaseAge: 1440
-# minimumReleaseAgeExclude:
-#   - '@naturalcycles/*'
-#   - vitest
-#   - '@vitest/*'
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - '@naturalcycles/*'
+  - vitest
+  - '@vitest/*'
+  - oxfmt
+  - '@oxfmt/*'
+  - eslint-plugin-oxlint
+  - oxlint
+  - oxlint-tsgolint
+  - '@oxlint/*'
+
+overrides:
+  typescript: ~6.0
 
 blockExoticSubdeps: true
-ignorePatchFailures: false
-
-ignoredBuiltDependencies:
-  - '@firebase/util'
-  - '@parcel/watcher'
-  - protobufjs
-
-onlyBuiltDependencies:
-  - esbuild
-  - unrs-resolver
 
 publicHoistPattern:
   - oxlint
   - oxlint-tsgolint
   - oxfmt
+allowBuilds:
+  esbuild: true
+  '@firebase/util': false
+  '@parcel/watcher': false
+  protobufjs: false

@@ -32,7 +32,7 @@
     "@naturalcycles/dev-lib": "^20",
     "@naturalcycles/nodejs-lib": "^15",
     "@types/node": "^25",
-    "@typescript/native-preview": "7.0.0-dev.20260328.1",
+    "@typescript/native-preview": "beta",
     "@vitejs/plugin-vue": "^6",
     "husky": "^9",
     "sass": "^1",
@@ -43,11 +43,8 @@
     "vite-plugin-vuetify": "^2",
     "vue-tsc": "^3"
   },
-  "resolutions": {
-    "typescript": "~6.0"
-  },
   "engines": {
     "node": ">=24.11.0"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@11.0.8"
 }
