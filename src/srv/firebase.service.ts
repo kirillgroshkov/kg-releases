@@ -9,6 +9,7 @@ import { analyticsService, mp } from '@/srv/analytics.service'
 import type { BackendResponse } from '@/srv/model'
 import { releasesService } from '@/srv/releases.service'
 import { useStore } from '@/store'
+
 export type { UserInfo }
 
 const USER_FIELDS: (keyof UserInfo)[] = ['uid', 'displayName', 'email', 'photoURL']

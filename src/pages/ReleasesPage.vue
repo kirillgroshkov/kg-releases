@@ -184,8 +184,7 @@ function descrClick($event: MouseEvent): void {
                 <pre>
   Last updated: {{ unixtimePretty(store.releasesUpdaterLastFinished) }}
   Starred repos: {{ store.userFM.starredReposCount }}
-              </pre
-                >
+              </pre>
               </td>
               <td style="text-align: right; padding-right: 10px">
                 <v-btn

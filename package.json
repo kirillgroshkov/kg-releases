@@ -22,7 +22,7 @@
     "@sentry/vue": "^10",
     "@vueuse/core": "^14",
     "firebase": "^12",
-    "pinia": "^3",
+    "pinia": "^4",
     "tslib": "^2",
     "vue": "^3",
     "vue-router": "^5",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@naturalcycles/dev-lib": "^20",
     "@naturalcycles/nodejs-lib": "^15",
-    "@types/node": "^25",
+    "@types/node": "^26",
     "@typescript/native-preview": "beta",
     "@vitejs/plugin-vue": "^6",
     "husky": "^9",
@@ -44,7 +44,7 @@
     "vue-tsc": "^3"
   },
   "engines": {
-    "node": ">=24.11.0"
+    "node": ">=24.15.0"
   },
-  "packageManager": "pnpm@11.0.8"
+  "packageManager": "pnpm@11.17.0"
 }
