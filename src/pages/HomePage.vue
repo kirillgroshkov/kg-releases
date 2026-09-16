@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { withProgress } from '@/decorators/decorators'
-import { router } from '@/router'
-import { analyticsService } from '@/srv/analytics.service'
-import { firebaseService } from '@/srv/firebase.service'
+import { withProgress } from '#src/decorators/decorators.js'
+import { router } from '#src/router.js'
+import { analyticsService } from '#src/srv/analytics.service.js'
+import { firebaseService } from '#src/srv/firebase.service.js'
 
 async function login(): Promise<void> {
   await withProgress(async () => {

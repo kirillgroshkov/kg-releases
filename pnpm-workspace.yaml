@@ -9,6 +9,7 @@ minimumReleaseAgeExclude:
   - oxlint-tsgolint
   - '@oxlint/*'
 
+optimisticRepeatInstall: false
 overrides:
   typescript: ~6.0
 
@@ -25,6 +26,7 @@ allowBuilds:
   protobufjs: false
 
 trustLockfile: true
+trustPolicyExcludePrune: true
 trustPolicy: no-downgrade
 
 update:

@@ -1,8 +1,8 @@
 import type { NavigationGuard } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { bootstrapDone } from '@/bootstrapDone'
-import { analyticsService } from '@/srv/analytics.service'
-import { useStore } from '@/store'
+import { bootstrapDone } from '#src/bootstrapDone.js'
+import { analyticsService } from '#src/srv/analytics.service.js'
+import { useStore } from '#src/store.js'
 
 const loggedInGuard: NavigationGuard = () => {
   const u = useStore().user

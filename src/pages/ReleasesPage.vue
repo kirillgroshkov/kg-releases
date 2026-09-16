@@ -5,11 +5,11 @@ import type { LocalDate } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
-import { withProgress } from '@/decorators/decorators'
-import { timeHM, unixtimePretty } from '@/filters/filters'
-import type { Release, ReleasesByDay } from '@/srv/model'
-import { releasesService } from '@/srv/releases.service'
-import { useStore } from '@/store'
+import { withProgress } from '#src/decorators/decorators.js'
+import { timeHM, unixtimePretty } from '#src/filters/filters.js'
+import type { Release, ReleasesByDay } from '#src/srv/model.js'
+import { releasesService } from '#src/srv/releases.service.js'
+import { useStore } from '#src/store.js'
 
 interface ReleaseGroup {
   repo: string

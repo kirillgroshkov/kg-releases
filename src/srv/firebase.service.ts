@@ -3,12 +3,12 @@ import { _pick } from '@naturalcycles/js-lib/object'
 import { pDefer } from '@naturalcycles/js-lib/promise'
 import type { User } from '@sentry/vue'
 import type { Auth, UserInfo } from 'firebase/auth'
-import { withProgress } from '@/decorators/decorators'
-import { sentry } from '@/error'
-import { analyticsService, mp } from '@/srv/analytics.service'
-import type { BackendResponse } from '@/srv/model'
-import { releasesService } from '@/srv/releases.service'
-import { useStore } from '@/store'
+import { withProgress } from '#src/decorators/decorators.js'
+import { sentry } from '#src/error.js'
+import { analyticsService, mp } from '#src/srv/analytics.service.js'
+import type { BackendResponse } from '#src/srv/model.js'
+import { releasesService } from '#src/srv/releases.service.js'
+import { useStore } from '#src/store.js'
 
 export type { UserInfo }
 

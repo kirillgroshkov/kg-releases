@@ -1,14 +1,10 @@
 {
   "extends": "@naturalcycles/dev-lib/cfg/tsconfig.frontend.json",
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
     "noEmit": true,
     "sourceMap": true,
     "outDir": "dist/tsc",
-    "rootDir": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "rootDir": "."
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"]
 }

@@ -1,6 +1,6 @@
 import type { AnyObject } from '@naturalcycles/js-lib/types'
 // import mixpanel from 'mixpanel-browser'
-import { prod } from '@/env'
+import { prod } from '#src/env.js'
 // let mp = mixpanel
 let mp = {} as any
 

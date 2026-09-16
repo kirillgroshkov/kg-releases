@@ -43,8 +43,12 @@
     "vite-plugin-vuetify": "^2",
     "vue-tsc": "^3"
   },
+  "imports": {
+    "#src/*.js": "./src/*.ts",
+    "#src/*": "./src/*"
+  },
   "engines": {
     "node": ">=24.15.0"
   },
-  "packageManager": "pnpm@11.17.0"
+  "packageManager": "pnpm@12.4.2"
 }

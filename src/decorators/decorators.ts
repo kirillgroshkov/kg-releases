@@ -1,6 +1,6 @@
 import type { AnyFunction } from '@naturalcycles/js-lib/types'
-import { errorDialog } from '@/error'
-import { useStore } from '@/store'
+import { errorDialog } from '#src/error.js'
+import { useStore } from '#src/store.js'
 
 const catchFn = ({ err }: { err: any }): void => errorDialog(err)
 
