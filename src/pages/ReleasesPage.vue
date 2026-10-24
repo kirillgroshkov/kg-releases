@@ -177,6 +177,19 @@ function descrClick($event: MouseEvent): void {
   <div>
     <div>
       <div class="container releases">
+        <v-alert
+          v-if="store.showScanningResumed"
+          type="info"
+          variant="tonal"
+          closable
+          title="Welcome back!"
+          style="max-width: 500px; margin-bottom: 12px"
+          @click:close="store.dismissScanningResumed()"
+        >
+          Scanning of your starred repos was paused while you were away (no visits in 30+ days). It
+          is now resumed: missed releases will show up here within minutes.
+        </v-alert>
+
         <table style="width: 100%; max-width: 500px">
           <tbody>
             <tr>

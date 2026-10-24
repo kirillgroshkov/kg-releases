@@ -69,4 +69,8 @@ export interface BackendResponse {
   userFM?: UserFM
   releases?: Release[]
   releasesUpdaterLastFinished?: UnixTimestamp
+  /**
+   * Present if user's scanning was paused due to inactivity, and was recently resumed.
+   */
+  scanningResumedAt?: UnixTimestamp
 }

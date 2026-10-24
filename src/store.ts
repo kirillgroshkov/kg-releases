@@ -13,6 +13,11 @@ export interface GlobalState {
   userFM: UserFM
   ghostMode: boolean
   releasesUpdaterLastFinished?: UnixTimestamp
+  scanningResumedAt?: UnixTimestamp
+  /**
+   * The "scanning resumed" message is shown until dismissed.
+   */
+  scanningResumedDismissedAt?: UnixTimestamp
   // rateLimit: RateLimit
   lastStarred: string[]
   // starredReposNumber: number
@@ -36,7 +41,13 @@ function getInitialState(): GlobalState {
   }
 }
 
-const persistKeys: (keyof GlobalState)[] = ['counter', 'releases', 'starredRepos', 'user']
+const persistKeys: (keyof GlobalState)[] = [
+  'counter',
+  'releases',
+  'starredRepos',
+  'user',
+  'scanningResumedDismissedAt',
+]
 
 const LS_ID = 'state'
 
@@ -73,6 +84,10 @@ export const useStore = defineStore('main', {
         .sort()
       return days[0] || null
     },
+
+    showScanningResumed: (state): boolean =>
+      !!state.scanningResumedAt &&
+      state.scanningResumedAt > (state.scanningResumedDismissedAt || 0),
 
     getReleasesCount: state => (): number => {
       return Object.keys(state.releases).length
@@ -114,7 +129,7 @@ export const useStore = defineStore('main', {
 
     onBackendResponse(br: BackendResponse = {}): void {
       console.log('onBackendResponse', br)
-      const { userFM, releasesUpdaterLastFinished } = br
+      const { userFM, releasesUpdaterLastFinished, scanningResumedAt } = br
 
       if (userFM) {
         this.userFM = userFM
@@ -123,6 +138,14 @@ export const useStore = defineStore('main', {
       if (releasesUpdaterLastFinished) {
         this.releasesUpdaterLastFinished = releasesUpdaterLastFinished
       }
+
+      if (scanningResumedAt) {
+        this.scanningResumedAt = scanningResumedAt
+      }
+    },
+
+    dismissScanningResumed(): void {
+      this.scanningResumedDismissedAt = localTime.nowUnix()
     },
   },
 })
