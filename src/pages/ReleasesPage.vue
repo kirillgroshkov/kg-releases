@@ -6,10 +6,20 @@ import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '#src/decorators/decorators.js'
+import { isGithubStarsNotConnectedError } from '#src/error.js'
 import { timeHM, unixtimePretty } from '#src/filters/filters.js'
+import { githubStarsService } from '#src/srv/githubStars.service.js'
 import type { Release, ReleasesByDay } from '#src/srv/model.js'
 import { releasesService } from '#src/srv/releases.service.js'
 import { useStore } from '#src/store.js'
+
+interface UnstarDialog {
+  repoFullName: string
+  /**
+   * True if the "stars" GitHub App needs to be connected first.
+   */
+  needsConnect: boolean
+}
 
 interface ReleaseGroup {
   repo: string
@@ -26,6 +36,7 @@ const dayLast = ref<IsoDate | null>('' as IsoDate)
 const dayLoading = ref<IsoDate>('' as IsoDate)
 const dayMax = ref<IsoDate>('' as IsoDate)
 const releasesByDay = ref<ReleasesByDay>({})
+const unstarDialog = ref<UnstarDialog | null>(null)
 
 // const dayNext = computed((): IsoDate => {
 //   if (!dayLast.value) return ''
@@ -164,7 +175,34 @@ function toggleClick(id: string, _$event: MouseEvent): void {
 }
 
 function unstarClick(repoFullName: string): void {
-  globalThis.alert(`unstar ${repoFullName}: will be implemented later`)
+  unstarDialog.value = { repoFullName, needsConnect: false }
+}
+
+async function unstarConfirm(): Promise<void> {
+  const dialog = unstarDialog.value!
+
+  if (dialog.needsConnect) {
+    // Redirects to GitHub, the unstar is completed on /github-callback
+    await githubStarsService.connect(dialog.repoFullName)
+    return
+  }
+
+  await withProgress(async () => {
+    try {
+      await releasesService.unstarRepo(dialog.repoFullName)
+    } catch (err) {
+      if (isGithubStarsNotConnectedError(err)) {
+        // Keep the dialog open, now asking to connect the GitHub App
+        dialog.needsConnect = true
+        return
+      }
+      unstarDialog.value = null
+      throw err
+    }
+
+    unstarDialog.value = null
+    releasesByDay.value = store.getReleasesByDay()
+  })
 }
 
 function descrClick($event: MouseEvent): void {
@@ -466,6 +504,33 @@ function descrClick($event: MouseEvent): void {
         </div>
       </div>
     </div>
+
+    <v-dialog
+      :model-value="!!unstarDialog"
+      max-width="400"
+      @update:model-value="unstarDialog = null"
+    >
+      <v-card
+        v-if="unstarDialog"
+        :title="unstarDialog.needsConnect ? 'Connect GitHub' : 'Unstar repo'"
+      >
+        <v-card-text v-if="unstarDialog.needsConnect">
+          To unstar repos, Releases needs permission to manage your GitHub stars. You'll be
+          redirected to GitHub to approve the Releases app, which can only star and unstar repos.
+        </v-card-text>
+        <v-card-text v-else>
+          Unstar <b>{{ unstarDialog.repoFullName }}</b> on GitHub? Its releases will no longer show
+          up here.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn :disabled="store.ghostMode" @click="unstarDialog = null">Cancel</v-btn>
+          <v-btn color="primary" :disabled="store.ghostMode" @click="unstarConfirm()">
+            {{ unstarDialog.needsConnect ? 'Connect GitHub' : 'Unstar' }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 

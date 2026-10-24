@@ -6,8 +6,7 @@ import type { Auth, UserInfo } from 'firebase/auth'
 import { withProgress } from '#src/decorators/decorators.js'
 import { sentry } from '#src/error.js'
 import { analyticsService, mp } from '#src/srv/analytics.service.js'
-import type { BackendResponse } from '#src/srv/model.js'
-import { releasesService } from '#src/srv/releases.service.js'
+import type { AuthInput } from '#src/srv/model.js'
 import { useStore } from '#src/store.js'
 
 export type { UserInfo }
@@ -46,7 +45,10 @@ class FirebaseService {
     return auth
   }
 
-  async login(): Promise<BackendResponse> {
+  /**
+   * Returns AuthInput, to be passed to the Backend (releasesService.auth).
+   */
+  async signInWithGithub(): Promise<AuthInput> {
     const auth = await this.getAuth()
     const { signInWithPopup, getAdditionalUserInfo, GithubAuthProvider } =
       await import('firebase/auth')
@@ -61,13 +63,23 @@ class FirebaseService {
     const credential = GithubAuthProvider.credentialFromResult(result)!
     const additionalUserInfo = getAdditionalUserInfo(result)!
 
-    const br = await releasesService.auth({
+    return {
       username: additionalUserInfo.username!,
       accessToken: credential.accessToken!,
       idToken,
-    })
+    }
+  }
 
-    return br
+  /**
+   * Updates the idToken in the store with a fresh (non-expired) one.
+   * Must be called before calling "protected" Backend endpoints, which verify the idToken.
+   */
+  async refreshIdToken(): Promise<void> {
+    const auth = await this.getAuth()
+    await auth.authStateReady()
+    // getIdToken() returns the cached token, or a new one if it's expired
+    const idToken = await auth.currentUser?.getIdToken()
+    useStore().user.idToken = idToken
   }
 
   async logout(): Promise<void> {

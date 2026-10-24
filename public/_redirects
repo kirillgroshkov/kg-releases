@@ -14,3 +14,4 @@ http://pwa--releases.netlify.app/* https://pwa--releases.netlify.app/:splat 301!
 /releases /index.html 200
 /projects/* /index.html 200
 /settings /index.html 200
+/github-callback /index.html 200

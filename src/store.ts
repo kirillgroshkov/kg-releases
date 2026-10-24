@@ -113,6 +113,13 @@ export const useStore = defineStore('main', {
       }
     },
 
+    removeRepoReleases(repoFullName: string): void {
+      this.releases = _by(
+        _stringMapValues(this.releases).filter(r => r.repoFullName !== repoFullName),
+        r => r.id,
+      )
+    },
+
     cleanAfterLastDay(lastDay: string): void {
       const releases: { [id: string]: Release } = {}
 

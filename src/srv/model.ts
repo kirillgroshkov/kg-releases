@@ -43,6 +43,17 @@ export interface Repo {
   starredAt: number
 }
 
+/**
+ * Client ID of the "stars" GitHub App, which only has the "Starring" permission.
+ * Connected on demand (on first unstar), not at login.
+ */
+export const GITHUB_STARS_APP_CLIENT_ID = 'Iv23liOSIla7gfRRN921'
+
+/**
+ * Backend ErrorData.code, which means that the "stars" GitHub App needs to be connected (again).
+ */
+export const GITHUB_STARS_NOT_CONNECTED = 'GITHUB_STARS_NOT_CONNECTED'
+
 export interface AuthInput {
   username: string
   accessToken: string

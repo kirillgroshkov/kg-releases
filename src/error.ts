@@ -1,12 +1,18 @@
+import { HttpRequestError } from '@naturalcycles/js-lib/error'
 import { _stringify } from '@naturalcycles/js-lib/string'
 import * as sentry from '@sentry/vue'
 import type { App } from 'vue'
 import { prod } from '#src/env.js'
+import { GITHUB_STARS_NOT_CONNECTED } from '#src/srv/model.js'
 
 export function errorDialog(err: any): void {
   console.error(err)
   sentry.captureException(err)
   alert(_stringify(err))
+}
+
+export function isGithubStarsNotConnectedError(err: unknown): boolean {
+  return err instanceof HttpRequestError && err.cause.data.code === GITHUB_STARS_NOT_CONNECTED
 }
 
 export function initSentry(app: App): void {

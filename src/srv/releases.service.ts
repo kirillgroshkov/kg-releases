@@ -1,5 +1,6 @@
 import { _Memo } from '@naturalcycles/js-lib/decorators'
 import { api } from '#src/srv/api.service.js'
+import { firebaseService } from '#src/srv/firebase.service.js'
 import type { AuthInput, BackendResponse, Release, Repo, UserSettings } from '#src/srv/model.js'
 import { useStore } from '#src/store.js'
 
@@ -35,6 +36,10 @@ class ReleasesService {
     return await api.get<Release[]>(`repos/${repoFullName}/releases/fetch`)
   }
 
+  async login(): Promise<BackendResponse> {
+    return await this.auth(await firebaseService.signInWithGithub())
+  }
+
   async auth(json: AuthInput): Promise<BackendResponse> {
     const br = await api.post<BackendResponse>(`auth`, {
       json,
@@ -47,11 +52,27 @@ class ReleasesService {
   }
 
   async saveUserSettings(json: UserSettings): Promise<BackendResponse> {
+    await firebaseService.refreshIdToken() // protected endpoint
     const br = await api.put<BackendResponse>(`userSettings`, {
       json,
     })
 
     useStore().onBackendResponse(br)
+
+    return br
+  }
+
+  /**
+   * Unstars the repo on GitHub (for real).
+   * Throws error with code GITHUB_STARS_NOT_CONNECTED, if githubStarsService.connect is needed first.
+   */
+  async unstarRepo(repoFullName: string): Promise<BackendResponse> {
+    await firebaseService.refreshIdToken() // protected endpoint
+    const br = await api.delete<BackendResponse>(`starred/${repoFullName}`)
+
+    const store = useStore()
+    store.onBackendResponse(br)
+    store.removeRepoReleases(repoFullName)
 
     return br
   }

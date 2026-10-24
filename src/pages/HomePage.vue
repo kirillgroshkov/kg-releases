@@ -2,12 +2,12 @@
 import { withProgress } from '#src/decorators/decorators.js'
 import { router } from '#src/router.js'
 import { analyticsService } from '#src/srv/analytics.service.js'
-import { firebaseService } from '#src/srv/firebase.service.js'
+import { releasesService } from '#src/srv/releases.service.js'
 
 async function login(): Promise<void> {
   await withProgress(async () => {
     analyticsService.event('loginClick')
-    const { newUser } = await firebaseService.login()
+    const { newUser } = await releasesService.login()
     if (newUser) {
       alert(
         'Welcome to Releases!\nDepending on the number of stars it may take few minutes to import your starred repos and scan them.',

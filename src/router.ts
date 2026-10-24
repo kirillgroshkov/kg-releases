@@ -42,6 +42,11 @@ export const router = createRouter({
     //   beforeEnter: loggedInGuard,
     // },
     {
+      path: '/github-callback',
+      component: () => import('./pages/GithubCallbackPage.vue'),
+      beforeEnter: loggedInGuard,
+    },
+    {
       path: '/settings',
       component: () => import('./pages/SettingsPage.vue'),
       beforeEnter: loggedInGuard,
@@ -55,5 +60,6 @@ router.beforeEach(async () => {
 })
 
 router.afterEach(to => {
-  analyticsService.pageView(to.fullPath)
+  // Query of /github-callback has OAuth `code` and `state`, which shouldn't go to analytics
+  analyticsService.pageView(to.path === '/github-callback' ? to.path : to.fullPath)
 })
