@@ -7,6 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "upd": "pnpm up --no-save",
+    "upd2": "rm -rf node_modules && rm pnpm-lock.yaml && pnpm up --no-save",
     "build": "vite build",
     "test": "dev-lib test",
     "lint": "dev-lib lint",
@@ -50,5 +51,5 @@
   "engines": {
     "node": ">=24.15.0"
   },
-  "packageManager": "pnpm@12.14.0"
+  "packageManager": "pnpm@12.15.0"
 }
