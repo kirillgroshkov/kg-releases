@@ -47,12 +47,20 @@ class FirebaseService {
 
   /**
    * Returns AuthInput, to be passed to the Backend (releasesService.auth).
+   *
+   * Extra scopes can be requested on demand (e.g `public_repo` to manage stars).
+   * GitHub remembers granted scopes, so later logins without them still get a token with them.
+   *
+   * Should be called directly from a click handler, otherwise the popup can be blocked.
    */
-  async signInWithGithub(): Promise<AuthInput> {
+  async signInWithGithub(scopes: string[] = []): Promise<AuthInput> {
     const auth = await this.getAuth()
     const { signInWithPopup, getAdditionalUserInfo, GithubAuthProvider } =
       await import('firebase/auth')
     const githubAuthProvider = new GithubAuthProvider()
+    for (const scope of scopes) {
+      githubAuthProvider.addScope(scope)
+    }
 
     const result = await signInWithPopup(auth, githubAuthProvider)
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)

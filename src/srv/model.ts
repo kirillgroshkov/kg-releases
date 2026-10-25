@@ -44,15 +44,15 @@ export interface Repo {
 }
 
 /**
- * Client ID of the "stars" GitHub App, which only has the "Starring" permission.
- * Connected on demand (on first unstar), not at login.
+ * GitHub OAuth scope, required to star/unstar repos (GitHub has no narrower scope for stars).
+ * Requested on demand (on first unstar), not at login.
  */
-export const GITHUB_STARS_APP_CLIENT_ID = 'Iv23liOSIla7gfRRN921'
+export const GITHUB_STARS_SCOPE = 'public_repo'
 
 /**
- * Backend ErrorData.code, which means that the "stars" GitHub App needs to be connected (again).
+ * Backend ErrorData.code, which means that GITHUB_STARS_SCOPE needs to be granted (or re-granted).
  */
-export const GITHUB_STARS_NOT_CONNECTED = 'GITHUB_STARS_NOT_CONNECTED'
+export const GITHUB_INSUFFICIENT_SCOPE = 'GITHUB_INSUFFICIENT_SCOPE'
 
 export interface AuthInput {
   username: string

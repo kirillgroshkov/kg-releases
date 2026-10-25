@@ -3,7 +3,7 @@ import { _stringify } from '@naturalcycles/js-lib/string'
 import * as sentry from '@sentry/vue'
 import type { App } from 'vue'
 import { prod } from '#src/env.js'
-import { GITHUB_STARS_NOT_CONNECTED } from '#src/srv/model.js'
+import { GITHUB_INSUFFICIENT_SCOPE } from '#src/srv/model.js'
 
 export function errorDialog(err: any): void {
   console.error(err)
@@ -11,8 +11,8 @@ export function errorDialog(err: any): void {
   alert(_stringify(err))
 }
 
-export function isGithubStarsNotConnectedError(err: unknown): boolean {
-  return err instanceof HttpRequestError && err.cause.data.code === GITHUB_STARS_NOT_CONNECTED
+export function isGithubInsufficientScopeError(err: unknown): boolean {
+  return err instanceof HttpRequestError && err.cause.data.code === GITHUB_INSUFFICIENT_SCOPE
 }
 
 export function initSentry(app: App): void {

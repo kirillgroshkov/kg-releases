@@ -1,6 +1,7 @@
 import { _Memo } from '@naturalcycles/js-lib/decorators'
 import { api } from '#src/srv/api.service.js'
 import { firebaseService } from '#src/srv/firebase.service.js'
+import { GITHUB_STARS_SCOPE } from '#src/srv/model.js'
 import type { AuthInput, BackendResponse, Release, Repo, UserSettings } from '#src/srv/model.js'
 import { useStore } from '#src/store.js'
 
@@ -40,6 +41,14 @@ class ReleasesService {
     return await this.auth(await firebaseService.signInWithGithub())
   }
 
+  /**
+   * Re-login with GITHUB_STARS_SCOPE, which updates the accessToken in the Backend.
+   * Should be called directly from a click handler, otherwise the popup can be blocked.
+   */
+  async grantStarsPermission(): Promise<void> {
+    await this.auth(await firebaseService.signInWithGithub([GITHUB_STARS_SCOPE]))
+  }
+
   async auth(json: AuthInput): Promise<BackendResponse> {
     const br = await api.post<BackendResponse>(`auth`, {
       json,
@@ -64,7 +73,7 @@ class ReleasesService {
 
   /**
    * Unstars the repo on GitHub (for real).
-   * Throws error with code GITHUB_STARS_NOT_CONNECTED, if githubStarsService.connect is needed first.
+   * Throws error with code GITHUB_INSUFFICIENT_SCOPE, if grantStarsPermission is needed first.
    */
   async unstarRepo(repoFullName: string): Promise<BackendResponse> {
     await firebaseService.refreshIdToken() // protected endpoint

@@ -6,9 +6,8 @@ import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { useEventListener } from '@vueuse/core'
 import { computed, onMounted, ref } from 'vue'
 import { withProgress } from '#src/decorators/decorators.js'
-import { isGithubStarsNotConnectedError } from '#src/error.js'
+import { isGithubInsufficientScopeError } from '#src/error.js'
 import { timeHM, unixtimePretty } from '#src/filters/filters.js'
-import { githubStarsService } from '#src/srv/githubStars.service.js'
 import type { Release, ReleasesByDay } from '#src/srv/model.js'
 import { releasesService } from '#src/srv/releases.service.js'
 import { useStore } from '#src/store.js'
@@ -16,9 +15,9 @@ import { useStore } from '#src/store.js'
 interface UnstarDialog {
   repoFullName: string
   /**
-   * True if the "stars" GitHub App needs to be connected first.
+   * True if the `public_repo` scope needs to be granted first.
    */
-  needsConnect: boolean
+  needsPermission: boolean
 }
 
 interface ReleaseGroup {
@@ -37,6 +36,7 @@ const dayLoading = ref<IsoDate>('' as IsoDate)
 const dayMax = ref<IsoDate>('' as IsoDate)
 const releasesByDay = ref<ReleasesByDay>({})
 const unstarDialog = ref<UnstarDialog | null>(null)
+const needsPermission = computed(() => !!unstarDialog.value?.needsPermission)
 
 // const dayNext = computed((): IsoDate => {
 //   if (!dayLast.value) return ''
@@ -175,25 +175,25 @@ function toggleClick(id: string, _$event: MouseEvent): void {
 }
 
 function unstarClick(repoFullName: string): void {
-  unstarDialog.value = { repoFullName, needsConnect: false }
+  unstarDialog.value = { repoFullName, needsPermission: false }
+}
+
+function closeUnstarDialog(): void {
+  unstarDialog.value = null
 }
 
 async function unstarConfirm(): Promise<void> {
   const dialog = unstarDialog.value!
 
-  if (dialog.needsConnect) {
-    // Redirects to GitHub, the unstar is completed on /github-callback
-    await githubStarsService.connect(dialog.repoFullName)
-    return
-  }
-
   await withProgress(async () => {
     try {
+      // GitHub popup must be opened right in the click handler, otherwise the browser can block it
+      if (dialog.needsPermission) await releasesService.grantStarsPermission()
       await releasesService.unstarRepo(dialog.repoFullName)
     } catch (err) {
-      if (isGithubStarsNotConnectedError(err)) {
-        // Keep the dialog open, now asking to connect the GitHub App
-        dialog.needsConnect = true
+      if (isGithubInsufficientScopeError(err)) {
+        // Keep the dialog open, now asking to grant the permission (with a new click)
+        dialog.needsPermission = true
         return
       }
       unstarDialog.value = null
@@ -507,16 +507,33 @@ function descrClick($event: MouseEvent): void {
 
     <v-dialog
       :model-value="!!unstarDialog"
-      max-width="400"
-      @update:model-value="unstarDialog = null"
+      max-width="520"
+      @update:model-value="closeUnstarDialog()"
     >
       <v-card
         v-if="unstarDialog"
-        :title="unstarDialog.needsConnect ? 'Connect GitHub' : 'Unstar repo'"
+        :title="needsPermission ? 'GitHub permission needed' : 'Unstar repo'"
       >
-        <v-card-text v-if="unstarDialog.needsConnect">
-          To unstar repos, Releases needs permission to manage your GitHub stars. You'll be
-          redirected to GitHub to approve the Releases app, which can only star and unstar repos.
+        <v-card-text v-if="needsPermission" class="permissionText">
+          <p>
+            To unstar from here, Releases needs the <b>public_repo</b> permission on GitHub. GitHub
+            has no narrower permission for stars, and <b>public_repo</b> grants much more than that:
+          </p>
+          <ul>
+            <li>
+              Read <b>and write</b> access to all <b>public</b> repositories you have write access
+              to (yours and your organizations'): code, releases, settings, webhooks, collaborators.
+            </li>
+            <li>No access to private repositories.</li>
+            <li>
+              Organizations that restrict third-party apps stay blocked, unless an owner approves.
+            </li>
+          </ul>
+          <p>
+            The token is stored encrypted on the Releases server and only used to unstar. You can
+            revoke it anytime in GitHub → Settings → Applications.
+          </p>
+          <p>Not sure? Keep unstarring manually on GitHub instead, it's one click there.</p>
         </v-card-text>
         <v-card-text v-else>
           Unstar <b>{{ unstarDialog.repoFullName }}</b> on GitHub? Its releases will no longer show
@@ -524,9 +541,17 @@ function descrClick($event: MouseEvent): void {
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn :disabled="store.ghostMode" @click="unstarDialog = null">Cancel</v-btn>
+          <v-btn :disabled="store.ghostMode" @click="closeUnstarDialog()">Cancel</v-btn>
+          <v-btn
+            v-if="needsPermission"
+            :href="`https://github.com/${unstarDialog.repoFullName}`"
+            target="_blank"
+            @click="closeUnstarDialog()"
+          >
+            Unstar on GitHub
+          </v-btn>
           <v-btn color="primary" :disabled="store.ghostMode" @click="unstarConfirm()">
-            {{ unstarDialog.needsConnect ? 'Connect GitHub' : 'Unstar' }}
+            {{ needsPermission ? 'Grant public_repo' : 'Unstar' }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -577,6 +602,15 @@ function descrClick($event: MouseEvent): void {
 
 .container pre {
   margin: 0;
+}
+
+.permissionText p {
+  margin-bottom: 10px;
+}
+
+.permissionText ul {
+  margin: 0 0 10px;
+  padding-left: 20px;
 }
 
 @media (max-width: 800px) {
