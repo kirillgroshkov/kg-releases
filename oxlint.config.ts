@@ -7,5 +7,8 @@ export default defineOxlintConfig({
     'react/rules-of-hooks': 2,
     'react/exhaustive-deps': 2,
     'react/jsx-key': 2,
+    // React Compiler rule: forbids writing to values returned from hooks. Preact signals from
+    // useSignal() are written through `.value` by design, so it only produces false positives here.
+    'react/immutability': 0,
   },
 })
