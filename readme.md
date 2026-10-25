@@ -46,8 +46,8 @@ Feature requests, issues, PRs are welcome!
 
 # Stack (frontend)
 
-- Vue3
-- Vuetify3
+- Preact 11
+- @preact/signals
 - Typescript
 - Firebase Auth
 - Hosted at Netlify

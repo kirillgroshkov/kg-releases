@@ -1,0 +1,387 @@
+/* Tokens: light only; a dark block can redefine these later without touching rules */
+:root {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --fg: #212121;
+  --fg-muted: #888;
+  --bg: #fff;
+  --bg-hover: rgba(0, 0, 0, 0.05);
+  --bg-sub: rgba(0, 0, 0, 0.025);
+  --border: #e0e0e0;
+  --accent: #448aff;
+  --accent-fg: #fff;
+  --code-bg: #f0f0f0;
+  --radius: 6px;
+  --max-w: 500px;
+}
+
+/* Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  font: 14px/1.5 var(--font-sans);
+  color: var(--fg);
+  background: var(--bg);
+}
+img {
+  display: block;
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Header */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 8px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.topbar nav {
+  display: flex;
+  gap: 4px;
+}
+.topbar nav a {
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  color: var(--fg);
+}
+.topbar nav a:hover {
+  background: var(--bg-hover);
+  text-decoration: none;
+}
+.topbar nav a[aria-current] {
+  color: var(--accent);
+}
+.topbar .avatar {
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  border-radius: 50%;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover {
+  background: var(--bg-hover);
+  text-decoration: none;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.btn-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--accent), black 12%);
+}
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Layout */
+.container {
+  max-width: var(--max-w);
+  padding: 16px;
+}
+
+/* Releases list */
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.stats {
+  margin: 0;
+  font-family: var(--font-mono);
+}
+.rows {
+  /* full-bleed rows: the hover tint and separators run edge to edge, as before */
+  margin: 0 -16px;
+  padding-bottom: 80px;
+}
+.day {
+  margin: 12px 0 4px;
+  padding-left: 66px;
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--fg-muted);
+}
+.row {
+  border-top: 1px solid var(--border);
+}
+.row > summary {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 0 14px;
+  align-items: start;
+  padding: 8px 10px 8px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+.row > summary::-webkit-details-marker {
+  display: none;
+}
+@media (hover: hover) {
+  .row > summary:hover {
+    background: var(--bg-hover);
+  }
+}
+.row > summary:active {
+  background: var(--bg-hover);
+}
+.row .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+}
+.row .title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.row .time {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.row .chev {
+  width: 20px;
+  height: 20px;
+  opacity: 0.4;
+  transition: transform 0.15s;
+}
+.row[open] > summary .chev {
+  transform: rotate(180deg);
+}
+.row .body {
+  min-width: 0;
+  padding: 0 10px 10px 16px;
+  overflow-wrap: break-word;
+}
+.row.child {
+  background: var(--bg-sub);
+}
+.row.child > summary {
+  grid-template-columns: 32px 1fr auto;
+  padding: 4px 10px 4px 24px;
+  align-items: center;
+}
+.row.child .avatar {
+  width: 32px;
+  height: 32px;
+}
+.row.child .body {
+  padding-left: 24px;
+}
+.ver {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--fg-muted);
+  line-height: 1;
+}
+.group-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 4px 0 2px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+.empty {
+  margin: 0;
+  padding: 8px 16px;
+}
+.load-more {
+  padding: 16px;
+}
+
+/* Notice (scanning resumed) */
+.notice {
+  position: relative;
+  margin-bottom: 12px;
+  padding: 12px 44px 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 60%);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent), transparent 92%);
+}
+.notice-title {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+.notice .btn-icon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+/* Dialog */
+.dialog {
+  width: calc(100% - 32px);
+  max-width: 520px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  color: var(--fg);
+}
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+.dialog-body {
+  padding: 20px;
+}
+.dialog h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+.dialog p {
+  margin: 0 0 10px;
+}
+.dialog ul {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Forms (Settings) */
+.form1 {
+  max-width: 400px;
+}
+.field {
+  display: block;
+  margin-bottom: 16px;
+}
+.field span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+.field input {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+}
+.field input:disabled {
+  opacity: 0.6;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.form1 p {
+  margin: 12px 0;
+}
+hr {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Release notes (GitHub HTML), ported from global.scss `.md` */
+.md p {
+  margin: 14px 0;
+}
+.md a {
+  color: var(--accent);
+}
+.md ul {
+  margin: 14px 0;
+  padding-left: 24px;
+  /* list-style-type: disc; */
+}
+.md code {
+  padding: 0 3px 2px;
+  font-family: var(--font-mono);
+  background: var(--code-bg);
+  border-radius: 2px;
+}
+.md pre {
+  overflow-x: auto;
+}
+.md h1,
+.md h2 {
+  margin: 12px 0 6px;
+  font-size: 18px;
+}
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+  margin: 12px 0 6px;
+  font-size: 14px;
+}
+.md img {
+  max-width: 100%;
+}

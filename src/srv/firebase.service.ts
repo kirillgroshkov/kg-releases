@@ -1,13 +1,12 @@
 import { _Memo } from '@naturalcycles/js-lib/decorators'
 import { _pick } from '@naturalcycles/js-lib/object'
 import { pDefer } from '@naturalcycles/js-lib/promise'
-import type { User } from '@sentry/vue'
+import type { User } from '@sentry/browser'
 import type { Auth, UserInfo } from 'firebase/auth'
 import { withProgress } from '#src/decorators/decorators.js'
 import { sentry } from '#src/error.js'
-import { analyticsService, mp } from '#src/srv/analytics.service.js'
 import type { AuthInput } from '#src/srv/model.js'
-import { useStore } from '#src/store.js'
+import { store } from '#src/store.js'
 
 export type { UserInfo }
 
@@ -87,7 +86,7 @@ class FirebaseService {
     await auth.authStateReady()
     // getIdToken() returns the cached token, or a new one if it's expired
     const idToken = await auth.currentUser?.getIdToken()
-    useStore().user.idToken = idToken
+    store.user.value = { ...store.user.value, idToken }
   }
 
   async logout(): Promise<void> {
@@ -95,13 +94,11 @@ class FirebaseService {
       const auth = await this.getAuth()
       await auth.signOut()
       sentry.setUser({})
-      mp.reset()
     })
   }
 
   private async onAuthStateChanged(userInfo: UserInfo | null): Promise<void> {
     // console.log('onAuthStateChanged, user:', _deepCopy(_user))
-    const store = useStore()
 
     // debug!
     const qs = new URLSearchParams(location.search)
@@ -110,9 +107,8 @@ class FirebaseService {
       console.log('debug: ?uid')
 
       sentry.setUser({ uid })
-      analyticsService.setUserId(uid)
 
-      store.user = {
+      store.user.value = {
         uid,
       } as UserInfo
     } else if (userInfo) {
@@ -126,12 +122,11 @@ class FirebaseService {
       }
 
       sentry.setUser(user as User)
-      analyticsService.setUserId(user.uid)
 
-      store.user = user
+      store.user.value = user
     } else {
-      store.user = {} as any
-      store.userFM = { settings: {} } as any
+      store.user.value = {} as any
+      store.userFM.value = { settings: {} } as any
     }
 
     this.authStateChanged.resolve()

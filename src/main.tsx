@@ -1,20 +1,12 @@
-import 'vuetify/lib/styles/core.css'
-import './scss/global.scss'
-import { mdiCheckboxBlankOutline, mdiCheckboxMarked, mdiMinusBox } from '@mdi/js'
+import '#src/css/global.css'
 import { pDelay } from '@naturalcycles/js-lib/promise'
-import { createPinia } from 'pinia'
-import { createApp } from 'vue'
-import { createVuetify } from 'vuetify'
-import { mdi } from 'vuetify/iconsets/mdi-svg'
-import { bootstrapDone } from '#src/bootstrapDone.js'
+import { render } from 'preact'
+import { App } from '#src/App.jsx'
 import { prod } from '#src/env.js'
 import { errorDialog, initSentry } from '#src/error.js'
-import { router } from '#src/router.js'
-import { analyticsService } from '#src/srv/analytics.service.js'
 import { firebaseService } from '#src/srv/firebase.service.js'
 import { releasesService } from '#src/srv/releases.service.js'
-import { initStore, useStore } from '#src/store.js'
-import App from './App.vue'
+import { appReady, store } from '#src/store.js'
 
 // oxlint-disable-next-line unicorn/prefer-top-level-await
 void main()
@@ -22,39 +14,8 @@ void main()
 async function main(): Promise<void> {
   console.log({ prod })
 
-  const vuetify = createVuetify({
-    icons: {
-      defaultSet: 'mdi',
-      aliases: {
-        checkboxOn: mdiCheckboxMarked,
-        checkboxOff: mdiCheckboxBlankOutline,
-        checkboxIndeterminate: mdiMinusBox,
-      },
-      sets: {
-        mdi,
-      },
-    },
-    theme: {
-      defaultTheme: 'light',
-      themes: {
-        light: {
-          colors: {
-            primary: '#448aff',
-          },
-        },
-      },
-    },
-  })
-
-  const app = createApp(App).use(createPinia()).use(router).use(vuetify)
-
   // Error handlers go first
-  initSentry(app)
-
-  app.config.errorHandler = (err, _instance, info) => {
-    if (info) console.log('error info:', info)
-    errorDialog(err)
-  }
+  initSentry()
 
   globalThis.addEventListener('unhandledrejection', event => {
     console.log('unhandledRejection')
@@ -66,17 +27,10 @@ async function main(): Promise<void> {
     // otherwise - let it propagate
   })
 
-  initStore()
-
   // mount should happen after Sentry.init, according to Sentry
-  app.mount('#app')
+  render(<App />, document.querySelector('#app')!)
 
-  analyticsService.init()
-
-  document.body.classList.add('ontouchstart' in document.documentElement ? 'touch' : 'no-touch')
-
-  const store = useStore()
-  if (store.user.uid) {
+  if (store.user.value.uid) {
     void releasesService.init()
   } else {
     // only init releasesService if user is NOT logged in
@@ -86,7 +40,7 @@ async function main(): Promise<void> {
   }
 
   void hideLoader()
-  bootstrapDone.resolve()
+  appReady.value = true
 }
 
 async function hideLoader(): Promise<void> {
@@ -121,10 +75,3 @@ async function hideLoader(): Promise<void> {
 // w.throwError = () => {
 //   throw new Error('my error')
 // }
-
-declare global {
-  interface Window {
-    dataLayer: any[]
-    gtag: (...args: any[]) => void
-  }
-}

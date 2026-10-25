@@ -3,7 +3,7 @@ import { api } from '#src/srv/api.service.js'
 import { firebaseService } from '#src/srv/firebase.service.js'
 import { GITHUB_STARS_SCOPE } from '#src/srv/model.js'
 import type { AuthInput, BackendResponse, Release, Repo, UserSettings } from '#src/srv/model.js'
-import { useStore } from '#src/store.js'
+import { addReleases, onBackendResponse, removeRepoReleases, store } from '#src/store.js'
 
 class ReleasesService {
   async fetchReleases(minIncl: string, maxExcl = ''): Promise<BackendResponse> {
@@ -16,7 +16,7 @@ class ReleasesService {
       },
     })
 
-    useStore().addReleases(releases)
+    addReleases(releases)
 
     return {
       releases,
@@ -26,7 +26,7 @@ class ReleasesService {
   async fetchRepos(): Promise<void> {
     const starredRepos = await api.get<Repo[]>('repos')
 
-    useStore().starredRepos = starredRepos
+    store.starredRepos.value = starredRepos
   }
 
   async getReleasesByRepo(repoFullName: string): Promise<Release[]> {
@@ -55,7 +55,7 @@ class ReleasesService {
     })
     // console.log('auth', br)
 
-    useStore().onBackendResponse(br)
+    onBackendResponse(br)
 
     return br
   }
@@ -66,7 +66,7 @@ class ReleasesService {
       json,
     })
 
-    useStore().onBackendResponse(br)
+    onBackendResponse(br)
 
     return br
   }
@@ -79,9 +79,8 @@ class ReleasesService {
     await firebaseService.refreshIdToken() // protected endpoint
     const br = await api.delete<BackendResponse>(`starred/${repoFullName}`)
 
-    const store = useStore()
-    store.onBackendResponse(br)
-    store.removeRepoReleases(repoFullName)
+    onBackendResponse(br)
+    removeRepoReleases(repoFullName)
 
     return br
   }
@@ -90,7 +89,7 @@ class ReleasesService {
   async init(): Promise<BackendResponse> {
     const br = await api.get<BackendResponse>(`init`)
 
-    useStore().onBackendResponse(br)
+    onBackendResponse(br)
 
     return br
   }
