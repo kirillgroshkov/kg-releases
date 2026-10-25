@@ -90,10 +90,14 @@ async function main(): Promise<void> {
 }
 
 async function hideLoader(): Promise<void> {
-  const loader = document.querySelector('#loading0')!
+  const loader = document.querySelector('#loading0')
+  if (!loader) return
   // await pDelay(100)
-  loader.addEventListener('transitionend', () => loader.remove())
+  loader.addEventListener('transitionend', () => loader.remove(), { once: true })
   loader.classList.add('opacity0')
+  // Fallback: transitionend may never fire (e.g. background tab, cancelled transition),
+  // so don't rely on it alone. Fade lasts 100ms, so 200ms lets it finish normally.
+  setTimeout(() => loader.remove(), 200)
 }
 
 // Debug
