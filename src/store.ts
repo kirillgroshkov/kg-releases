@@ -1,172 +1,164 @@
 import { _by, _sortBy } from '@naturalcycles/js-lib/array'
 import { localTime } from '@naturalcycles/js-lib/datetime'
-import { _deepCopy, _pick } from '@naturalcycles/js-lib/object'
 import { _stringMapValues } from '@naturalcycles/js-lib/types'
 import type { IsoDate, StringMap, UnixTimestamp } from '@naturalcycles/js-lib/types'
-import { defineStore } from 'pinia'
+import { batch, computed, effect, signal } from '@preact/signals'
 import type { UserInfo } from '#src/srv/firebase.service.js'
 import type { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '#src/srv/model.js'
 
-export interface GlobalState {
+export type StoreUser = UserInfo & { idToken?: string }
+
+interface PersistedState {
   counter: number
-  user: UserInfo & { idToken?: string }
-  userFM: UserFM
-  ghostMode: boolean
-  releasesUpdaterLastFinished?: UnixTimestamp
-  scanningResumedAt?: UnixTimestamp
+  releases: StringMap<Release>
+  starredRepos: Repo[]
+  user: StoreUser
+  scanningResumedDismissedAt?: UnixTimestamp
+}
+
+const LS_ID = 'state'
+// `globalThis.localStorage?.` keeps the module importable in vitest (node env)
+const persisted: Partial<PersistedState> = JSON.parse(
+  globalThis.localStorage?.getItem(LS_ID) || '{}',
+)
+
+export const store = {
+  counter: signal(persisted.counter ?? 0),
+  user: signal<StoreUser>(persisted.user ?? ({} as StoreUser)),
+  userFM: signal<UserFM>({ settings: {} } as UserFM),
+  ghostMode: signal(false),
+  releasesUpdaterLastFinished: signal<UnixTimestamp | undefined>(undefined),
+  scanningResumedAt: signal<UnixTimestamp | undefined>(undefined),
   /**
    * The "scanning resumed" message is shown until dismissed.
    */
-  scanningResumedDismissedAt?: UnixTimestamp
+  scanningResumedDismissedAt: signal(persisted.scanningResumedDismissedAt),
   // rateLimit: RateLimit
-  lastStarred: string[]
+  lastStarred: signal<string[]>([]),
   // starredReposNumber: number
-  releases: StringMap<Release>
-  starredRepos: Repo[]
+  releases: signal<StringMap<Release>>(persisted.releases ?? {}),
+  starredRepos: signal<Repo[]>(persisted.starredRepos ?? []),
 }
 
-function getInitialState(): GlobalState {
-  return {
-    counter: 0,
-    user: {} as any,
-    userFM: {
-      settings: {},
-    } as any,
-    ghostMode: false,
-    // rateLimit: {} as any,
-    // starredReposNumber: 0,
-    releases: {},
-    lastStarred: [],
-    starredRepos: [],
+/** True once main() finished bootstrap; the router renders only after that. */
+export const appReady = signal(false)
+
+export const releasesByDay = computed((): ReleasesByDay => {
+  const m: ReleasesByDay = {}
+  _stringMapValues(store.releases.value).forEach(r => {
+    const day = localTime(r.published).toISODate()
+    m[day] ||= []
+    m[day].push(r)
+  })
+
+  // sort
+  Object.values(m).forEach(releases =>
+    _sortBy(releases, r => r.published, { mutate: true, dir: 'desc' }),
+  )
+
+  return m
+})
+
+export const releasesLastDay = computed((): IsoDate | null => {
+  const days = (_stringMapValues(store.releases.value) || [])
+    .map(r => localTime(r.published).toISODate())
+    .sort()
+  return days[0] || null
+})
+
+export const showScanningResumed = computed(
+  (): boolean =>
+    !!store.scanningResumedAt.value &&
+    store.scanningResumedAt.value > (store.scanningResumedDismissedAt.value || 0),
+)
+
+export const releasesCount = computed((): number => Object.keys(store.releases.value).length)
+
+export function addReleases(releases: Release[] = []): void {
+  store.releases.value = {
+    ...store.releases.value,
+    ..._by(releases, r => r.id),
   }
 }
 
-const persistKeys: (keyof GlobalState)[] = [
-  'counter',
-  'releases',
-  'starredRepos',
-  'user',
-  'scanningResumedDismissedAt',
-]
+export function removeRepoReleases(repoFullName: string): void {
+  store.releases.value = _by(
+    _stringMapValues(store.releases.value).filter(r => r.repoFullName !== repoFullName),
+    r => r.id,
+  )
+}
 
-const LS_ID = 'state'
+export function cleanAfterLastDay(lastDay: string): void {
+  const releases: { [id: string]: Release } = {}
 
-export const useStore = defineStore('main', {
-  state: () => {
-    const state: GlobalState = {
-      ...getInitialState(),
-      ...JSON.parse(localStorage.getItem(LS_ID) || '{}'),
+  _stringMapValues(store.releases.value).forEach(r => {
+    const day = localTime(r.published).toISODate()
+    if (day >= lastDay) {
+      // include, otherwise exclude
+      releases[r.id] = r
+    }
+  })
+
+  store.releases.value = releases
+}
+
+export function onBackendResponse(br: BackendResponse = {}): void {
+  console.log('onBackendResponse', br)
+  const { userFM, releasesUpdaterLastFinished, scanningResumedAt } = br
+
+  batch(() => {
+    if (userFM) {
+      store.userFM.value = userFM
     }
 
-    return state
-  },
+    if (releasesUpdaterLastFinished) {
+      store.releasesUpdaterLastFinished.value = releasesUpdaterLastFinished
+    }
 
-  getters: {
-    getReleasesByDay: state => (): ReleasesByDay => {
-      const m: ReleasesByDay = {}
-      _stringMapValues(state.releases).forEach(r => {
-        const day = localTime(r.published).toISODate()
-        m[day] ||= []
-        m[day].push(r)
-      })
+    if (scanningResumedAt) {
+      store.scanningResumedAt.value = scanningResumedAt
+    }
+  })
+}
 
-      // sort
-      Object.values(m).forEach(releases =>
-        _sortBy(releases, r => r.published, { mutate: true, dir: 'desc' }),
-      )
+export function dismissScanningResumed(): void {
+  store.scanningResumedDismissedAt.value = localTime.nowUnix()
+}
 
-      return m
-    },
+export function resetStore(): void {
+  batch(() => {
+    store.counter.value = 0
+    store.user.value = {} as StoreUser
+    store.userFM.value = { settings: {} } as UserFM
+    store.ghostMode.value = false
+    store.releasesUpdaterLastFinished.value = undefined
+    store.scanningResumedAt.value = undefined
+    store.scanningResumedDismissedAt.value = undefined
+    // rateLimit: {} as any,
+    // starredReposNumber: 0,
+    store.releases.value = {}
+    store.lastStarred.value = []
+    store.starredRepos.value = []
+  })
+}
 
-    getReleasesLastDay: state => (): IsoDate | null => {
-      const days = (_stringMapValues(state.releases) || [])
-        .map(r => localTime(r.published).toISODate())
-        .sort()
-      return days[0] || null
-    },
-
-    showScanningResumed: (state): boolean =>
-      !!state.scanningResumedAt &&
-      state.scanningResumedAt > (state.scanningResumedDismissedAt || 0),
-
-    getReleasesCount: state => (): number => {
-      return Object.keys(state.releases).length
-    },
-  },
-
-  actions: {
-    reset() {
-      Object.assign(this, getInitialState())
-    },
-
-    setUser(uid: string): void {
-      this.user = {
-        ...this.user,
-        uid,
-      }
-    },
-
-    addReleases(releases: Release[] = []): void {
-      this.releases = {
-        ...this.releases,
-        ..._by(releases, r => r.id),
-      }
-    },
-
-    removeRepoReleases(repoFullName: string): void {
-      this.releases = _by(
-        _stringMapValues(this.releases).filter(r => r.repoFullName !== repoFullName),
-        r => r.id,
-      )
-    },
-
-    cleanAfterLastDay(lastDay: string): void {
-      const releases: { [id: string]: Release } = {}
-
-      _stringMapValues(this.releases).forEach(r => {
-        const day = localTime(r.published).toISODate()
-        if (day >= lastDay) {
-          // include, otherwise exclude
-          releases[r.id] = r
-        }
-      })
-
-      this.releases = releases
-    },
-
-    onBackendResponse(br: BackendResponse = {}): void {
-      console.log('onBackendResponse', br)
-      const { userFM, releasesUpdaterLastFinished, scanningResumedAt } = br
-
-      if (userFM) {
-        this.userFM = userFM
-      }
-
-      if (releasesUpdaterLastFinished) {
-        this.releasesUpdaterLastFinished = releasesUpdaterLastFinished
-      }
-
-      if (scanningResumedAt) {
-        this.scanningResumedAt = scanningResumedAt
-      }
-    },
-
-    dismissScanningResumed(): void {
-      this.scanningResumedDismissedAt = localTime.nowUnix()
-    },
-  },
+// Persistence: replaces Pinia $subscribe. The effect re-runs whenever one of the five signals changes.
+let previousState = ''
+effect(() => {
+  const state: PersistedState = {
+    counter: store.counter.value,
+    releases: store.releases.value,
+    starredRepos: store.starredRepos.value,
+    user: store.user.value,
+    scanningResumedDismissedAt: store.scanningResumedDismissedAt.value,
+  }
+  const newState = JSON.stringify(state)
+  if (newState === previousState) return
+  previousState = newState
+  globalThis.localStorage?.setItem(LS_ID, newState)
+  console.log('state >> ls')
 })
 
-let previousState = ''
-
-export function initStore(): void {
-  const store = useStore()
-  store.$subscribe((_mutation, state) => {
-    const newState = JSON.stringify(_pick(state, persistKeys))
-    if (newState === previousState) return
-    previousState = newState
-    localStorage.setItem(LS_ID, newState)
-    console.log('state >> ls')
-  })
-  ;(globalThis as any)['state'] = () => console.log(_deepCopy(store.$state))
-}
+// Debug helper: `state()` in the console logs the current store
+;(globalThis as any)['state'] = () =>
+  console.log(Object.fromEntries(Object.entries(store).map(([k, s]) => [k, s.value])))

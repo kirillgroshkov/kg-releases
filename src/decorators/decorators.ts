@@ -1,18 +1,17 @@
 import type { AnyFunction } from '@naturalcycles/js-lib/types'
 import { errorDialog } from '#src/error.js'
-import { useStore } from '#src/store.js'
+import { store } from '#src/store.js'
 
 const catchFn = ({ err }: { err: any }): void => errorDialog(err)
 
 export async function withProgress(fn: AnyFunction): Promise<void> {
-  const store = useStore()
-  store.ghostMode = true
+  store.ghostMode.value = true
 
   try {
     await fn()
   } catch (err) {
     catchFn({ err })
   } finally {
-    store.ghostMode = false
+    store.ghostMode.value = false
   }
 }
