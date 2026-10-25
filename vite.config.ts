@@ -13,6 +13,12 @@ export default defineConfig({
     __RRWEB_EXCLUDE_SHADOW_DOM__: true,
     __SENTRY_EXCLUDE_REPLAY_WORKER__: true,
   },
+  // Explicit, although tsconfig already says so: @prefresh/vite derives the JSX runtime from
+  // `oxc.jsx` (or `esbuild.jsx`) only, and falls back to the classic `h()` runtime without it,
+  // which would break both dev and build ("h is not defined")
+  oxc: {
+    jsx: { runtime: 'automatic', importSource: 'preact' },
+  },
   plugins: [
     // prefresh types its result as Promise<PluginOption>, a nested Thenable that Vite 8's PluginOption
     // type rejects; Vite flattens it at runtime, so the cast only narrows the type
