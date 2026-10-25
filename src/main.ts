@@ -96,8 +96,10 @@ async function hideLoader(): Promise<void> {
   loader.addEventListener('transitionend', () => loader.remove(), { once: true })
   loader.classList.add('opacity0')
   // Fallback: transitionend may never fire (e.g. background tab, cancelled transition),
-  // so don't rely on it alone. Fade lasts 100ms, so 200ms lets it finish normally.
-  setTimeout(() => loader.remove(), 200)
+  // so don't rely on it alone. It's only a cleanup (pointer-events: none already unblocks clicks),
+  // so the delay is generous: the main thread is often busy rendering right after this call,
+  // which delays the start of the 100ms fade, and a short timer would cut it off.
+  setTimeout(() => loader.remove(), 2000)
 }
 
 // Debug
