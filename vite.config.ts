@@ -1,8 +1,8 @@
-import vue from '@vitejs/plugin-vue'
+import prefresh from '@prefresh/vite'
+import type { Plugin } from 'vite'
 import { defineConfig } from 'vite'
 // import { visualizer } from 'rollup-plugin-visualizer'
 import { analyzer } from 'vite-bundle-analyzer'
-import vuetify from 'vite-plugin-vuetify'
 
 // oxlint-disable-next-line import/no-default-export
 export default defineConfig({
@@ -13,9 +13,16 @@ export default defineConfig({
     __RRWEB_EXCLUDE_SHADOW_DOM__: true,
     __SENTRY_EXCLUDE_REPLAY_WORKER__: true,
   },
+  // Explicit, although tsconfig already says so: @prefresh/vite derives the JSX runtime from
+  // `oxc.jsx` (or `esbuild.jsx`) only, and falls back to the classic `h()` runtime without it,
+  // which would break both dev and build ("h is not defined")
+  oxc: {
+    jsx: { runtime: 'automatic', importSource: 'preact' },
+  },
   plugins: [
-    vue(),
-    vuetify(),
+    // prefresh types its result as Promise<PluginOption>, a nested Thenable that Vite 8's PluginOption
+    // type rejects; Vite flattens it at runtime, so the cast only narrows the type
+    prefresh() as Promise<Plugin>,
     analyzer({
       analyzerMode: 'static',
       fileName: 'stats.html',

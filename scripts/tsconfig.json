@@ -2,8 +2,6 @@
   "extends": "@naturalcycles/dev-lib/cfg/tsconfig.scripts.json",
   "compilerOptions": {
     "lib": ["esnext", "dom"]
-    // "baseUrl": "./",
-    // "outDir": "../dist"
   },
   "exclude": ["**/__exclude"]
 }

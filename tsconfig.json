@@ -4,7 +4,9 @@
     "noEmit": true,
     "sourceMap": true,
     "outDir": "dist/tsc",
-    "rootDir": "."
+    "rootDir": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts", "vitest.config.ts"]
 }

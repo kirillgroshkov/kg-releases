@@ -11,8 +11,7 @@
     "build": "vite build",
     "test": "dev-lib test",
     "lint": "dev-lib lint",
-    "bt": "dev-lib typecheck && vue-tsc --noEmit && pnpm build",
-    "check": "dev-lib lint && pnpm bt",
+    "check": "dev-lib check && vite build",
     "dev": "vite --port 4100 --open",
     "build-netlify": "vite build",
     "preview": "vite preview --open"
@@ -20,36 +19,34 @@
   "dependencies": {
     "@mdi/js": "^7",
     "@naturalcycles/js-lib": "^15",
-    "@sentry/vue": "^11",
-    "@vueuse/core": "^15",
+    "@preact/signals": "^2",
+    "@sentry/browser": "^11",
     "firebase": "^13",
-    "pinia": "^4",
-    "tslib": "^2",
-    "vue": "^3",
-    "vue-router": "^5",
-    "vuetify": "^4"
+    "preact": "^11",
+    "preact-iso": "^2",
+    "tslib": "^2"
   },
   "devDependencies": {
     "@naturalcycles/dev-lib": "^20",
     "@naturalcycles/nodejs-lib": "^15",
+    "@prefresh/core": "^1.5",
+    "@prefresh/utils": "^1.2",
+    "@prefresh/vite": "^4",
     "@types/node": "^26",
-    "@typescript/native-preview": "beta",
-    "@vitejs/plugin-vue": "^6",
     "husky": "^9",
-    "sass": "^1",
     "tsx": "^4",
-    "typescript": "~6.0",
+    "typescript": "^7",
     "vite": "^8",
     "vite-bundle-analyzer": "^1",
-    "vite-plugin-vuetify": "^2",
-    "vue-tsc": "^3"
+    "vitest": "^5"
   },
   "imports": {
     "#src/*.js": "./src/*.ts",
+    "#src/*.jsx": "./src/*.tsx",
     "#src/*": "./src/*"
   },
   "engines": {
-    "node": ">=24.15.0"
+    "node": ">=26.12.1"
   },
-  "packageManager": "pnpm@12.15.0"
+  "packageManager": "pnpm@12.17.0"
 }
