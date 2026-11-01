@@ -63,7 +63,6 @@ class FirebaseService {
 
     const result = await signInWithPopup(auth, githubAuthProvider)
     // const r = await firebase.auth!().signInWithRedirect(githubAuthProvider)
-    console.log(result)
     const idToken = await auth.currentUser!.getIdToken()
     // console.log('idToken', idToken)
 
