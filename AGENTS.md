@@ -24,6 +24,12 @@ dev-lib typecheck     # TypeScript check (tsc, covers .ts and .tsx)
 
 Always run `pnpm check` before handing over the work.
 
+## Git
+
+Never create commits or push unless explicitly asked.
+
+Never add Co-Authored-By Claude in the commit message.
+
 ## Code Style & Standards
 
 - **Performance:** All code must be performance-optimized by default.

@@ -3,7 +3,7 @@ import { pDelay } from '@naturalcycles/js-lib/promise'
 import { render } from 'preact'
 import { App } from '#src/App.jsx'
 import { prod } from '#src/env.js'
-import { errorDialog, initSentry } from '#src/error.js'
+import { errorDialog, initErrorHandlers } from '#src/error.js'
 import { firebaseService } from '#src/srv/firebase.service.js'
 import { releasesService } from '#src/srv/releases.service.js'
 import { appReady, store } from '#src/store.js'
@@ -15,7 +15,7 @@ async function main(): Promise<void> {
   console.log({ prod })
 
   // Error handlers go first
-  initSentry()
+  initErrorHandlers()
 
   globalThis.addEventListener('unhandledrejection', event => {
     console.log('unhandledRejection')
@@ -27,7 +27,7 @@ async function main(): Promise<void> {
     // otherwise - let it propagate
   })
 
-  // mount should happen after Sentry.init, according to Sentry
+  // mount should happen after the error handlers are set up (originally: after Sentry.init, according to Sentry)
   render(<App />, document.querySelector('#app')!)
 
   if (store.user.value.uid) {

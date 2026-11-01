@@ -1,10 +1,9 @@
 import { _Memo } from '@naturalcycles/js-lib/decorators'
 import { _pick } from '@naturalcycles/js-lib/object'
 import { pDefer } from '@naturalcycles/js-lib/promise'
-import type { User } from '@sentry/browser'
 import type { Auth, UserInfo } from 'firebase/auth'
 import { withProgress } from '#src/decorators/decorators.js'
-import { sentry } from '#src/error.js'
+import { setSentryUser } from '#src/error.js'
 import type { AuthInput } from '#src/srv/model.js'
 import { store } from '#src/store.js'
 
@@ -92,7 +91,7 @@ class FirebaseService {
     await withProgress(async () => {
       const auth = await this.getAuth()
       await auth.signOut()
-      sentry.setUser({})
+      setSentryUser({})
     })
   }
 
@@ -105,7 +104,7 @@ class FirebaseService {
     if (uid) {
       console.log('debug: ?uid')
 
-      sentry.setUser({ uid })
+      setSentryUser({ uid })
 
       store.user.value = {
         uid,
@@ -120,7 +119,11 @@ class FirebaseService {
         idToken,
       }
 
-      sentry.setUser(user as User)
+      // Without idToken: a bearer token shouldn't end up in Sentry
+      setSentryUser({
+        ..._pick(userInfo, ['uid', 'displayName', 'photoURL']),
+        email: userInfo.email ?? undefined,
+      })
 
       store.user.value = user
     } else {
