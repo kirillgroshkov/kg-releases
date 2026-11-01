@@ -1,26 +1,6 @@
 import { localTime } from '@naturalcycles/js-lib/datetime'
 import type { UnixTimestamp } from '@naturalcycles/js-lib/types'
 
-// Vue.filter('unixtimePretty', (v: number) => {
-//   if (!v) return ''
-//   return localTime(v).toPretty()
-// })
-//
-// Vue.filter('timePretty', (v: number) => {
-//   if (!v) return ''
-//   return localTime(v).toISOTime()
-// })
-//
-// Vue.filter('timeHM', (v: number) => {
-//   if (!v) return ''
-//   return localTime(v).toISOTime(false)
-// })
-//
-// Vue.filter('timeAgo', (v: number) => {
-//   if (!v) return ''
-//   return localTime(v).fromNow()
-// })
-
 export function unixtimePretty(v?: UnixTimestamp): string {
   if (!v) return ''
   return localTime(v).toPretty()

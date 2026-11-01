@@ -4,7 +4,7 @@ import * as sentry from '@sentry/browser'
 import { prod } from '#src/env.js'
 import { GITHUB_INSUFFICIENT_SCOPE } from '#src/srv/model.js'
 
-export function errorDialog(err: any): void {
+export function errorDialog(err: unknown): void {
   console.error(err)
   sentry.captureException(err)
   alert(_stringify(err))

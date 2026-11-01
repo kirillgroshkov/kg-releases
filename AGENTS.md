@@ -13,7 +13,6 @@ pnpm dev              # Vite dev server on port 4100, auto-opens browser
 pnpm build            # Production build → dist/ (also writes the bundle report dist/stats.html)
 pnpm lint             # Oxlint + oxfmt (via dev-lib)
 pnpm test             # Vitest unit tests (via dev-lib)
-pnpm bt               # Build test: typecheck + vite build
 pnpm check            # Check everything
 ```
 
@@ -53,6 +52,9 @@ function foo() {
 
 When changing code - DON'T remove pre-existing code comments, preserve them instead.
 
+Don't use props destructuring for function arguments. Declare a `Props` interface and destructure
+inside the function.
+
 ## Tech Stack
 
 - **Preact 11** with TSX function components and hooks (core `preact`, not `preact/compat`)
@@ -90,6 +92,14 @@ redirects logged-in users to `/releases`) and `loggedInGuard` (`/releases`, `/se
 guests to `/`). Guards read the user with `peek()`, so they run on navigation only (like the former
 `beforeEnter` guards), not reactively. `AppRouter` renders nothing until `appReady` is true.
 Navigation inside components: `const { route } = useLocation()`, then `route('/releases')`.
+
+### Components (`src/components/`)
+
+- `Icon.tsx` — SVG icon from an `@mdi/js` path
+- `NavLink.tsx` — header link. On the current page it renders without `href` (a non-focusable
+  placeholder link, you cannot navigate to the page you are on) with `aria-current="page"`. Plain
+  `<a>` tags already navigate client-side (`LocationProvider` intercepts the click), so prefer them
+  anywhere the active state is not needed.
 
 ### Pages (`src/pages/`)
 

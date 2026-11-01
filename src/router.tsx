@@ -54,14 +54,16 @@ function DefaultRoute(): null {
   return null
 }
 
-function Guard(props: {
+interface GuardProps {
   allow: boolean
   redirectTo: string
   name: string
   children: ComponentChildren
-}): JSX.Element | null {
-  const { route } = useLocation()
+}
+
+function Guard(props: GuardProps): JSX.Element | null {
   const { allow, redirectTo, name, children } = props
+  const { route } = useLocation()
   useEffect(() => {
     if (allow) return
     console.log(`GUARD: ${name}`)

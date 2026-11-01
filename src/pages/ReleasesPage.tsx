@@ -82,7 +82,7 @@ function Stats(): JSX.Element {
       <pre class="stats">{stats}</pre>
       <button
         type="button"
-        class="btn btn-primary"
+        class="btn btn-primary btn-lg"
         disabled={store.ghostMode.value}
         onClick={() => void reload()}
       >
@@ -92,7 +92,12 @@ function Stats(): JSX.Element {
   )
 }
 
-function Day({ day }: { day: IsoDate }): JSX.Element | null {
+interface DayProps {
+  day: IsoDate
+}
+
+function Day(props: DayProps): JSX.Element | null {
+  const { day } = props
   const groups = groupsByDay.value[day]
   if (!groups?.length) return null
 
@@ -111,7 +116,14 @@ function Day({ day }: { day: IsoDate }): JSX.Element | null {
   )
 }
 
-function ReleaseRow({ r, child = false }: { r: Release; child?: boolean }): JSX.Element {
+interface ReleaseRowProps {
+  r: Release
+  child?: boolean
+}
+
+function ReleaseRow(props: ReleaseRowProps): JSX.Element {
+  const { r, child = false } = props
+
   return (
     <details class={child ? 'row child' : 'row'}>
       <summary>
@@ -147,7 +159,12 @@ function ReleaseRow({ r, child = false }: { r: Release; child?: boolean }): JSX.
   )
 }
 
-function GroupRow({ group }: { group: ReleaseGroup }): JSX.Element {
+interface GroupRowProps {
+  group: ReleaseGroup
+}
+
+function GroupRow(props: GroupRowProps): JSX.Element {
+  const { group } = props
   const { releases } = group
 
   return (

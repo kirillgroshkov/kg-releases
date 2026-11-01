@@ -39,14 +39,14 @@ async function main(): Promise<void> {
     await Promise.race([firebaseService.authStateChanged, pDelay(10_000)])
   }
 
-  void hideLoader()
+  hideLoader()
   appReady.value = true
 }
 
-async function hideLoader(): Promise<void> {
+function hideLoader(): void {
   const loader = document.querySelector('#loading0')
   if (!loader) return
-  // await pDelay(100)
+
   loader.addEventListener('transitionend', () => loader.remove(), { once: true })
   loader.classList.add('opacity0')
   // Fallback: transitionend may never fire (e.g. background tab, cancelled transition),

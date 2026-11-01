@@ -1,4 +1,4 @@
-import { _by, _sortBy } from '@naturalcycles/js-lib/array'
+import { _by, _minOrUndefined, _sortBy } from '@naturalcycles/js-lib/array'
 import { localTime } from '@naturalcycles/js-lib/datetime'
 import { _stringMapValues } from '@naturalcycles/js-lib/types'
 import type { IsoDate, StringMap, UnixTimestamp } from '@naturalcycles/js-lib/types'
@@ -60,10 +60,11 @@ export const releasesByDay = computed((): ReleasesByDay => {
 })
 
 export const releasesLastDay = computed((): IsoDate | null => {
-  const days = (_stringMapValues(store.releases.value) || [])
-    .map(r => localTime(r.published).toISODate())
-    .sort()
-  return days[0] || null
+  return (
+    _minOrUndefined(
+      (_stringMapValues(store.releases.value) || []).map(r => localTime(r.published).toISODate()),
+    ) || null
+  )
 })
 
 export const showScanningResumed = computed(

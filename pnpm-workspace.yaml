@@ -10,8 +10,6 @@ minimumReleaseAgeExclude:
   - '@oxlint/*'
 
 optimisticRepeatInstall: false
-overrides:
-  typescript: ~6.0
 
 blockExoticSubdeps: true
 
@@ -28,6 +26,3 @@ allowBuilds:
 trustLockfile: true
 trustPolicyExcludePrune: true
 trustPolicy: no-downgrade
-
-update:
-  githubActions: false

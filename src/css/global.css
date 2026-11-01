@@ -45,7 +45,7 @@ a:hover {
   outline-offset: 2px;
 }
 
-/* Header */
+/* Header: solid accent bar with white text, like the former Vuetify app bar (color="primary") */
 .topbar {
   position: sticky;
   top: 0;
@@ -54,8 +54,8 @@ a:hover {
   align-items: center;
   height: 48px;
   padding: 0 8px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background: var(--accent);
+  color: var(--accent-fg);
 }
 .topbar nav {
   display: flex;
@@ -64,14 +64,21 @@ a:hover {
 .topbar nav a {
   padding: 6px 10px;
   border-radius: var(--radius);
-  color: var(--fg);
+  color: inherit;
 }
 .topbar nav a:hover {
-  background: var(--bg-hover);
   text-decoration: none;
 }
+/* Only real links get the hover tint; the current page is a placeholder <a> without href */
+.topbar nav a[href]:hover {
+  background: rgb(255 255 255 / 8%);
+}
+/* Vuetify's active-state overlay: 12% white on the primary color */
 .topbar nav a[aria-current] {
-  color: var(--accent);
+  background: rgb(255 255 255 / 12%);
+}
+.topbar a:focus-visible {
+  outline-color: var(--accent-fg);
 }
 .topbar .avatar {
   width: 32px;
@@ -93,6 +100,12 @@ a:hover {
   font: inherit;
   cursor: pointer;
   text-decoration: none;
+}
+/* Mobile-friendly tap target (44px) for the primary action of a screen, e.g. Reload */
+.btn-lg {
+  height: 44px;
+  padding: 0 20px;
+  font-size: 16px;
 }
 .btn:hover {
   background: var(--bg-hover);
@@ -134,9 +147,13 @@ a:hover {
 /* Releases list */
 .stats-row {
   display: flex;
+  flex-wrap: wrap; /* narrow screens: the Reload button drops below the stats instead of overflowing */
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+}
+.stats-row .btn {
+  margin-left: auto;
 }
 .stats {
   margin: 0;
