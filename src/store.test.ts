@@ -1,5 +1,6 @@
+import { localDate } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Release } from '#src/srv/model.js'
 
 // In-memory localStorage, stubbed before the store module is imported: the module reads it at
@@ -27,10 +28,9 @@ const {
   showScanningResumed,
 } = await import('#src/store.js')
 
+// `hour` is in UTC: localDate.unix is the 00:00:00 UTC of that day
 const ts = (isoDay: string, hour = 12): UnixTimestamp =>
-  Math.floor(
-    Date.parse(`${isoDay}T${String(hour).padStart(2, '0')}:00:00Z`) / 1000,
-  ) as UnixTimestamp
+  (localDate(isoDay as IsoDate).unix + hour * 3600) as UnixTimestamp
 
 function release(id: string, repoFullName: string, published: UnixTimestamp): Release {
   return { id, repoFullName, published, v: '1.0.0', tagName: 'v1.0.0', descrHtml: '', author: 'a' }
@@ -49,7 +49,7 @@ beforeEach(() => {
 })
 
 describe('releases actions', () => {
-  test('addReleases merges by id', () => {
+  it('should merge by id in addReleases', () => {
     addReleases([a1, b1])
     addReleases([{ ...a1, tagName: 'v1.0.1' }, c1])
     expect(Object.keys(store.releases.value).sort()).toEqual(['a_1', 'b_1', 'c_1'])
@@ -57,18 +57,18 @@ describe('releases actions', () => {
     expect(releasesCount.value).toBe(3)
   })
 
-  test('addReleases without arguments is a no-op', () => {
+  it('should be a no-op when addReleases has no arguments', () => {
     addReleases()
     expect(store.releases.value).toEqual({})
   })
 
-  test('removeRepoReleases removes only that repo', () => {
+  it('should remove only that repo in removeRepoReleases', () => {
     addReleases([a1, a2, b1])
     removeRepoReleases('org/a')
     expect(Object.keys(store.releases.value)).toEqual(['b_1'])
   })
 
-  test('cleanAfterLastDay keeps releases with day >= lastDay', () => {
+  it('should keep releases with day >= lastDay in cleanAfterLastDay', () => {
     addReleases([a1, b1, c1])
     cleanAfterLastDay('2026-10-24')
     expect(Object.keys(store.releases.value).sort()).toEqual(['a_1', 'b_1'])
@@ -76,19 +76,19 @@ describe('releases actions', () => {
 })
 
 describe('derived values', () => {
-  test('releasesByDay groups by day and sorts each day newest first', () => {
+  it('should group releasesByDay by day, newest first within each day', () => {
     addReleases([a1, b1, a2])
     expect(Object.keys(releasesByDay.value).sort()).toEqual(['2026-10-24', '2026-10-25'])
     expect(releasesByDay.value['2026-10-25' as IsoDate]!.map(r => r.id)).toEqual(['a_2', 'a_1'])
   })
 
-  test('releasesLastDay is the earliest day, or null when empty', () => {
+  it('should return the earliest day as releasesLastDay, or null when empty', () => {
     expect(releasesLastDay.value).toBeNull()
     addReleases([a1, c1, b1])
     expect(releasesLastDay.value).toBe('2026-10-20')
   })
 
-  test('showScanningResumed until dismissed', () => {
+  it('should show scanningResumed until dismissed', () => {
     expect(showScanningResumed.value).toBe(false)
     onBackendResponse({ scanningResumedAt: ts('2026-10-01') })
     expect(showScanningResumed.value).toBe(true)
@@ -96,7 +96,7 @@ describe('derived values', () => {
     expect(showScanningResumed.value).toBe(false)
   })
 
-  test('onBackendResponse applies only the fields present', () => {
+  it('should apply only the fields present in onBackendResponse', () => {
     onBackendResponse({ releasesUpdaterLastFinished: ts('2026-10-25') })
     expect(store.releasesUpdaterLastFinished.value).toBe(ts('2026-10-25'))
     expect(store.userFM.value).toEqual({ settings: {} })
@@ -106,7 +106,7 @@ describe('derived values', () => {
 })
 
 describe('persistence', () => {
-  test('writes exactly the persisted keys under "state"', () => {
+  it('should write exactly the persisted keys under "state"', () => {
     store.counter.value = 5
     const persisted = JSON.parse(ls.get('state')!)
     expect(Object.keys(persisted)).toEqual(['counter', 'releases', 'starredRepos', 'user'])
@@ -122,7 +122,7 @@ describe('persistence', () => {
     ])
   })
 
-  test('non-persisted fields do not write', () => {
+  it('should not write when non-persisted fields change', () => {
     store.counter.value = 7
     const before = ls.get('state')
     store.ghostMode.value = true

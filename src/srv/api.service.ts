@@ -14,7 +14,6 @@ let pendingRequests = 0
 export const api = getFetcher({
   logResponse: true,
   baseUrl,
-  credentials: 'include',
 })
   .onBeforeRequest(req => {
     const { uid, idToken } = store.user.value

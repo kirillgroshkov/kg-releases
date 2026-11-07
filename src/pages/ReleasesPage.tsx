@@ -1,4 +1,6 @@
 import { mdiChevronDown } from '@mdi/js'
+import { localTime } from '@naturalcycles/js-lib/datetime'
+import type { LocalTime } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate } from '@naturalcycles/js-lib/types'
 import type { JSX } from 'preact'
 import { useEffect, useRef } from 'preact/hooks'
@@ -26,11 +28,11 @@ export function ReleasesPage(): JSX.Element {
 
   useEffect(() => {
     // Auto-reload when the tab becomes visible again, at most once a minute
-    let lastAutoReload = 0
+    let lastAutoReload: LocalTime | undefined
     const onVisibilityChange = (): void => {
       if (document.visibilityState !== 'visible') return
-      if (Date.now() - lastAutoReload < 60_000) return
-      lastAutoReload = Date.now()
+      if (lastAutoReload?.isYoungerThan(1, 'minute')) return
+      lastAutoReload = localTime.now()
       void reload()
     }
     document.addEventListener('visibilitychange', onVisibilityChange)

@@ -171,7 +171,7 @@ importers:
         version: 7.4.47
       '@naturalcycles/js-lib':
         specifier: ^15
-        version: 15.100.0
+        version: 15.103.0
       '@preact/signals':
         specifier: ^2
         version: 2.11.4(preact@11.2.0)
@@ -193,10 +193,10 @@ importers:
     devDependencies:
       '@naturalcycles/dev-lib':
         specifier: ^20
-        version: 20.70.0(husky@9.1.7)(typescript@7.0.2)
+        version: 20.72.0(husky@9.1.7)(typescript@7.0.2)
       '@naturalcycles/nodejs-lib':
         specifier: ^15
-        version: 15.139.0
+        version: 15.142.0
       '@prefresh/core':
         specifier: ^1.5
         version: 1.5.11(preact@11.2.0)
@@ -678,8 +678,8 @@ packages:
       '@emnapi/core': ^1.7.1 || 2.0.0-beta.2
       '@emnapi/runtime': ^1.7.1 || 2.0.0-beta.2
 
-  '@naturalcycles/dev-lib@20.70.0':
-    resolution: {integrity: sha512-Vc9s6SzRim85nQrza/bsprd82TYaPhX64Tks+kT6kpogV1DX7HaP84pOvzyIO4+KO+ifRuGLJzLvm/9/nZFdNA==}
+  '@naturalcycles/dev-lib@20.72.0':
+    resolution: {integrity: sha512-qsjGdEp1rWvDvT0pNC4FNAYkt41dPmEEf/LcQAd+er66W0s0TP3rja8jpbGfCN5H6IHvxwGizzxOvXWlqv9NBg==}
     engines: {node: '>=26.12.1'}
     hasBin: true
     peerDependencies:
@@ -704,8 +704,8 @@ packages:
       typescript-eslint:
         optional: true
 
-  '@naturalcycles/js-lib@15.100.0':
-    resolution: {integrity: sha512-BxY+qZWsRq0gHHhrJ11YJp63ZZ8b+hkGseRcOS1Q9VJ2XEjWvfdgW4DH0w/z/qomXQAmdLTQ9NZNIOvme9EMmQ==}
+  '@naturalcycles/js-lib@15.103.0':
+    resolution: {integrity: sha512-4oL0ynJihmsKjjuse9yMPp2NGgXP9Kc+hIXQRFGWI0AXtR1lSRi/W3Dd39rVrb+6aNPh2amFujVFV39eiJhs4A==}
     engines: {node: '>=26.12.1'}
     peerDependencies:
       undici: ^8
@@ -713,8 +713,8 @@ packages:
       undici:
         optional: true
 
-  '@naturalcycles/nodejs-lib@15.139.0':
-    resolution: {integrity: sha512-0OB5BzsZjhd2hiTrZIs5Fm0tjDXp3yvDz1LjZmubmU1v5gVWxktYVvhMdITU0I9k5dNeK0n16Vyy+OpkUkglLw==}
+  '@naturalcycles/nodejs-lib@15.142.0':
+    resolution: {integrity: sha512-Dsr7ne+4j/r0s2CCNUchM3gGiCRDMCd43mn3e1Zec4hhiPVjO76nEgw6HWZwREH7Zgo+7Q0nwMPndlFVRGZzDA==}
     engines: {node: '>=26.12.1'}
     hasBin: true
 
@@ -1717,8 +1717,8 @@ packages:
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
 
-  import-in-the-middle@3.5.3:
-    resolution: {integrity: sha512-usm/IiY63VtOyx/dm7uEoZV+EsanCDmwRUroQZIkFLGu1NVXZ8mZqIOhaN4QIJ7EsbMTuQbJXwCySCx+ozMA8g==}
+  import-in-the-middle@3.6.0:
+    resolution: {integrity: sha512-xRU7hI24S2FhucXtuZXn8EpcOjfVP6iiEQyR0USayPeaOroEmSsNlqnl95866iRdRtkHrd6Q/Z4D14R60au0+A==}
     engines: {node: '>=18'}
 
   is-fullwidth-code-point@3.0.0:
@@ -2632,10 +2632,10 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
-  '@naturalcycles/dev-lib@20.70.0(husky@9.1.7)(typescript@7.0.2)':
+  '@naturalcycles/dev-lib@20.72.0(husky@9.1.7)(typescript@7.0.2)':
     dependencies:
-      '@naturalcycles/js-lib': 15.100.0
-      '@naturalcycles/nodejs-lib': 15.139.0
+      '@naturalcycles/js-lib': 15.103.0
+      '@naturalcycles/nodejs-lib': 15.142.0
       eslint-plugin-oxlint: 1.92.0(oxlint@1.92.0(oxlint-tsgolint@7.0.2006))
       globals: 17.14.0
       husky: 9.1.7
@@ -2655,13 +2655,13 @@ snapshots:
       - undici
       - vite-plus
 
-  '@naturalcycles/js-lib@15.100.0':
+  '@naturalcycles/js-lib@15.103.0':
     dependencies:
       tslib: 2.9.1
 
-  '@naturalcycles/nodejs-lib@15.139.0':
+  '@naturalcycles/nodejs-lib@15.142.0':
     dependencies:
-      '@naturalcycles/js-lib': 15.100.0
+      '@naturalcycles/js-lib': 15.103.0
       '@standard-schema/spec': 1.1.0
       ajv: 8.20.0
       ansis: 4.5.0
@@ -2752,7 +2752,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/api-logs': 0.220.0
-      import-in-the-middle: 3.5.3
+      import-in-the-middle: 3.6.0
       require-in-the-middle: 8.0.1
     transitivePeerDependencies:
       - supports-color
@@ -3419,7 +3419,7 @@ snapshots:
 
   idb@7.1.1: {}
 
-  import-in-the-middle@3.5.3:
+  import-in-the-middle@3.6.0:
     dependencies:
       cjs-module-lexer: 2.3.0
       es-module-lexer: 3.0.4

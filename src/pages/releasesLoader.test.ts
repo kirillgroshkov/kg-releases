@@ -1,5 +1,5 @@
 import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { groupReleases } from '#src/pages/releasesLoader.js'
 import type { Release } from '#src/srv/model.js'
 
@@ -26,7 +26,7 @@ const d2 = '2026-10-24' as IsoDate
 const d3 = '2026-10-23' as IsoDate
 
 describe('groupReleases', () => {
-  test('groups by repo in order of first appearance, latest release first in each group', () => {
+  it('should group by repo in order of first appearance, latest release first in each group', () => {
     const byDay = {
       [d1]: [
         release('org/a', 'v3', 300, 'a.png'),
@@ -55,7 +55,7 @@ describe('groupReleases', () => {
     })
   })
 
-  test('days without releases produce empty groups', () => {
+  it('should produce empty groups for days without releases', () => {
     expect(groupReleases([d1, d2], { [d2]: [] })).toEqual({ [d1]: [], [d2]: [] })
     expect(groupReleases([], {})).toEqual({})
   })

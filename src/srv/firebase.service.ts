@@ -21,8 +21,17 @@ class FirebaseService {
 
   @_Memo()
   private async getAuth(): Promise<Auth> {
-    const { initializeApp } = await import('firebase/app')
-    const { getAuth, onAuthStateChanged } = await import('firebase/auth')
+    // Both at once: awaiting them one by one fetched the auth chunk only after the app chunk,
+    // an extra round trip on the guest bootstrap path (main.tsx waits for auth before showing the page).
+    // Destructuring inside .then() keeps them tree-shakeable, unlike destructuring Promise.all's result
+    // (which bundles every firebase/auth export, +15 kB gzip)
+    const [{ initializeApp }, { getAuth, onAuthStateChanged }] = await Promise.all([
+      import('firebase/app').then(({ initializeApp }) => ({ initializeApp })),
+      import('firebase/auth').then(({ getAuth, onAuthStateChanged }) => ({
+        getAuth,
+        onAuthStateChanged,
+      })),
+    ])
 
     const firebaseApp = initializeApp({
       apiKey: 'AIzaSyC_ooKU2uYbczwRQVfAa6VjGbxfkV-9cYI',
