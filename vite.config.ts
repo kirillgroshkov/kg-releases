@@ -23,6 +23,7 @@ export default defineConfig({
     // prefresh types its result as Promise<PluginOption>, a nested Thenable that Vite 8's PluginOption
     // type rejects; Vite flattens it at runtime, so the cast only narrows the type
     prefresh() as Promise<Plugin>,
+    inlineCss(),
     analyzer({
       analyzerMode: 'static',
       fileName: 'stats.html',
@@ -39,3 +40,32 @@ export default defineConfig({
   //   sourcemap: true,
   // },
 })
+
+/**
+ * Replaces the stylesheet <link> in index.html with an inline <style> and drops the .css file from
+ * the build. The CSS is ~2 KB gzipped, so the extra bytes in the html cost less than the
+ * render-blocking request. CSS urls are absolute (/static/...), so they resolve the same from the
+ * html. Only stylesheets linked from the html are touched: CSS of lazy chunks stays a file.
+ */
+function inlineCss(): Plugin {
+  return {
+    name: 'inline-css',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const { bundle } = ctx
+        if (!bundle) return html
+        return html.replaceAll(
+          /<link rel="stylesheet"[^>]*href="\/([^"]+\.css)"[^>]*>/g,
+          (tag, fileName: string) => {
+            const asset = bundle[fileName]
+            if (asset?.type !== 'asset') return tag
+            delete bundle[fileName]
+            return `<style>${asset.source}</style>`
+          },
+        )
+      },
+    },
+  }
+}
