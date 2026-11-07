@@ -5,6 +5,12 @@ import { store } from '#src/store.js'
 
 const baseUrl = 'https://kg-backend3.appspot.com/releases'
 
+/**
+ * Requests can overlap (e.g. a background unstar during a reload), so the topbar is hidden only
+ * when the last one finishes. afterResponse runs once per request, for errors too.
+ */
+let pendingRequests = 0
+
 export const api = getFetcher({
   logResponse: true,
   baseUrl,
@@ -20,8 +26,9 @@ export const api = getFetcher({
       }),
     )
 
+    pendingRequests++
     topbar.show()
   })
   .onAfterResponse(() => {
-    topbar.hide()
+    if (--pendingRequests === 0) topbar.hide()
   })

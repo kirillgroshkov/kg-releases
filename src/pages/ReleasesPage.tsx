@@ -280,12 +280,7 @@ function UnstarDialog(): JSX.Element {
             </p>
           )}
           <div class="dialog-actions">
-            <button
-              type="button"
-              class="btn"
-              disabled={store.ghostMode.value}
-              onClick={closeUnstarDialog}
-            >
+            <button type="button" class="btn" onClick={closeUnstarDialog}>
               Cancel
             </button>
             {dialog.needsPermission && (
@@ -299,12 +294,8 @@ function UnstarDialog(): JSX.Element {
                 Unstar on GitHub
               </a>
             )}
-            <button
-              type="button"
-              class="btn btn-primary"
-              disabled={store.ghostMode.value}
-              onClick={() => void unstarConfirm()}
-            >
+            {/* Not disabled by ghostMode: unstarConfirm closes the dialog and runs in the background */}
+            <button type="button" class="btn btn-primary" onClick={() => void unstarConfirm()}>
               {dialog.needsPermission ? 'Grant public_repo' : 'Unstar'}
             </button>
           </div>

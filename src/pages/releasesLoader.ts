@@ -3,7 +3,7 @@ import type { LocalDate } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { computed, signal } from '@preact/signals'
 import { withProgress } from '#src/decorators/decorators.js'
-import { isGithubInsufficientScopeError } from '#src/error.js'
+import { errorDialog, isGithubInsufficientScopeError } from '#src/error.js'
 import type { Release, ReleasesByDay } from '#src/srv/model.js'
 import { releasesService } from '#src/srv/releases.service.js'
 import { cleanAfterLastDay, releasesByDay, releasesLastDay, store } from '#src/store.js'
@@ -94,26 +94,27 @@ export function closeUnstarDialog(): void {
   unstarDialog.value = null
 }
 
+/**
+ * Closes the dialog right away and unstars in the background (no ghostMode, so nothing is blocked):
+ * the fetcher's topbar shows the progress, on success the repo's releases disappear from the list,
+ * errors are shown with errorDialog.
+ */
 export async function unstarConfirm(): Promise<void> {
   const dialog = unstarDialog.value!
+  unstarDialog.value = null
 
-  await withProgress(async () => {
-    try {
-      // GitHub popup must be opened right in the click handler, otherwise the browser can block it
-      if (dialog.needsPermission) await releasesService.grantStarsPermission()
-      await releasesService.unstarRepo(dialog.repoFullName)
-    } catch (err) {
-      if (isGithubInsufficientScopeError(err)) {
-        // Keep the dialog open, now asking to grant the permission (with a new click)
-        unstarDialog.value = { ...dialog, needsPermission: true }
-        return
-      }
-      unstarDialog.value = null
-      throw err
+  try {
+    // GitHub popup must be opened right in the click handler, otherwise the browser can block it
+    if (dialog.needsPermission) await releasesService.grantStarsPermission()
+    await releasesService.unstarRepo(dialog.repoFullName)
+  } catch (err) {
+    if (isGithubInsufficientScopeError(err)) {
+      // Reopen the dialog, now asking to grant the permission (with a new click)
+      unstarDialog.value = { ...dialog, needsPermission: true }
+      return
     }
-
-    unstarDialog.value = null
-  })
+    errorDialog(err)
+  }
 }
 
 /**
