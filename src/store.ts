@@ -4,6 +4,7 @@ import { _stringMapValues } from '@naturalcycles/js-lib/types'
 import type { IsoDate, StringMap, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { batch, computed, effect, signal } from '@preact/signals'
 import type { UserInfo } from '#src/srv/firebase.service.js'
+import { isCanonicalSemverTag } from '#src/srv/model.js'
 import type {
   BackendResponse,
   FeedOptions,
@@ -60,15 +61,18 @@ export const hiddenRepoSet = computed(() => new Set(store.userFM.value.hiddenRep
 export const favoriteRepoSet = computed(() => new Set(store.userFM.value.favoriteRepos))
 
 /**
- * Releases shown in the feed. Hidden repos' releases are filtered out here too (not only by the
- * Backend), as the store can still have them: fetched before the repo was hidden (e.g on another
- * device), or with feedOptions.showHidden that was turned off since.
+ * Releases shown in the feed. feedOptions are applied here too (not only by the Backend), as the
+ * store can still have releases they exclude: fetched before the repo was hidden (e.g on another
+ * device), or with other feedOptions. This also makes narrowing the feed instant (no reload).
  */
 export const feedReleases = computed((): Release[] => {
   const releases = _stringMapValues(store.releases.value)
-  const hidden = hiddenRepoSet.value
-  if (store.feedOptions.value.showHidden || !hidden.size) return releases
-  return releases.filter(r => !hidden.has(r.repoFullName))
+  const { showHidden, semverOnly } = store.feedOptions.value
+  const hidden: ReadonlySet<string> = showHidden ? new Set() : hiddenRepoSet.value
+  if (!hidden.size && !semverOnly) return releases
+  return releases.filter(
+    r => !hidden.has(r.repoFullName) && (!semverOnly || isCanonicalSemverTag(r.tagName)),
+  )
 })
 
 export const releasesByDay = computed((): ReleasesByDay => {

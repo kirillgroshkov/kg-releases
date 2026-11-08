@@ -56,12 +56,12 @@ export const groupsByDay = computed((): Record<IsoDate, ReleaseGroup[]> =>
 )
 
 /**
- * Hidden releases are filtered client-side too (see feedReleases), so only turning showHidden on
- * needs a reload (to fetch them). New options that change what the Backend returns should reload too.
+ * Options are applied client-side too (see feedReleases), so narrowing the feed is instant, and only
+ * widening it needs a reload, to fetch what the Backend skipped (hidden or non-semver releases).
  */
 export function setFeedOptions(patch: Partial<FeedOptions>): void {
   store.feedOptions.value = { ...store.feedOptions.value, ...patch }
-  if (patch.showHidden) void reload()
+  if (patch.showHidden || patch.semverOnly === false) void reload()
 }
 
 export async function reload(): Promise<void> {

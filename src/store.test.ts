@@ -132,6 +132,21 @@ describe('hidden repos', () => {
     expect(releasesCount.value).toBe(3)
   })
 
+  it('should filter out non-semver releases with semverOnly, together with hidden repos', () => {
+    const nightly = { ...b1, id: 'b_2', tagName: 'v0.0.0-0.nightly.2026.11.08' }
+    addReleases([a1, b1, nightly, { ...c1, tagName: 'router-utils@1.163.0' }])
+    expect(feedReleases.value).toHaveLength(4)
+
+    store.feedOptions.value = { semverOnly: true }
+    expect(feedReleases.value.map(r => r.id).sort()).toEqual(['a_1', 'b_1', 'c_1'])
+
+    onBackendResponse({ userFM: { ...userFM, hiddenRepos: ['org/a'] } })
+    expect(feedReleases.value.map(r => r.id).sort()).toEqual(['b_1', 'c_1'])
+
+    store.feedOptions.value = { semverOnly: true, showHidden: true }
+    expect(feedReleases.value.map(r => r.id).sort()).toEqual(['a_1', 'b_1', 'c_1'])
+  })
+
   it('should reset feedOptions in resetStore', () => {
     store.feedOptions.value = { showHidden: true }
     resetStore()

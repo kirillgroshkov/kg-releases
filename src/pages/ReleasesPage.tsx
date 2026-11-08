@@ -109,7 +109,7 @@ function Stats(): JSX.Element {
  * Collapsed by default, so that more options can be added later without cluttering the feed.
  */
 function FeedOptionsPanel(): JSX.Element {
-  const { showHidden } = store.feedOptions.value
+  const { showHidden, semverOnly } = store.feedOptions.value
 
   return (
     <details class="feed-options">
@@ -118,6 +118,18 @@ function FeedOptionsPanel(): JSX.Element {
         <Icon path={mdiChevronDown} class="chev" />
       </summary>
       <div class="feed-options-body">
+        <label class="check">
+          <input
+            type="checkbox"
+            checked={!!semverOnly}
+            onChange={e => setFeedOptions({ semverOnly: e.currentTarget.checked })}
+          />{' '}
+          <span>
+            Only semver releases
+            <span class="hint">1.2.3, v1.2, pkg@1.2.3; no nightlies, pre-releases or hashes</span>
+          </span>
+        </label>
+
         <label class="check">
           <input
             type="checkbox"

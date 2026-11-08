@@ -319,6 +319,12 @@ a:hover {
   margin: 0 0 4px;
   color: var(--fg-muted);
 }
+/* Description line under an option's label */
+.feed-options .check .hint {
+  display: block;
+  margin: 0;
+  font-size: 12px;
+}
 .hidden-repos {
   margin: 0;
   padding: 0;

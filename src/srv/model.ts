@@ -99,7 +99,34 @@ export interface FeedOptions {
    * Include releases of the hidden repos (excluded by default).
    */
   showHidden?: boolean
+
+  /**
+   * Only releases with a canonical semver tag, e.g `1.2.3` or `pkg@1.2.3` (see isCanonicalSemverTag).
+   */
+  semverOnly?: boolean
 }
+
+/**
+ * Canonical semver tag: MAJOR[.MINOR[.PATCH]] (numbers without leading zeros), with an optional `v`,
+ * e.g `1.2.3`, `v1.2`, `v7`.
+ *
+ * Can be prefixed with a name and a separator (`-`, `@`, `_` or `/`), as monorepos do,
+ * e.g `router-utils@1.163.0`, `agent-skills-v0.4440.0`, `jackson-module-kotlin-3.3.0`.
+ * A prefixed version needs at least MAJOR.MINOR, as a bare number there is rather a build number
+ * or a timestamp, e.g `2fc131eeb4a3-1794109014`.
+ *
+ * Nothing is allowed after the version, so pre-releases, nightlies, dev builds and hashes are not
+ * canonical, e.g `1.2.3-beta.1`, `1.67.1.dev20261107`, `v0.0.0-0.nightly.2026.11.08`,
+ * `cmux-app-ffi-b9867f610b60`.
+ *
+ * Keep in sync with the Backend's isCanonicalSemverTag.
+ */
+export function isCanonicalSemverTag(tagName: string): boolean {
+  return canonicalSemverTagRegex.test(tagName)
+}
+
+const canonicalSemverTagRegex =
+  /^v?(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){0,2}$|[-@_/]v?(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*)){1,2}$/i
 
 export interface BackendResponse {
   newUser?: boolean
