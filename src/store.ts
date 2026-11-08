@@ -37,6 +37,11 @@ export const store = {
   userFM: signal<UserFM>({ settings: {} } as UserFM),
   ghostMode: signal(false),
   feedOptions: signal<FeedOptions>(persisted.feedOptions ?? {}),
+  /**
+   * Repos (fullRepoNames) being unstarred right now. Their releases are hidden from the feed
+   * optimistically, and come back if the unstar fails (see setRepoUnstarring).
+   */
+  unstarringRepos: signal<ReadonlySet<string>>(new Set()),
   releasesUpdaterLastFinished: signal<UnixTimestamp | undefined>(undefined),
   scanningResumedAt: signal<UnixTimestamp | undefined>(undefined),
   /**
@@ -64,14 +69,19 @@ export const favoriteRepoSet = computed(() => new Set(store.userFM.value.favorit
  * Releases shown in the feed. feedOptions are applied here too (not only by the Backend), as the
  * store can still have releases they exclude: fetched before the repo was hidden (e.g on another
  * device), or with other feedOptions. This also makes narrowing the feed instant (no reload).
+ * Releases of repos being unstarred are excluded too (optimistically).
  */
 export const feedReleases = computed((): Release[] => {
   const releases = _stringMapValues(store.releases.value)
   const { showHidden, semverOnly } = store.feedOptions.value
   const hidden: ReadonlySet<string> = showHidden ? new Set() : hiddenRepoSet.value
-  if (!hidden.size && !semverOnly) return releases
+  const unstarring = store.unstarringRepos.value
+  if (!hidden.size && !unstarring.size && !semverOnly) return releases
   return releases.filter(
-    r => !hidden.has(r.repoFullName) && (!semverOnly || isCanonicalSemverTag(r.tagName)),
+    r =>
+      !hidden.has(r.repoFullName) &&
+      !unstarring.has(r.repoFullName) &&
+      (!semverOnly || isCanonicalSemverTag(r.tagName)),
   )
 })
 
@@ -121,6 +131,21 @@ export function removeRepoReleases(repoFullName: string): void {
   )
 }
 
+/**
+ * Optimistic unstar: hides the repo's releases from the feed while the unstar request is in flight.
+ * They're kept in the store (and only removed from it on success, see removeRepoReleases), so
+ * un-marking brings them back, and a reload in the meantime can't bring them back too early.
+ */
+export function setRepoUnstarring(repoFullName: string, unstarring: boolean): void {
+  const repos = new Set(store.unstarringRepos.value)
+  if (unstarring) {
+    repos.add(repoFullName)
+  } else {
+    repos.delete(repoFullName)
+  }
+  store.unstarringRepos.value = repos
+}
+
 export function cleanAfterLastDay(lastDay: string): void {
   const releases: { [id: string]: Release } = {}
 
@@ -165,6 +190,7 @@ export function resetStore(): void {
     store.userFM.value = { settings: {} } as UserFM
     store.ghostMode.value = false
     store.feedOptions.value = {}
+    store.unstarringRepos.value = new Set()
     store.releasesUpdaterLastFinished.value = undefined
     store.scanningResumedAt.value = undefined
     store.scanningResumedDismissedAt.value = undefined

@@ -18,6 +18,7 @@ const {
   store,
   addReleases,
   removeRepoReleases,
+  setRepoUnstarring,
   cleanAfterLastDay,
   onBackendResponse,
   dismissScanningResumed,
@@ -151,6 +152,30 @@ describe('hidden repos', () => {
     store.feedOptions.value = { showHidden: true }
     resetStore()
     expect(store.feedOptions.value).toEqual({})
+  })
+})
+
+describe('unstarring repos', () => {
+  it('should hide releases of repos being unstarred from the feed, keeping them in the store', () => {
+    addReleases([a1, a2, b1])
+    setRepoUnstarring('org/a', true)
+    expect(feedReleases.value.map(r => r.id)).toEqual(['b_1'])
+    expect(releasesCount.value).toBe(1)
+    expect(Object.keys(store.releases.value)).toHaveLength(3)
+
+    // Unstar failed: releases come back
+    setRepoUnstarring('org/a', false)
+    expect(feedReleases.value.map(r => r.id).sort()).toEqual(['a_1', 'a_2', 'b_1'])
+  })
+
+  it('should not persist unstarringRepos, and reset it in resetStore', () => {
+    store.counter.value = 7
+    const before = ls.get('state')
+    setRepoUnstarring('org/a', true)
+    expect(ls.get('state')).toBe(before)
+
+    resetStore()
+    expect(store.unstarringRepos.value.size).toBe(0)
   })
 })
 

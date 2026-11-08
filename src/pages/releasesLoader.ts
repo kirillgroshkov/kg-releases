@@ -6,7 +6,13 @@ import { withProgress } from '#src/decorators/decorators.js'
 import { errorDialog, isGithubInsufficientScopeError } from '#src/error.js'
 import type { FeedOptions, Release, ReleasesByDay, RepoList } from '#src/srv/model.js'
 import { releasesService } from '#src/srv/releases.service.js'
-import { cleanAfterLastDay, releasesByDay, releasesLastDay, store } from '#src/store.js'
+import {
+  cleanAfterLastDay,
+  releasesByDay,
+  releasesLastDay,
+  setRepoUnstarring,
+  store,
+} from '#src/store.js'
 
 /**
  * Fetch logic of the Releases page (day-walking loader, grouping, unstar dialog state, feed options,
@@ -105,12 +111,13 @@ export function closeUnstarDialog(): void {
 
 /**
  * Closes the dialog right away and unstars in the background (no ghostMode, so nothing is blocked):
- * the fetcher's topbar shows the progress, on success the repo's releases disappear from the list,
- * errors are shown with errorDialog.
+ * the fetcher's topbar shows the progress, the repo's releases disappear from the list right away
+ * (optimistically), and come back if it fails. Errors are shown with errorDialog.
  */
 export async function unstarConfirm(): Promise<void> {
   const dialog = unstarDialog.value!
   unstarDialog.value = null
+  setRepoUnstarring(dialog.repoFullName, true)
 
   try {
     // GitHub popup must be opened right in the click handler, otherwise the browser can block it
@@ -123,6 +130,9 @@ export async function unstarConfirm(): Promise<void> {
       return
     }
     errorDialog(err)
+  } finally {
+    // On success, unstarRepo has already removed the releases from the store
+    setRepoUnstarring(dialog.repoFullName, false)
   }
 }
 
