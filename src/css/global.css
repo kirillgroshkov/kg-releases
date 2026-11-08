@@ -10,6 +10,7 @@
   --border: #e0e0e0;
   --accent: #448aff;
   --accent-fg: #fff;
+  --fav: #f5a300;
   --code-bg: #f0f0f0;
   --radius: 6px;
   --max-w: 500px;
@@ -262,6 +263,75 @@ a:hover {
 }
 .load-more {
   padding: 16px;
+}
+
+/* Favorite and hidden repos */
+.row.fav > summary {
+  box-shadow: inset 3px 0 0 var(--fav);
+}
+.row.hidden-repo > summary {
+  opacity: 0.5;
+}
+/* Icon before the repo name (and in the favorite button) */
+.mark {
+  width: 16px;
+  height: 16px;
+  margin-right: 3px;
+  vertical-align: -3px;
+  color: var(--fg-muted);
+}
+.mark.fav-mark {
+  color: var(--fav);
+}
+
+/* Feed options */
+.feed-options {
+  margin-top: 4px;
+}
+.feed-options > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0; /* bigger tap target */
+  color: var(--fg-muted);
+  cursor: pointer;
+  list-style: none;
+}
+.feed-options > summary::-webkit-details-marker {
+  display: none;
+}
+.feed-options .chev {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+  transition: transform 0.15s;
+}
+.feed-options[open] > summary .chev {
+  transform: rotate(180deg);
+}
+.feed-options-body {
+  padding: 6px 0 8px;
+}
+.feed-options .check {
+  margin-bottom: 12px;
+}
+.feed-options .hint {
+  margin: 0 0 4px;
+  color: var(--fg-muted);
+}
+.hidden-repos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hidden-repos li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-top: 1px solid var(--border);
+  overflow-wrap: anywhere;
 }
 
 /* Notice (scanning resumed) */

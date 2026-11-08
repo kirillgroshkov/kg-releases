@@ -1,7 +1,7 @@
 import { localDate } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { Release } from '#src/srv/model.js'
+import type { Release, UserFM } from '#src/srv/model.js'
 
 // In-memory localStorage, stubbed before the store module is imported: the module reads it at
 // import time, and the persistence effect writes to it on every change
@@ -23,6 +23,7 @@ const {
   dismissScanningResumed,
   resetStore,
   releasesByDay,
+  feedReleases,
   releasesLastDay,
   releasesCount,
   showScanningResumed,
@@ -40,6 +41,15 @@ const a1 = release('a_1', 'org/a', ts('2026-10-25', 10))
 const a2 = release('a_2', 'org/a', ts('2026-10-25', 14))
 const b1 = release('b_1', 'org/b', ts('2026-10-24'))
 const c1 = release('c_1', 'org/c', ts('2026-10-20'))
+
+const userFM: UserFM = {
+  id: 'u1',
+  username: 'user1',
+  starredReposCount: 3,
+  hiddenRepos: [],
+  favoriteRepos: [],
+  settings: {},
+}
 
 beforeEach(() => {
   // dev-lib's vitest config unstubs globals before each test
@@ -105,12 +115,45 @@ describe('derived values', () => {
   })
 })
 
+describe('hidden repos', () => {
+  it('should filter hidden repos out of the feed, unless showHidden', () => {
+    addReleases([a1, a2, b1])
+    expect(feedReleases.value).toHaveLength(3)
+
+    onBackendResponse({ userFM: { ...userFM, hiddenRepos: ['org/a'] } })
+    expect(feedReleases.value.map(r => r.id)).toEqual(['b_1'])
+    expect(releasesCount.value).toBe(1)
+    expect(Object.keys(releasesByDay.value)).toEqual(['2026-10-24'])
+    // Still in the store, so turning showHidden on shows them right away
+    expect(Object.keys(store.releases.value)).toHaveLength(3)
+
+    store.feedOptions.value = { showHidden: true }
+    expect(feedReleases.value.map(r => r.id).sort()).toEqual(['a_1', 'a_2', 'b_1'])
+    expect(releasesCount.value).toBe(3)
+  })
+
+  it('should reset feedOptions in resetStore', () => {
+    store.feedOptions.value = { showHidden: true }
+    resetStore()
+    expect(store.feedOptions.value).toEqual({})
+  })
+})
+
 describe('persistence', () => {
   it('should write exactly the persisted keys under "state"', () => {
     store.counter.value = 5
     const persisted = JSON.parse(ls.get('state')!)
-    expect(Object.keys(persisted)).toEqual(['counter', 'releases', 'starredRepos', 'user'])
+    expect(Object.keys(persisted)).toEqual([
+      'counter',
+      'releases',
+      'starredRepos',
+      'user',
+      'feedOptions',
+    ])
     expect(persisted.counter).toBe(5)
+
+    store.feedOptions.value = { showHidden: true }
+    expect(JSON.parse(ls.get('state')!).feedOptions).toEqual({ showHidden: true })
 
     dismissScanningResumed()
     expect(Object.keys(JSON.parse(ls.get('state')!))).toEqual([
@@ -118,6 +161,7 @@ describe('persistence', () => {
       'releases',
       'starredRepos',
       'user',
+      'feedOptions',
       'scanningResumedDismissedAt',
     ])
   })

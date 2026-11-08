@@ -71,8 +71,34 @@ export interface UserFM {
   id: string
   username: string
   starredReposCount: number
+  /**
+   * Repos (fullRepoNames) the user chose to hide: they stay starred on GitHub,
+   * but their releases are excluded from the feed (unless FeedOptions.showHidden) and notifications.
+   */
+  hiddenRepos: string[]
+  /**
+   * Repos (fullRepoNames) the user marked as favorite (highlighted in the feed).
+   * A repo cannot be both hidden and favorite.
+   */
+  favoriteRepos: string[]
   displayName?: string
   settings: UserSettings
+}
+
+/**
+ * User's lists of repos (mutually exclusive), named as the Backend endpoints, e.g `PUT /hidden/:repo`.
+ */
+export type RepoList = 'hidden' | 'favorite'
+
+/**
+ * Options to tune the feed. Persisted in localStorage (per device), sent to the Backend as query
+ * params (see the Backend's FeedOptions). New options are added here.
+ */
+export interface FeedOptions {
+  /**
+   * Include releases of the hidden repos (excluded by default).
+   */
+  showHidden?: boolean
 }
 
 export interface BackendResponse {

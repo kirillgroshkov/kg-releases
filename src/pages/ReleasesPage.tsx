@@ -1,4 +1,4 @@
-import { mdiChevronDown } from '@mdi/js'
+import { mdiChevronDown, mdiEyeOff, mdiStar, mdiStarOutline } from '@mdi/js'
 import { localTime } from '@naturalcycles/js-lib/datetime'
 import type { LocalTime } from '@naturalcycles/js-lib/datetime'
 import type { IsoDate } from '@naturalcycles/js-lib/types'
@@ -13,13 +13,22 @@ import {
   groupsByDay,
   loadMore,
   reload,
+  repoInListClick,
+  setFeedOptions,
   unstarClick,
   unstarConfirm,
   unstarDialog,
 } from '#src/pages/releasesLoader.js'
 import type { ReleaseGroup } from '#src/pages/releasesLoader.js'
 import type { Release } from '#src/srv/model.js'
-import { dismissScanningResumed, releasesCount, showScanningResumed, store } from '#src/store.js'
+import {
+  dismissScanningResumed,
+  favoriteRepoSet,
+  hiddenRepoSet,
+  releasesCount,
+  showScanningResumed,
+  store,
+} from '#src/store.js'
 
 export function ReleasesPage(): JSX.Element {
   useEffect(() => {
@@ -44,6 +53,8 @@ export function ReleasesPage(): JSX.Element {
       {showScanningResumed.value && <ScanningResumedNotice />}
 
       <Stats />
+
+      <FeedOptionsPanel />
 
       <div class="rows">
         {days.value.map(day => (
@@ -94,6 +105,73 @@ function Stats(): JSX.Element {
   )
 }
 
+/**
+ * Collapsed by default, so that more options can be added later without cluttering the feed.
+ */
+function FeedOptionsPanel(): JSX.Element {
+  const { showHidden } = store.feedOptions.value
+
+  return (
+    <details class="feed-options">
+      <summary>
+        Feed options
+        <Icon path={mdiChevronDown} class="chev" />
+      </summary>
+      <div class="feed-options-body">
+        <label class="check">
+          <input
+            type="checkbox"
+            checked={!!showHidden}
+            onChange={e => setFeedOptions({ showHidden: e.currentTarget.checked })}
+          />{' '}
+          Show hidden releases
+        </label>
+
+        <HiddenRepos />
+      </div>
+    </details>
+  )
+}
+
+/**
+ * The place to unhide a repo, also the ones that have no releases in the feed.
+ */
+function HiddenRepos(): JSX.Element {
+  // undefined until init() returns
+  const repos = store.userFM.value.hiddenRepos
+
+  if (!repos?.length) {
+    return (
+      <p class="hint">
+        No hidden repos. Use "hide" on a release to hide its repo: it stays starred on GitHub, but
+        its releases are skipped here and in emails.
+      </p>
+    )
+  }
+
+  return (
+    <>
+      <div class="hint">Hidden repos ({repos.length})</div>
+      <ul class="hidden-repos">
+        {repos.toSorted().map(repo => (
+          <li key={repo}>
+            <a href={`https://github.com/${repo}`} target="_blank" rel="noopener">
+              {repo}
+            </a>
+            <button
+              type="button"
+              class="btn"
+              onClick={() => void repoInListClick('hidden', repo, false)}
+            >
+              unhide
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
+
 interface DayProps {
   day: IsoDate
 }
@@ -125,15 +203,19 @@ interface ReleaseRowProps {
 
 function ReleaseRow(props: ReleaseRowProps): JSX.Element {
   const { r, child = false } = props
+  const repo = r.repoFullName
+  const fav = favoriteRepoSet.value.has(repo)
+  const hidden = hiddenRepoSet.value.has(repo)
 
   return (
-    <details class={child ? 'row child' : 'row'}>
+    // Child rows are not marked as fav/hidden: their group row is
+    <details class={child ? 'row child' : rowClass('row', fav, hidden)}>
       <summary>
         <img class="avatar" src={r.avatarUrl + '&s=80'} alt="" loading="lazy" />
         <div class="title">
           {!child && (
             <>
-              {r.repoFullName}
+              <RepoName repo={repo} fav={fav} hidden={hidden} />
               <br />
             </>
           )}
@@ -149,6 +231,22 @@ function ReleaseRow(props: ReleaseRowProps): JSX.Element {
           <a class="btn" href={releaseUrl(r)} target="_blank" rel="noopener">
             view on github
           </a>
+          {/* Not disabled by ghostMode: these run in the background, see repoInListClick */}
+          <button
+            type="button"
+            class="btn"
+            onClick={() => void repoInListClick('favorite', repo, !fav)}
+          >
+            <Icon path={fav ? mdiStar : mdiStarOutline} class={fav ? 'mark fav-mark' : 'mark'} />
+            {fav ? 'unfavorite' : 'favorite'}
+          </button>
+          <button
+            type="button"
+            class="btn"
+            onClick={() => void repoInListClick('hidden', repo, !hidden)}
+          >
+            {hidden ? 'unhide' : 'hide'}
+          </button>
           <button type="button" class="btn" onClick={() => unstarClick(r.repoFullName)}>
             unstar
           </button>
@@ -168,13 +266,15 @@ interface GroupRowProps {
 function GroupRow(props: GroupRowProps): JSX.Element {
   const { group } = props
   const { releases } = group
+  const fav = favoriteRepoSet.value.has(group.repo)
+  const hidden = hiddenRepoSet.value.has(group.repo)
 
   return (
-    <details class="row group">
+    <details class={rowClass('row group', fav, hidden)}>
       <summary>
         <img class="avatar" src={group.avatarUrl + '&s=80'} alt="" loading="lazy" />
         <div class="title">
-          {group.repo}
+          <RepoName repo={group.repo} fav={fav} hidden={hidden} />
           <div class="group-tags">
             {releases.slice(0, releases.length > 3 ? 2 : 3).map(r => (
               <span key={r.id} class="ver">
@@ -194,6 +294,28 @@ function GroupRow(props: GroupRowProps): JSX.Element {
         <ReleaseRow key={r.id} r={r} child />
       ))}
     </details>
+  )
+}
+
+interface RepoNameProps {
+  repo: string
+  fav: boolean
+  hidden: boolean
+}
+
+/**
+ * Repo name, prefixed with a star if it's favorite, or a crossed eye if it's hidden
+ * (hidden repos are in the feed only with feedOptions.showHidden).
+ */
+function RepoName(props: RepoNameProps): JSX.Element {
+  const { repo, fav, hidden } = props
+
+  return (
+    <>
+      {fav && <Icon path={mdiStar} class="mark fav-mark" />}
+      {hidden && <Icon path={mdiEyeOff} class="mark" />}
+      {repo}
+    </>
   )
 }
 
@@ -309,4 +431,8 @@ function UnstarDialog(): JSX.Element {
 
 function releaseUrl(r: Release): string {
   return `https://github.com/${r.repoFullName}/releases/tag/${r.tagName || 'v' + r.v}`
+}
+
+function rowClass(base: string, fav: boolean, hidden: boolean): string {
+  return base + (fav ? ' fav' : '') + (hidden ? ' hidden-repo' : '')
 }

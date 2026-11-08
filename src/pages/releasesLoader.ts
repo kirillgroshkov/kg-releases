@@ -4,13 +4,13 @@ import type { IsoDate, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { computed, signal } from '@preact/signals'
 import { withProgress } from '#src/decorators/decorators.js'
 import { errorDialog, isGithubInsufficientScopeError } from '#src/error.js'
-import type { Release, ReleasesByDay } from '#src/srv/model.js'
+import type { FeedOptions, Release, ReleasesByDay, RepoList } from '#src/srv/model.js'
 import { releasesService } from '#src/srv/releases.service.js'
 import { cleanAfterLastDay, releasesByDay, releasesLastDay, store } from '#src/store.js'
 
 /**
- * Fetch logic of the Releases page (day-walking loader, grouping, unstar dialog state), as plain
- * TS with module-level signals, so the page component only renders.
+ * Fetch logic of the Releases page (day-walking loader, grouping, unstar dialog state, feed options,
+ * hide/favorite), as plain TS with module-level signals, so the page component only renders.
  */
 
 export interface UnstarDialog {
@@ -54,6 +54,15 @@ export const days = computed((): IsoDate[] => {
 export const groupsByDay = computed((): Record<IsoDate, ReleaseGroup[]> =>
   groupReleases(days.value, releasesByDay.value),
 )
+
+/**
+ * Hidden releases are filtered client-side too (see feedReleases), so only turning showHidden on
+ * needs a reload (to fetch them). New options that change what the Backend returns should reload too.
+ */
+export function setFeedOptions(patch: Partial<FeedOptions>): void {
+  store.feedOptions.value = { ...store.feedOptions.value, ...patch }
+  if (patch.showHidden) void reload()
+}
 
 export async function reload(): Promise<void> {
   if (loading.value) return // don't start new request
@@ -113,6 +122,23 @@ export async function unstarConfirm(): Promise<void> {
       unstarDialog.value = { ...dialog, needsPermission: true }
       return
     }
+    errorDialog(err)
+  }
+}
+
+/**
+ * Hide/favorite (and back) is reversible, so there's no confirmation dialog. Like unstarConfirm, runs
+ * in the background (no ghostMode): the fetcher's topbar shows the progress, the feed updates from the
+ * returned userFM (e.g a hidden repo's releases disappear), errors are shown with errorDialog.
+ */
+export async function repoInListClick(
+  list: RepoList,
+  repoFullName: string,
+  add: boolean,
+): Promise<void> {
+  try {
+    await releasesService.setRepoInList(list, repoFullName, add)
+  } catch (err) {
     errorDialog(err)
   }
 }

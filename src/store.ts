@@ -4,7 +4,14 @@ import { _stringMapValues } from '@naturalcycles/js-lib/types'
 import type { IsoDate, StringMap, UnixTimestamp } from '@naturalcycles/js-lib/types'
 import { batch, computed, effect, signal } from '@preact/signals'
 import type { UserInfo } from '#src/srv/firebase.service.js'
-import type { BackendResponse, Release, ReleasesByDay, Repo, UserFM } from '#src/srv/model.js'
+import type {
+  BackendResponse,
+  FeedOptions,
+  Release,
+  ReleasesByDay,
+  Repo,
+  UserFM,
+} from '#src/srv/model.js'
 
 export type StoreUser = UserInfo & { idToken?: string }
 
@@ -13,6 +20,7 @@ interface PersistedState {
   releases: StringMap<Release>
   starredRepos: Repo[]
   user: StoreUser
+  feedOptions: FeedOptions
   scanningResumedDismissedAt?: UnixTimestamp
 }
 
@@ -27,6 +35,7 @@ export const store = {
   user: signal<StoreUser>(persisted.user ?? ({} as StoreUser)),
   userFM: signal<UserFM>({ settings: {} } as UserFM),
   ghostMode: signal(false),
+  feedOptions: signal<FeedOptions>(persisted.feedOptions ?? {}),
   releasesUpdaterLastFinished: signal<UnixTimestamp | undefined>(undefined),
   scanningResumedAt: signal<UnixTimestamp | undefined>(undefined),
   /**
@@ -43,9 +52,28 @@ export const store = {
 /** True once main() finished bootstrap; the router renders only after that. */
 export const appReady = signal(false)
 
+/**
+ * Sets, for fast lookups by repoFullName (e.g when rendering every row).
+ * userFM is not persisted, so they're empty until init() returns.
+ */
+export const hiddenRepoSet = computed(() => new Set(store.userFM.value.hiddenRepos))
+export const favoriteRepoSet = computed(() => new Set(store.userFM.value.favoriteRepos))
+
+/**
+ * Releases shown in the feed. Hidden repos' releases are filtered out here too (not only by the
+ * Backend), as the store can still have them: fetched before the repo was hidden (e.g on another
+ * device), or with feedOptions.showHidden that was turned off since.
+ */
+export const feedReleases = computed((): Release[] => {
+  const releases = _stringMapValues(store.releases.value)
+  const hidden = hiddenRepoSet.value
+  if (store.feedOptions.value.showHidden || !hidden.size) return releases
+  return releases.filter(r => !hidden.has(r.repoFullName))
+})
+
 export const releasesByDay = computed((): ReleasesByDay => {
   const m: ReleasesByDay = {}
-  _stringMapValues(store.releases.value).forEach(r => {
+  feedReleases.value.forEach(r => {
     const day = localTime(r.published).toISODate()
     m[day] ||= []
     m[day].push(r)
@@ -73,7 +101,7 @@ export const showScanningResumed = computed(
     store.scanningResumedAt.value > (store.scanningResumedDismissedAt.value || 0),
 )
 
-export const releasesCount = computed((): number => Object.keys(store.releases.value).length)
+export const releasesCount = computed((): number => feedReleases.value.length)
 
 export function addReleases(releases: Release[] = []): void {
   store.releases.value = {
@@ -132,6 +160,7 @@ export function resetStore(): void {
     store.user.value = {} as StoreUser
     store.userFM.value = { settings: {} } as UserFM
     store.ghostMode.value = false
+    store.feedOptions.value = {}
     store.releasesUpdaterLastFinished.value = undefined
     store.scanningResumedAt.value = undefined
     store.scanningResumedDismissedAt.value = undefined
@@ -143,7 +172,7 @@ export function resetStore(): void {
   })
 }
 
-// Persistence: replaces Pinia $subscribe. The effect re-runs whenever one of the five signals changes.
+// Persistence: replaces Pinia $subscribe. The effect re-runs whenever one of the six signals changes.
 let previousState = ''
 effect(() => {
   const state: PersistedState = {
@@ -151,6 +180,7 @@ effect(() => {
     releases: store.releases.value,
     starredRepos: store.starredRepos.value,
     user: store.user.value,
+    feedOptions: store.feedOptions.value,
     scanningResumedDismissedAt: store.scanningResumedDismissedAt.value,
   }
   const newState = JSON.stringify(state)

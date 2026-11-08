@@ -1,8 +1,16 @@
 import { _Memo } from '@naturalcycles/js-lib/decorators'
+import { _filterFalsyValues } from '@naturalcycles/js-lib/object'
 import { api } from '#src/srv/api.service.js'
 import { firebaseService } from '#src/srv/firebase.service.js'
 import { GITHUB_STARS_SCOPE } from '#src/srv/model.js'
-import type { AuthInput, BackendResponse, Release, Repo, UserSettings } from '#src/srv/model.js'
+import type {
+  AuthInput,
+  BackendResponse,
+  Release,
+  Repo,
+  RepoList,
+  UserSettings,
+} from '#src/srv/model.js'
 import { addReleases, onBackendResponse, removeRepoReleases, store } from '#src/store.js'
 
 class ReleasesService {
@@ -13,6 +21,8 @@ class ReleasesService {
       searchParams: {
         minIncl,
         maxExcl,
+        // Only non-default options, e.g `showHidden=true`
+        ..._filterFalsyValues(store.feedOptions.value),
       },
     })
 
@@ -81,6 +91,24 @@ class ReleasesService {
 
     onBackendResponse(br)
     removeRepoReleases(repoFullName)
+
+    return br
+  }
+
+  /**
+   * Adds the repo to (or removes from) user's hidden or favorite repos (a repo can't be both).
+   * The repo stays starred on GitHub. Idempotent.
+   */
+  async setRepoInList(
+    list: RepoList,
+    repoFullName: string,
+    add: boolean,
+  ): Promise<BackendResponse> {
+    await firebaseService.refreshIdToken() // protected endpoint
+    const url = `${list}/${repoFullName}`
+    const br = add ? await api.put<BackendResponse>(url) : await api.delete<BackendResponse>(url)
+
+    onBackendResponse(br)
 
     return br
   }
