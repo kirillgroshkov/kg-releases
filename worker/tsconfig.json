@@ -1,0 +1,20 @@
+// Cloudflare Worker code (see wrangler.jsonc): Workers runtime types instead of DOM and Node.
+// Type-checked by oxlint (pnpm lint), which picks the nearest tsconfig.json for each file.
+//
+// "types" declares the runtime's globals (Request, Response, URL, fetch, console), which really are
+// globals in a Worker and can't be imported as values. Import Cloudflare-specific types explicitly
+// instead of relying on their globals: `import type { ExportedHandler } from
+// '@cloudflare/workers-types'` (the package's module entry, index.ts, compatible with the globals).
+{
+  "extends": "@naturalcycles/dev-lib/cfg/tsconfig.src.json",
+  "compilerOptions": {
+    "rootDir": "${configDir}/..",
+    "noEmit": true,
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "incremental": false
+  },
+  "include": ["${configDir}/**/*.ts"]
+}

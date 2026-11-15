@@ -29,10 +29,11 @@
     "tslib": "^2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5",
     "@naturalcycles/dev-lib": "^20",
     "@naturalcycles/nodejs-lib": "^15",
-    "@prefresh/core": "^1.5",
-    "@prefresh/utils": "^1.2",
+    "@prefresh/core": "^1",
+    "@prefresh/utils": "^1",
     "@prefresh/vite": "^4",
     "@types/node": "^26",
     "husky": "^9",

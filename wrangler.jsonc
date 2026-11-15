@@ -1,6 +1,7 @@
 // Cloudflare Workers deployment (in parallel to Netlify, see netlify.toml).
-// Serves the vite build output as static assets: no Worker code runs, so requests are free and
-// don't count towards the Workers request limits.
+// Serves the vite build output as static assets, plus a small Worker (worker/index.ts) for /api/*.
+// Static asset requests are free and don't count towards the Workers request limits, only /api/*
+// requests do.
 // public/_headers applies as is. Netlify's redirects live in netlify.toml (not public/_redirects),
 // so that Cloudflare doesn't pick them up.
 {
@@ -12,10 +13,16 @@
   // Explicit, because when omitted the setting follows workers_dev (on). Preview builds are also off
   // in Workers Builds (dashboard), so only master deploys.
   "preview_urls": false,
+  "main": "./worker/index.ts",
+  "upload_source_maps": true,
+  // Worker logs and traces in the dashboard (releases → Observability)
+  "observability": { "enabled": true },
   "assets": {
     "directory": "./dist",
     // Client-side routes (/releases, /settings, ...) get index.html with 200, the same as the
     // `/releases /index.html 200` rules in public/_redirects on Netlify
     "not_found_handling": "single-page-application",
+    // Only these requests run the Worker, everything else is served as static assets
+    "run_worker_first": ["/api/*"],
   },
 }
