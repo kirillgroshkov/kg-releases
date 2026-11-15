@@ -146,6 +146,6 @@ Cloudflare (trial, in parallel to Netlify): `wrangler.jsonc` serves `dist/` as W
 `pnpm preview-cloudflare` serves the build locally the way Cloudflare does (port 8787),
 `pnpm deploy-cloudflare` builds and deploys from your machine. CI is Workers Builds (Cloudflare
 dashboard → Worker `releases` → Settings → Builds, not in the repo): build command `pnpm build`,
-deploy command `npx wrangler deploy` (master → production). Preview builds are disabled (and
+deploy command `pnpm exec wrangler deploy` (master → production). Preview builds are disabled (and
 `preview_urls: false`): Firebase login works only on hosts in Firebase Auth's authorized domains,
 which can't be wildcards, so per-branch URLs couldn't log in.
