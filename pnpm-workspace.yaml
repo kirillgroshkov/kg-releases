@@ -22,6 +22,7 @@ allowBuilds:
   '@firebase/util': false
   '@parcel/watcher': false
   protobufjs: false
+  workerd: true
 
 trustLockfile: true
 trustPolicyExcludePrune: true

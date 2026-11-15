@@ -1,6 +1,48 @@
-
 [build]
 publish = "dist"
 command = "pnpm build-netlify"
 
 [build.environment]
+
+#
+# Redirects for netlify. They used to live in public/_redirects, but Cloudflare reads that file too,
+# and there the /index.html rewrites turn into 307 redirects to / (Cloudflare strips /index.html).
+# Cloudflare has its own SPA fallback instead, see wrangler.jsonc.
+#
+
+#
+# force https
+#
+[[redirects]]
+from = "http://releases.netlify.app/*"
+to = "https://releases.netlify.app/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "http://pwa--releases.netlify.app/*"
+to = "https://pwa--releases.netlify.app/:splat"
+status = 301
+force = true
+
+# SPA
+#/* /index.html 200
+[[redirects]]
+from = "/"
+to = "/index.html"
+status = 200
+
+[[redirects]]
+from = "/releases"
+to = "/index.html"
+status = 200
+
+[[redirects]]
+from = "/projects/*"
+to = "/index.html"
+status = 200
+
+[[redirects]]
+from = "/settings"
+to = "/index.html"
+status = 200

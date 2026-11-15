@@ -1,0 +1,8 @@
+# Files Cloudflare (wrangler deploy) should not upload from dist/, gitignore syntax.
+# Unlike Netlify (and Cloudflare Pages), Workers static assets upload hidden files too. Local deploys
+# would then publish whatever untracked dotfiles sit in public/: .DS_Store from the macOS Finder,
+# editor files, an .env by mistake. Builds from a git checkout (Netlify, Workers Builds) don't have them.
+# So: no hidden files or folders at any depth, except .well-known (security.txt, app links), the one
+# standard public dot-folder.
+.*
+!.well-known

@@ -14,6 +14,8 @@
     "check": "dev-lib check && vite build",
     "dev": "vite --port 4100 --open",
     "build-netlify": "vite build",
+    "deploy-cloudflare": "vite build && wrangler deploy",
+    "preview-cloudflare": "vite build && wrangler dev",
     "preview": "vite preview --open"
   },
   "dependencies": {
@@ -38,7 +40,8 @@
     "typescript": "^7",
     "vite": "^8",
     "vite-bundle-analyzer": "^1",
-    "vitest": "^5"
+    "vitest": "^5",
+    "wrangler": "^4"
   },
   "imports": {
     "#src/*.js": "./src/*.ts",

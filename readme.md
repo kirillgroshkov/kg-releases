@@ -42,6 +42,8 @@ Feature requests, issues, PRs are welcome!
 - Firebase Auth
 - Hosted at Netlify
 
+Mirror deployment to Cloudflare workers: https://releases.kirillgroshkov.workers.dev
+
 ## Develop
 
     pn dev

@@ -138,3 +138,14 @@ releases depending on login state → hides the loader → `appReady.value = tru
 ## Deployment
 
 Netlify deploys from `dist/` on push. Config in `netlify.toml`. Build command: `pnpm build-netlify`.
+Netlify's redirects (https, SPA rewrites) live in `netlify.toml`, not in `public/_redirects`:
+Cloudflare would read that file too.
+
+Cloudflare (trial, in parallel to Netlify): `wrangler.jsonc` serves `dist/` as Workers Static Assets
+(no Worker code) with the built-in SPA fallback. `public/_headers` applies on both hosts.
+`pnpm preview-cloudflare` serves the build locally the way Cloudflare does (port 8787),
+`pnpm deploy-cloudflare` builds and deploys from your machine. CI is Workers Builds (Cloudflare
+dashboard → Worker `releases` → Settings → Builds, not in the repo): build command `pnpm build`,
+deploy command `npx wrangler deploy` (master → production). Preview builds are disabled (and
+`preview_urls: false`): Firebase login works only on hosts in Firebase Auth's authorized domains,
+which can't be wildcards, so per-branch URLs couldn't log in.
